@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Header from "../components/header";
 import { FaUserCircle } from "react-icons/fa";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
+import Header from "../../components/header";
 
 const Profile = () => {
   const { user, updateUser, logout } = useAuth(); // Assuming you have updateUser function in AuthContext

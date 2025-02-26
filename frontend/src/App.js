@@ -9,19 +9,19 @@ import AdminRoute from "./Admin/components/AdminRoute";
 import AdminPanel from "./Admin/pages/AdminPanel/AdminPanel";
 
 // ======User routes =====
-import Login from "./pages/Login";
 import Register from "./pages/Register/Register";
-import Dashboard from "./pages/Dashboard";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
-import Shop from "./pages/Shop";
-import Cart from "./pages/Carts";
-import Contact from "./pages/Contact";
-import About from "./pages/about";
-import Profile from "./pages/profile"; // ✅ Added Profile page
+import Shop from "./pages/Shop/Shop";
+import Cart from "./pages/Cart/Carts";
 import Domains from "./Admin/pages/Domains/Domains";
 
 import "./App.css";
+import About from "./pages/About/about";
+import Profile from "./pages/Profile/profile";
+import Contact from "./pages/Contact/Contact";
+import Login from "./pages/Login/Login";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
   return (

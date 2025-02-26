@@ -1,6 +1,7 @@
 import React from "react";
-import Header from "../components/header"; // Ensure the correct import
-import { useCart } from "../context/CartContext";
+import Header from "../../components/header"; // Ensure the correct import
+import { useCart } from "../../context/CartContext";
+import "./index.css"
 
 const products = Array.from({ length: 12 }, (_, index) => ({
   id: index + 1,

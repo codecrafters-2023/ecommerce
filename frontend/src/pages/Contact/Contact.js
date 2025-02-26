@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { FaPhone, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import Header from "../components/header";
-import Hero from "../components/heroSection";
+import Header from "../../components/header";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -38,7 +36,6 @@ const Contact = () => {
   return (
     <div>
       <Header />
-      <Hero />
       <div className="container mx-auto p-6 flex flex-col md:flex-row gap-6">
         {/* Contact Form */}
         <div className="md:w-2/3 bg-white p-6 shadow-lg rounded-lg">
