@@ -10,8 +10,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
-    credentials: true
+    // origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: "*",
+    credentials: true,
+    allowedHeaders: "Content-Type, Authorization"
 }));
 
 // Database
