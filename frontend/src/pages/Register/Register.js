@@ -5,6 +5,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import './index.css';
 import Header from '../../components/header';
+import { toast } from 'react-toastify';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -27,12 +28,12 @@ const Register = () => {
         e.preventDefault();
 
         if (formData.password !== formData.passwordConfirm) {
-            alert('Passwords do not match');
+            toast.error('Password do not match');
             return;
         }
 
         if (!isValidPassword(formData.password)) {
-            alert('Password must be at least 10 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.');
+            toast.error('Password must be at least 8 characters long and include one uppercase letter, and one special character.');
             return;
         }
 

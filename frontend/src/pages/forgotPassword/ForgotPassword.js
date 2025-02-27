@@ -22,8 +22,8 @@ const ForgotPassword = () => {
     return (
         <div>
             <Header />
-            <div className="register-container">
-                <div className="register-box">
+            <div className="forgotPassword-container">
+                <div className="forgotPassword-box">
                 <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="logo" />
                     <h2>Forgot Password</h2>
                     <form onSubmit={handleSubmit}>

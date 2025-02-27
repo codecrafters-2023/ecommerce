@@ -1,5 +1,5 @@
 
-.forgotPassword-container {
+.resetPassword-container {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -7,7 +7,7 @@
     min-height: 91.7vh;
     background-image: url(../../../public/bg.jpg);
 }
-.forgotPassword-box {
+.resetPassword-box {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,12 +21,12 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.forgotPassword-box h2 {
+.resetPassword-box h2 {
     font-size: 24px;
     margin: 20px 0;
 }
 
-.forgotPassword-box form{
+.resetPassword-box form{
     width: 100%;
 }
 

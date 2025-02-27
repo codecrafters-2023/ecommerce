@@ -9,8 +9,8 @@ import AdminRoute from "./Admin/components/AdminRoute";
 import AdminPanel from "./Admin/pages/AdminPanel/AdminPanel";
 
 // ======User routes =====
-import ResetPassword from "./pages/ResetPassword";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
+import ResetPassword from "./pages/resetPassword/ResetPassword";
 import Shop from "./pages/Shop/Shop";
 import Cart from "./pages/Cart/Carts";
 import Domains from "./Admin/pages/Domains/Domains";
