@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import './index.css';
-
+import Header from '../../components/header';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -50,7 +50,17 @@ const Register = () => {
     };
 
     return (
-        <div className="register-container">
+        <>
+        <Header />
+        <div className="register-container" style={{ 
+            backgroundImage: `url(${process.env.PUBLIC_URL}/bg.jpg)`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
             <div className="register-box">
                 <div className="register-left">
                     <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="logo" />
@@ -110,11 +120,12 @@ const Register = () => {
                         <Link to="/login">Already have an account? Login</Link>
                     </div>
                 </div>
-                <div className="register-right">
+                {/* <div className="register-right">
                     <img src={`${process.env.PUBLIC_URL}/register-Image.png`} alt="Register" className="register-image" />
-                </div>
+                </div> */}
             </div>
         </div>
+        </>
     );
 };
 

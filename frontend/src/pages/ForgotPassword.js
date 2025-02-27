@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Header from '../components/header';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -18,7 +19,12 @@ const ForgotPassword = () => {
     };
 
     return (
-        <div className="auth-container">
+        <div>
+            <Header />
+        <div className="register-container" style={{ 
+            backgroundImage: `url(${process.env.PUBLIC_URL}/bg.jpg) `,
+             }}>
+        <div className="auth-container" style={{background: "white"}}>
             <h2>Forgot Password</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -35,7 +41,7 @@ const ForgotPassword = () => {
             <div className="auth-links">
                 <Link to="/login">Remember your password? Login</Link>
             </div>
-        </div>
+            </div></div></div>
     );
 };
 
