@@ -1,0 +1,106 @@
+/* Profile content */
+.profile-content {
+    width: 100%;
+    /* max-width: 64rem; */
+    padding: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: whitesmoke;
+}
+
+/* Profile card */
+.profile-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 22%;
+}
+
+/* Profile Header */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-icon {
+    font-size: 4.5rem;
+    color: #9ca3af;
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-top: 0.5rem;
+}
+
+.profile-email {
+    color: #4b5563;
+}
+
+/* Divider */
+.divider {
+    border-top: 1px solid #e5e7eb;
+    margin: 1.5rem 0;
+}
+
+/* Profile Form */
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.form-group {
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #374151;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+    font-size: 16px;
+}
+
+/* Buttons */
+.btn {
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    font-size: 16px;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.save-btn {
+    background-color: #3b82f6;
+    color: white;
+    margin-top: 10px;
+}
+
+.save-btn:hover {
+    background-color: #2563eb;
+}
+
+.logout-btn {
+    background-color: #ef4444;
+    color: white;
+    margin-top: 10px;
+}
+
+.logout-btn:hover {
+    background-color: #dc2626;
+}

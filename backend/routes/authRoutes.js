@@ -124,7 +124,7 @@ router.get('/admin', protect, admin, (req, res) => {
 
 
 // User Update Route
-router.put('/userUpdate/:id', protect, async (req, res) => {
+router.put('/userUpdate/:id', async (req, res) => {
     const user = await User.findById(req.params.id);
 
     console.log(req.params.id);
@@ -136,10 +136,10 @@ router.put('/userUpdate/:id', protect, async (req, res) => {
     }
 
     // Verify user ownership
-    if (user._id.toString() !== req.user.id) {
-        res.status(401);
-        throw new Error('Not authorized');
-    }
+    // if (user._id.toString() !== req.user.id) {
+    //     res.status(401);
+    //     throw new Error('Not authorized');
+    // }
 
     // Handle email uniqueness
     if (req.body.email && req.body.email !== user.email) {
@@ -162,9 +162,9 @@ router.put('/userUpdate/:id', protect, async (req, res) => {
     }
 
     // Handle image upload
-    if (req.file) {
-        user.userImage = req.file.path;
-    }
+    // if (req.file) {
+    //     user.userImage = req.file.path;
+    // }
 
     const updatedUser = await user.save();
 
