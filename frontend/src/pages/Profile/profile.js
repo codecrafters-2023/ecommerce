@@ -2,23 +2,52 @@ import React, { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/header";
+import axios from "axios"
 
 const Profile = () => {
   const { user, updateUser, logout } = useAuth(); // Assuming you have updateUser function in AuthContext
   const [formData, setFormData] = useState({
-    fullname: user?.fullName || "",
-    email: user?.email || "",
-    password: "",
+    fullName: user?.fullName,
+    email: user?.email,
+    phone: user?.phone || '',
+    password: '',
   });
+
+  console.log(formData);
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    updateUser(formData); // Call update function (should be defined in AuthContext)
-    alert("Profile updated successfully!");
+    
+    const data = new FormData();
+    data.append('fullName', formData.fullName);
+    data.append('email', formData.email);
+    data.append('phone', formData.phone);
+    data.append('password', formData.password);
+    // if (file) data.append('userImage', file);
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/auth/${user._id}`,
+        data,
+        config
+      );
+
+      updateUser(response.data);
+      // Reset form or show success message
+    } catch (error) {
+      console.error('Update failed:', error.response?.data?.message);
+    }
   };
 
   return (
@@ -42,10 +71,9 @@ const Profile = () => {
               <input
                 type="text"
                 name="name"
-                value={formData.fullName}
+                value={formData?.fullName}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
-                required
               />
             </div>
 
@@ -54,10 +82,19 @@ const Profile = () => {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={formData?.email}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
-                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700">Email</label>
+              <input
+                type="number"
+                name="phone"
+                value={formData?.phone}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
               />
             </div>
 

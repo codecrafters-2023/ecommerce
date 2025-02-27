@@ -7,13 +7,13 @@ const nodemailer = require('nodemailer');
 
 // Register
 router.post('/register', async (req, res) => {
-    const { email, password, role,phone,fullName } = req.body;
+    const { email, password, role, phone, fullName } = req.body;
 
     try {
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-        const user = await User.create({ email, password, role, phone,fullName});
+        const user = await User.create({ email, password, role, phone, fullName });
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
             expiresIn: '30d'
@@ -121,5 +121,60 @@ router.get('/profile', protect, async (req, res) => {
 router.get('/admin', protect, admin, (req, res) => {
     res.json({ message: 'Admin Dashboard' });
 });
+
+
+// User Update Route
+router.put('/userUpdate/:id', protect, async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    console.log(req.params.id);
+    
+
+    if (!user) {
+        res.status(404);
+        throw new Error('User not found');
+    }
+
+    // Verify user ownership
+    if (user._id.toString() !== req.user.id) {
+        res.status(401);
+        throw new Error('Not authorized');
+    }
+
+    // Handle email uniqueness
+    if (req.body.email && req.body.email !== user.email) {
+        const emailExists = await User.findOne({ email: req.body.email });
+        if (emailExists) {
+            res.status(400);
+            throw new Error('Email already in use');
+        }
+    }
+
+    // Update user fields
+    user.fullName = req.body.fullName || user.fullName;
+    user.email = req.body.email || user.email;
+    user.phone = req.body.phone || user.phone;
+
+    // Handle password update
+    if (req.body.password) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(req.body.password, salt);
+    }
+
+    // Handle image upload
+    if (req.file) {
+        user.userImage = req.file.path;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+        _id: updatedUser._id,
+        fullName: updatedUser.fullName,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        userImage: updatedUser.userImage
+    });
+})
 
 module.exports = router;
