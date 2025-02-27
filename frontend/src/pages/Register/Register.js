@@ -52,15 +52,7 @@ const Register = () => {
     return (
         <>
         <Header />
-        <div className="register-container" style={{ 
-            backgroundImage: `url(${process.env.PUBLIC_URL}/bg.jpg)`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-        }}>
+        <div className="register-container">
             <div className="register-box">
                 <div className="register-left">
                     <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="logo" />

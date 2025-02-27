@@ -9,18 +9,19 @@ import AdminRoute from "./Admin/components/AdminRoute";
 import AdminPanel from "./Admin/pages/AdminPanel/AdminPanel";
 
 // ======User routes =====
-import Register from "./pages/Register/Register";
-import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
 import Shop from "./pages/Shop/Shop";
 import Cart from "./pages/Cart/Carts";
 import Domains from "./Admin/pages/Domains/Domains";
+import Profile from "./pages/Profile/profile";
 
+// ===============Public routes ==================
 import "./App.css";
 import About from "./pages/About/about";
-import Profile from "./pages/Profile/profile";
 import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
+import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
