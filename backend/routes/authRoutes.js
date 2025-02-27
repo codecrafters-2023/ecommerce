@@ -4,8 +4,9 @@ const { protect, admin } = require('../middleware/authMiddleware');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcryptjs');
 
-const multer  = require('multer')
+const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
 
 // Register
@@ -127,55 +128,103 @@ router.get('/admin', protect, admin, (req, res) => {
 
 
 // User Update Route
+// router.put('/userUpdate/:id', upload.single(), async (req, res) => {
+
+//     const id = req.params.id;
+
+//     console.log(id);
+
+
+//     const user = await User.findById(id);
+
+//     if (user) {
+//         user.fullName = req.body.fullName || user.fullName;
+//         user.email = req.body.email || user.email;
+//         user.phone = req.body.phone || user.phone;
+
+//         if (req.body.password) {
+//             user.password = await bcrypt.hash(req.body.password, 12);
+//         }
+
+//         // Check if email is being updated to an existing email
+//         if (req.body.email && req.body.email !== user.email) {
+//             const emailExists = await User.findOne({ email: req.body.email });
+//             if (emailExists) {
+//                 res.status(400);
+//                 throw new Error('Email already exists');
+//             }
+//         }
+
+//         // Check if phone is being updated to an existing phone
+//         if (req.body.phone && req.body.phone !== user.phone) {
+//             const phoneExists = await User.findOne({ phone: req.body.phone });
+//             if (phoneExists) {
+//                 res.status(400);
+//                 throw new Error('Phone number already exists');
+//             }
+//         }
+
+//         const updatedUser = await user.save();
+
+//         res.json({
+//             _id: updatedUser._id,
+//             fullName: updatedUser.fullName,
+//             email: updatedUser.email,
+//             phone: updatedUser.phone,
+//             isAdmin: updatedUser.isAdmin,
+//         });
+//     } else {
+//         res.status(404);
+//         throw new Error('User not found');
+//     }
+// })
+
+
 router.put('/userUpdate/:id', upload.single(), async (req, res) => {
 
     const id = req.params.id;
 
-    console.log(id);
-    
-
     const user = await User.findById(id);
 
-    if (user) {
-        user.fullName = req.body.fullName || user.fullName;
-        user.email = req.body.email || user.email;
-        user.phone = req.body.phone || user.phone;
-
-        if (req.body.password) {
-            user.password = await bcrypt.hash(req.body.password, 12);
-        }
-
-        // Check if email is being updated to an existing email
-        if (req.body.email && req.body.email !== user.email) {
-            const emailExists = await User.findOne({ email: req.body.email });
-            if (emailExists) {
-                res.status(400);
-                throw new Error('Email already exists');
-            }
-        }
-
-        // Check if phone is being updated to an existing phone
-        if (req.body.phone && req.body.phone !== user.phone) {
-            const phoneExists = await User.findOne({ phone: req.body.phone });
-            if (phoneExists) {
-                res.status(400);
-                throw new Error('Phone number already exists');
-            }
-        }
-
-        const updatedUser = await user.save();
-
-        res.json({
-            _id: updatedUser._id,
-            fullName: updatedUser.fullName,
-            email: updatedUser.email,
-            phone: updatedUser.phone,
-            isAdmin: updatedUser.isAdmin,
-        });
-    } else {
+    if (!user) {
         res.status(404);
         throw new Error('User not found');
     }
+
+    // Update fields
+    user.fullName = req.body.fullName || user.fullName;
+    user.email = req.body.email || user.email;
+    user.phone = req.body.phone || user.phone;
+    user.password = req.body.password || user.password;
+
+    // Check for duplicate email
+    if (req.body.email && req.body.email !== user.email) {
+        const emailExists = await User.findOne({ email: req.body.email });
+        if (emailExists) {
+            res.status(400);
+            throw new Error('Email already exists');
+        }
+    }
+
+    // Check for duplicate phone
+    if (req.body.phone && req.body.phone !== user.phone) {
+        const phoneExists = await User.findOne({ phone: req.body.phone });
+        if (phoneExists) {
+            res.status(400);
+            throw new Error('Phone number already exists');
+        }
+    }
+
+
+    const updatedUser = await user.save();
+
+    res.json({
+        _id: updatedUser._id,
+        fullName: updatedUser.fullName,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        // token: req.user.token // Keep the same token
+    });
 })
 
 module.exports = router;
