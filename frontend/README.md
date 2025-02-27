@@ -1,4 +1,4 @@
-# Getting Started with Create React App Gurbir Singh
+# Getting Started with Create React App Gurbir Singh Maan
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
