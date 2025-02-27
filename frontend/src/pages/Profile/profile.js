@@ -4,9 +4,10 @@ import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/header";
 import axios from "axios"
 import "./index.css"
+import { toast } from "react-toastify";
 
 const Profile = () => {
-  const { user, updateUser, logout } = useAuth(); // Assuming you have updateUser function in AuthContext
+  const { user, updateUser} = useAuth(); // Assuming you have updateUser function in AuthContext
   const [formData, setFormData] = useState({
     fullName: user?.fullName,
     email: user?.email,
@@ -20,40 +21,11 @@ const Profile = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = async (id) => {
-  //   // e.preventDefault();
 
-  //   console.log(id);
-
-
-  //   const data = new FormData();
-  //   data.append('fullName', formData.fullName);
-  //   data.append('email', formData.email);
-  //   data.append('phone', formData.phone);
-  //   data.append('password', formData.password);
-  //   // if (file) data.append('userImage', file);
-
-
-  //   try {
-  //     const config = {
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //         Authorization: `Bearer ${user.token}`,
-  //       },
-  //     };
-
-  //     const response = await axios.put(`${process.env.REACT_APP_API_URL}/auth/userUpdate/${id}`,
-  //       data,
-  //       config
-  //     );
-
-  //     updateUser(response.data);
-  //     // Reset form or show success message
-  //   } catch (error) {
-  //     console.error('Update failed:', error.response?.data?.message);
-  //   }
-  // };
-
+  const isValidPassword = (password) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{10,}$/;
+    return regex.test(password);
+};
 
   const handleSubmit = async (id) => {
     // e.preventDefault();
@@ -61,14 +33,19 @@ const Profile = () => {
     
 
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match!");
+      toast.error("Passwords don't match!");
       return;
     }
 
-    if (!formData.password) {
-      const confirm = window.confirm('Are you sure you want to update without changing password?');
-      if (!confirm) return;
-    }
+    if (!isValidPassword(formData.password)) {
+      toast.error('Password must be at least 8 characters long and include one uppercase letter, and one special character.');
+      return;
+  }
+
+    // if (!formData.password) {
+    //   const confirm = window.confirm('Are you sure you want to update without changing password?');
+    //   if (!confirm) return;
+    // }
 
     try {
       const response = await axios.put(
@@ -85,11 +62,11 @@ const Profile = () => {
       // updateUser(response.data);
       console.log(response.data);
       
-      alert('Profile updated successfully!');
+      toast.success('Profile updated successfully!');
       setFormData(prev => ({ ...prev, password: '' })); // Clear password field
     } catch (error) {
       console.error('Update failed:', error);
-      alert(error.response?.data?.message || 'Update failed');
+      toast.error(error.response?.data?.message || 'Update failed');
     }
   };
 
@@ -165,10 +142,6 @@ const Profile = () => {
 
           <div className="divider"></div>
 
-          {/* Logout Button */}
-          <button onClick={logout} className="btn logout-btn">
-            Logout
-          </button>
         </div>
       </div>
     </div>
