@@ -5,6 +5,9 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 // Register
 router.post('/register', async (req, res) => {
     const { email, password, role, phone, fullName } = req.body;
@@ -124,57 +127,55 @@ router.get('/admin', protect, admin, (req, res) => {
 
 
 // User Update Route
-router.put('/userUpdate/:id', async (req, res) => {
-    const user = await User.findById(req.params.id);
+router.put('/userUpdate/:id', upload.single(), async (req, res) => {
 
-    console.log(req.params.id);
+    const id = req.params.id;
+
+    console.log(id);
     
 
-    if (!user) {
+    const user = await User.findById(id);
+
+    if (user) {
+        user.fullName = req.body.fullName || user.fullName;
+        user.email = req.body.email || user.email;
+        user.phone = req.body.phone || user.phone;
+
+        if (req.body.password) {
+            user.password = await bcrypt.hash(req.body.password, 12);
+        }
+
+        // Check if email is being updated to an existing email
+        if (req.body.email && req.body.email !== user.email) {
+            const emailExists = await User.findOne({ email: req.body.email });
+            if (emailExists) {
+                res.status(400);
+                throw new Error('Email already exists');
+            }
+        }
+
+        // Check if phone is being updated to an existing phone
+        if (req.body.phone && req.body.phone !== user.phone) {
+            const phoneExists = await User.findOne({ phone: req.body.phone });
+            if (phoneExists) {
+                res.status(400);
+                throw new Error('Phone number already exists');
+            }
+        }
+
+        const updatedUser = await user.save();
+
+        res.json({
+            _id: updatedUser._id,
+            fullName: updatedUser.fullName,
+            email: updatedUser.email,
+            phone: updatedUser.phone,
+            isAdmin: updatedUser.isAdmin,
+        });
+    } else {
         res.status(404);
         throw new Error('User not found');
     }
-
-    // Verify user ownership
-    // if (user._id.toString() !== req.user.id) {
-    //     res.status(401);
-    //     throw new Error('Not authorized');
-    // }
-
-    // Handle email uniqueness
-    if (req.body.email && req.body.email !== user.email) {
-        const emailExists = await User.findOne({ email: req.body.email });
-        if (emailExists) {
-            res.status(400);
-            throw new Error('Email already in use');
-        }
-    }
-
-    // Update user fields
-    user.fullName = req.body.fullName || user.fullName;
-    user.email = req.body.email || user.email;
-    user.phone = req.body.phone || user.phone;
-
-    // Handle password update
-    if (req.body.password) {
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(req.body.password, salt);
-    }
-
-    // Handle image upload
-    // if (req.file) {
-    //     user.userImage = req.file.path;
-    // }
-
-    const updatedUser = await user.save();
-
-    res.json({
-        _id: updatedUser._id,
-        fullName: updatedUser.fullName,
-        email: updatedUser.email,
-        phone: updatedUser.phone,
-        userImage: updatedUser.userImage
-    });
 })
 
 module.exports = router;

@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         checkUserLoggedIn();
-    }, [checkUserLoggedIn]);
+    }, []);
 
     const register = async (formData) => {
         try {

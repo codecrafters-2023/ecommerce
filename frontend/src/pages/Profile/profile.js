@@ -14,8 +14,6 @@ const Profile = () => {
     password: '',
   });
 
-  console.log(formData);
-  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,12 +22,16 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    console.log(user._id);
+    
+
     const data = new FormData();
     data.append('fullName', formData.fullName);
     data.append('email', formData.email);
     data.append('phone', formData.phone);
     data.append('password', formData.password);
     // if (file) data.append('userImage', file);
+
 
     try {
       const config = {
