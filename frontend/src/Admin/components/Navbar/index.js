@@ -27,7 +27,7 @@ const AdminSidebar = () => {
                 <div>
                     <aside class="sidebar">
                         <div class="logo-container">
-                            <div class="logo">
+                            <div class="admin_logo">
                                 <FaCube className='logo_icon' />
                                 <span>Admin</span>
                             </div>

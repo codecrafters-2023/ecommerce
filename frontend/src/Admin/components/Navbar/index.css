@@ -21,17 +21,19 @@
     margin-bottom: 30px;
 }
 
-.logo {
+.admin_logo {
     font-size: 24px;
     font-weight: bold;
     text-align: center;
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 15px;
+    padding-left: 20px;
+    /* width: 100%!important; */
+    /* justify-content: center; */
 }
 
-.logo .logo_icon{
+.admin_logo .logo_icon{
     color: #fff;
 }
 
