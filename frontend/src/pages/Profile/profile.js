@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
+import { FaCloudUploadAlt, FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/header";
 import axios from "axios"
@@ -7,13 +7,14 @@ import "./index.css"
 import { toast } from "react-toastify";
 
 const Profile = () => {
-  const { user, updateUser} = useAuth(); // Assuming you have updateUser function in AuthContext
+  const { user } = useAuth(); // Assuming you have updateUser function in AuthContext
   const [formData, setFormData] = useState({
     fullName: user?.fullName,
     email: user?.email,
     phone: user?.phone || '',
     password: '',
     confirmPassword: '',
+    avatar: null
   });
 
 
@@ -25,13 +26,19 @@ const Profile = () => {
   const isValidPassword = (password) => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{10,}$/;
     return regex.test(password);
-};
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, avatar: file });
+      // setPreview(URL.createObjectURL(file));
+    }
+  };
 
   const handleSubmit = async (id) => {
-    // e.preventDefault();
-    console.log(id);
-    
 
+   
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords don't match!");
       return;
@@ -40,17 +47,22 @@ const Profile = () => {
     if (!isValidPassword(formData.password)) {
       toast.error('Password must be at least 8 characters long and include one uppercase letter, and one special character.');
       return;
-  }
+    }
 
-    // if (!formData.password) {
-    //   const confirm = window.confirm('Are you sure you want to update without changing password?');
-    //   if (!confirm) return;
-    // }
+    const data = new FormData();
+    data.append('fullName', formData.fullName);
+    data.append('email', formData.email);
+    data.append('phone', formData.phone);
+    data.append('password', formData.password);
+    if (formData.avatar) {
+      data.append('avatar', formData.avatar);
+    }
+
 
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_API_URL}/auth/userUpdate/${id}`,
-        formData,
+        data,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -61,7 +73,7 @@ const Profile = () => {
 
       // updateUser(response.data);
       console.log(response.data);
-      
+
       toast.success('Profile updated successfully!');
       setFormData(prev => ({ ...prev, password: '' })); // Clear password field
     } catch (error) {
@@ -77,7 +89,27 @@ const Profile = () => {
         <div className="profile-card">
           {/* Profile Header */}
           <div className="profile-header">
-            <FaUserCircle className="profile-icon" />
+            <img
+              src={user?.avatar}
+              alt={user?.fullName}
+              className="profile-avatar"
+              style={{ width: '20%', borderRadius: "50%" }}
+            />
+            <label htmlFor="avatar">
+              <div className="upload-overlay">
+                <FaCloudUploadAlt className="upload-icon" />
+                <span>Change Avatar</span>
+              </div>
+              <input
+                type="file"
+                id="avatar"
+                name="avatar"
+                accept="image/*"
+                onChange={handleFileChange}
+                hidden
+              />
+            </label>
+            {/* <FaUserCircle className="profile-icon" /> */}
             <h2 className="profile-name">{user?.fullName}</h2>
           </div>
 

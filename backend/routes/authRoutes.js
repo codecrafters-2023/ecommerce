@@ -33,7 +33,7 @@ const upload = multer({ storage: storage });
 
 
 // Register
-router.post('/register', upload.single('avatar'),  async (req, res) => {
+router.post('/register', upload.single('avatar'), async (req, res) => {
     const { email, password, role, phone, fullName } = req.body;
 
     try {
@@ -175,6 +175,16 @@ router.put('/userUpdate/:id', upload.single('avatar'), async (req, res) => {
         throw new Error('User not found');
     }
 
+    // Handle image upload
+    if (req.file) {
+        // Delete old image if it's from Cloudinary
+        if (user.avatar.includes('res.cloudinary.com')) {
+            const publicId = user.avatar.split('/').slice(-2).join('/').split('.')[0];
+            await cloudinary.v2.uploader.destroy(publicId);
+        }
+        user.avatar = req.file.path;
+    }
+
     // Update fields
     user.fullName = req.body.fullName || user.fullName;
     user.email = req.body.email || user.email;
@@ -207,6 +217,7 @@ router.put('/userUpdate/:id', upload.single('avatar'), async (req, res) => {
         fullName: updatedUser.fullName,
         email: updatedUser.email,
         phone: updatedUser.phone,
+        avatar: updatedUser.avatar,
         // token: req.user.token // Keep the same token
     });
 })
