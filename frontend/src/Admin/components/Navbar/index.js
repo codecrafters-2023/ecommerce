@@ -1,17 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './index.css';
-import { FaCube } from "react-icons/fa";
-import { FaGlobe } from "react-icons/fa";
-import { IoServer } from "react-icons/io5";
-import { FaUsers } from "react-icons/fa";
+import { FaCube, FaGlobe } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from '../../../context/AuthContext';
 import { IoIosLogOut } from "react-icons/io";
 import { CiCreditCard1 } from "react-icons/ci";
-import { HiMiniShoppingBag } from "react-icons/hi2";
-import { MdAddToPhotos } from "react-icons/md";
+
 
 
 
@@ -42,27 +38,28 @@ const AdminSidebar = () => {
                                     </Link>
                                 </li>
                                 <li class="nav-item">
-                                    <Link to={'/domains'} class="nav-link">
-                                        <HiMiniShoppingBag className='sidebar_icons' />
+                                    <Link to={'/products'} class="nav-link">
+                                        <FaGlobe className='sidebar_icons' />
                                         <span>Products</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">
-                                    <Link to={'#'} class="nav-link">
-                                        <MdAddToPhotos className='sidebar_icons' />
-                                        <span>Add product</span>
+                                    <Link to={'/AddProduct'} class="nav-link">
+                                        <FaGlobe className='sidebar_icons' />
+                                        <span>Add Products</span>
                                     </Link>
                                 </li>
-                                <li class="nav-item">
-                                    <Link to={'#'} class="nav-link">
-                                        <FaUsers className='sidebar_icons' />
-                                        <span>Users</span>
-                                    </Link>
-                                </li>
+                                
                                 <li class="nav-item">
                                     <Link to={'#'} class="nav-link">
                                         <CiCreditCard1 className='sidebar_icons' />
                                         <span>Billing</span>
+                                    </Link>
+                                </li>
+                                <li class="nav-item">
+                                    <Link to={'/UsersList'} class="nav-link">
+                                        <CiCreditCard1 className='sidebar_icons' />
+                                        <span>Users List</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">
