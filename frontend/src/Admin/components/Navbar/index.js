@@ -9,6 +9,12 @@ import { IoIosSettings } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from '../../../context/AuthContext';
 import { IoIosLogOut } from "react-icons/io";
+import { CiCreditCard1 } from "react-icons/ci";
+import { HiMiniShoppingBag } from "react-icons/hi2";
+import { MdAddToPhotos } from "react-icons/md";
+
+
+
 
 const AdminSidebar = () => {
 
@@ -37,20 +43,26 @@ const AdminSidebar = () => {
                                 </li>
                                 <li class="nav-item">
                                     <Link to={'/domains'} class="nav-link">
-                                        <FaGlobe className='sidebar_icons' />
-                                        <span>Domains</span>
+                                        <HiMiniShoppingBag className='sidebar_icons' />
+                                        <span>Products</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">
                                     <Link to={'#'} class="nav-link">
-                                        <IoServer className='sidebar_icons' />
-                                        <span>Hosting</span>
+                                        <MdAddToPhotos className='sidebar_icons' />
+                                        <span>Add product</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">
                                     <Link to={'#'} class="nav-link">
                                         <FaUsers className='sidebar_icons' />
                                         <span>Users</span>
+                                    </Link>
+                                </li>
+                                <li class="nav-item">
+                                    <Link to={'#'} class="nav-link">
+                                        <CiCreditCard1 className='sidebar_icons' />
+                                        <span>Billing</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">
