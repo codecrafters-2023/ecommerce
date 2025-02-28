@@ -16,7 +16,8 @@ import Cart from "./pages/Cart/Carts";
 import Domains from "./Admin/pages/Domains/Domains";
 import Profile from "./pages/Profile/profile";
 import AddProduct from "./Admin/pages/AddProduct/AddProduct";
-import UsersList from "./Admin/pages/UsersList/UsersList";
+
+
 
 
 // ===============Public routes ==================
@@ -26,6 +27,7 @@ import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import UsersList from "./Admin/pages/UsersList";
 
 function App() {
   return (
