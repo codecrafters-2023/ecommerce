@@ -38,7 +38,7 @@ const AdminSidebar = () => {
                                     </Link>
                                 </li>
                                 <li class="nav-item">
-                                    <Link to={'/products'} class="nav-link">
+                                    <Link to={'/allProducts'} class="nav-link">
                                         <FaGlobe className='sidebar_icons' />
                                         <span>Products</span>
                                     </Link>

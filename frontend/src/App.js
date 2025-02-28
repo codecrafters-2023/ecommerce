@@ -7,15 +7,16 @@ import { CartProvider } from "./context/CartContext";
 // ======Admin routes =====
 import AdminRoute from "./Admin/components/AdminRoute";
 import AdminPanel from "./Admin/pages/AdminPanel/AdminPanel";
+import AddProduct from "./Admin/pages/AddProduct";
+import UsersList from "./Admin/pages/UsersList";
+
 
 // ======User routes =====
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
 import ResetPassword from "./pages/resetPassword/ResetPassword";
 import Shop from "./pages/Shop/Shop";
 import Cart from "./pages/Cart/Carts";
-import Domains from "./Admin/pages/Domains/Domains";
 import Profile from "./pages/Profile/profile";
-import AddProduct from "./Admin/pages/AddProduct/AddProduct";
 
 
 
@@ -27,7 +28,10 @@ import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import UsersList from "./Admin/pages/UsersList";
+import ProductList from "./Admin/pages/Products";
+import ProductEditForm from "./Admin/components/ProductEditForm";
+
+
 
 function App() {
   return (
@@ -53,7 +57,8 @@ function App() {
             <Route element={<AdminRoute />}>
               <Route path="/admin" element={<AdminPanel />} />
             </Route>
-            {/* <Route path="/domains" element={<Domains />} /> */}
+            <Route path="/allProducts" element={<ProductList />} />
+            <Route path="/productEdit/:id" element={<ProductEditForm />} />
             <Route path="/AddProduct" element={<AddProduct />} />
             <Route path="/UsersList" element={<UsersList />} />
           </Routes>
