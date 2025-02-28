@@ -25,7 +25,7 @@ const AdminSidebar = () => {
                 <div>
                     <aside class="sidebar">
                         <div class="logo-container">
-                            <div class="logo">
+                            <div class="admin_logo">
                                 <FaCube className='logo_icon' />
                                 <span>Admin</span>
                             </div>
@@ -41,20 +41,20 @@ const AdminSidebar = () => {
                                 </li>
                                 <li class="nav-item">
                                     <Link to={'/domains'} class="nav-link">
-                                        <HiMiniShoppingBag className='sidebar_icons' />
-                                        <span>Products</span>
+                                        <FaGlobe className='sidebar_icons' />
+                                        <span>Domains</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">
-                                    <Link to={'/AddProduct'} class="nav-link">
-                                        <MdAddToPhotos className='sidebar_icons' />
-                                        <span>Add product</span>
+                                    <Link to={'#'} class="nav-link">
+                                        <IoServer className='sidebar_icons' />
+                                        <span>Hosting</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">
-                                    <Link to={'/UsersList'} class="nav-link">
-                                        <FaUsers className='sidebar_icons' />
-                                        <span>Users List</span>
+                                    <Link to={'#'} class="nav-link">
+                                        <CiCreditCard1 className='sidebar_icons' />
+                                        <span>Billing</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">

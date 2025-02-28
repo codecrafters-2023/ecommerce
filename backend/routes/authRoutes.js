@@ -5,26 +5,63 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
-
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer')
-const upload = multer({ dest: 'uploads/' })
+
+
+// Configure Cloudinary
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+// Configure Multer with Cloudinary storage
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'user-avatars',
+        format: async (req, file) => 'png', // or jpeg, webp, etc
+        public_id: (req, file) => `${uuid()}-${Date.now()}`,
+        transformation: [{ width: 500, height: 500, crop: 'limit' }]
+    },
+});
+
+const upload = multer({ storage: storage });
+
+
 
 // Register
-router.post('/register', async (req, res) => {
+router.post('/register', upload.single('avatar'),  async (req, res) => {
     const { email, password, role, phone, fullName } = req.body;
 
     try {
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-        const user = await User.create({ email, password, role, phone, fullName });
+        // Handle image upload
+        let avatar = '';
+        if (req.file) {
+            avatar = req.file.path; // Cloudinary URL
+        } else {
+            // Generate default avatar using DiceBear API
+            const avatarName = fullName || email.split('@')[0];
+            avatar = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(avatarName)}&size=64&backgroundType=gradientLinear`;
+        }
+
+        const user = await User.create({ email, password, role, phone, fullName, avatar });
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
             expiresIn: '30d'
         });
 
-        res.status(201).json({ _id: user._id, email: user.email, role: user.role, token });
+        res.status(201).json({ _id: user._id, email: user.email, role: user.role, avatar: user.avatar, token });
     } catch (error) {
+        // Delete uploaded file if error occurred
+        if (req.file) {
+            await cloudinary.uploader.destroy(req.file.filename);
+        }
         res.status(500).json({ message: error.message });
     }
 });
@@ -127,7 +164,7 @@ router.get('/admin', protect, admin, (req, res) => {
 });
 
 // ======user update routes =====
-router.put('/userUpdate/:id', upload.single(), async (req, res) => {
+router.put('/userUpdate/:id', upload.single('avatar'), async (req, res) => {
 
     const id = req.params.id;
 
