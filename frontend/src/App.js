@@ -53,7 +53,7 @@ function App() {
             <Route element={<AdminRoute />}>
               <Route path="/admin" element={<AdminPanel />} />
             </Route>
-            <Route path="/domains" element={<Domains />} />
+            {/* <Route path="/domains" element={<Domains />} /> */}
             <Route path="/AddProduct" element={<AddProduct />} />
             <Route path="/UsersList" element={<UsersList />} />
           </Routes>
