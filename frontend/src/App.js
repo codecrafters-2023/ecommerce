@@ -15,6 +15,9 @@ import Shop from "./pages/Shop/Shop";
 import Cart from "./pages/Cart/Carts";
 import Domains from "./Admin/pages/Domains/Domains";
 import Profile from "./pages/Profile/profile";
+import AddProduct from "./Admin/pages/AddProduct/AddProduct";
+import UsersList from "./Admin/pages/UsersList/UsersList";
+
 
 // ===============Public routes ==================
 import "./App.css";
@@ -49,6 +52,8 @@ function App() {
               <Route path="/admin" element={<AdminPanel />} />
             </Route>
             <Route path="/domains" element={<Domains />} />
+            <Route path="/AddProduct" element={<AddProduct />} />
+            <Route path="/UsersList" element={<UsersList />} />
           </Routes>
           <ToastContainer />
         </CartProvider>
