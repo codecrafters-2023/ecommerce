@@ -5,6 +5,8 @@
     --transition: all 0.3s ease;
 }
 
+
+
 .sidebar {
     width: var(--sidebar-width);
     background: var(--primary-color);
