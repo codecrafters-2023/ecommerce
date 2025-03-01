@@ -56,11 +56,11 @@ function App() {
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>
               <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/allProducts" element={<ProductList />} />
+              <Route path="/productEdit/:id" element={<ProductEditForm />} />
+              <Route path="/AddProduct" element={<AddProduct />} />
+              <Route path="/UsersList" element={<UsersList />} />
             </Route>
-            <Route path="/allProducts" element={<ProductList />} />
-            <Route path="/productEdit/:id" element={<ProductEditForm />} />
-            <Route path="/AddProduct" element={<AddProduct />} />
-            <Route path="/UsersList" element={<UsersList />} />
           </Routes>
           <ToastContainer />
         </CartProvider>

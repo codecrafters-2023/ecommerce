@@ -341,9 +341,9 @@ const ProductEditForm = () => {
                                     
                                 >
                                     <option value="">Select Category</option>
-                                    <option value="electronics">Electronics</option>
-                                    <option value="fashion">Fashion</option>
-                                    <option value="home">Home & Kitchen</option>
+                                    <option value="turmeric powder">Turmeric Powder</option>
+                                    {/* <option value="fashion">Fashion</option>
+                                    <option value="home">Home & Kitchen</option> */}
                                 </select>
                             </div>
 
@@ -399,7 +399,7 @@ const ProductEditForm = () => {
                             <div className="form-group">
                                 <label className="form-label">Weight (kg)</label>
                                 <input
-                                    type="number"
+                                    type="text"
                                     name="weight"
                                     value={product.weight || ''}
                                     onChange={handleInputChange}
@@ -409,32 +409,13 @@ const ProductEditForm = () => {
                             </div>
 
                             <div className="form-group">
-                                <label className="form-label">Colors</label>
-                                <div className="color-options">
-                                    {['red', 'blue', 'black'].map(color => (
-                                        <label key={color} className="color-option">
-                                            <input
-                                                type="checkbox"
-                                                name="colors"
-                                                value={color}
-                                                checked={product.colors.includes(color)}
-                                                onChange={handleInputChange}
-                                            />
-                                            <span className={`color-dot ${color}`}></span>
-                                            {color.charAt(0).toUpperCase() + color.slice(1)}
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="form-group">
                                 <label className="form-label">Description</label>
                                 <textarea
                                     name="description"
                                     value={product.description}
                                     onChange={handleInputChange}
                                     className="form-textarea"
-                                    rows="4"
+                                    rows="9"
                                 />
                             </div>
                         </div>
@@ -477,7 +458,7 @@ const ProductEditForm = () => {
                                 <label htmlFor="file-input" className="file-upload-label">
                                     <span className="upload-icon">📁</span>
                                     <span>Click to upload or drag and drop</span>
-                                    <small>PNG, JPG up to 2MB</small>
+                                    <small>PNG, JPG up to 5MB</small>
                                 </label>
                             </div>
                             <div className="file-previews">

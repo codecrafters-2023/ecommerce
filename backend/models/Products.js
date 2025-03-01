@@ -33,7 +33,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Product category is required'],
-    enum: ['electronics', 'fashion', 'home', 'other']
+    enum: ['turmeric powder', 'other']
   },
   brand: {
     type: String,
@@ -50,13 +50,13 @@ const productSchema = new mongoose.Schema({
     min: [0, 'Discount price cannot be negative']
   },
   weight: {
-    type: Number,
+    type: String,
     min: [0, 'Weight cannot be negative']
   },
-  colors: [{
-    type: String,
-    enum: ['red', 'blue', 'black', 'white', 'green']
-  }],
+  // colors: [{
+  //   type: String,
+  //   enum: ['red', 'blue', 'black', 'white', 'green']
+  // }],
   images: [{
     url: {
       type: String,

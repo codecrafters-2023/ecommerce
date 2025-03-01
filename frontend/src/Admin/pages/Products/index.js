@@ -8,39 +8,52 @@ import AdminSidebar from '../../components/Navbar';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(10); // You can make this configurable
 
+    const [searchTerm, setSearchTerm] = useState('');
 
-    const fetchProducts = async (page = 1) => {
+    const fetchProducts = async (page = 0) => {
         try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/products/getAllProducts/?page=${page}&limit=10`);
+            const res = await axios.get(
+                `${process.env.REACT_APP_API_URL}/products/getAllProducts/?page=${page + 1}&limit=${itemsPerPage}&search=${searchTerm}`
+            );
             setProducts(res.data.products);
             setTotalPages(res.data.totalPages);
-            setCurrentPage(page);
         } catch (err) {
             console.error(err);
+            toast.error('Failed to load products');
         }
     };
 
+    const handleItemsPerPageChange = (e) => {
+        const newLimit = parseInt(e.target.value);
+        setItemsPerPage(newLimit);
+        setCurrentPage(0); // Reset to first page when changing page size
+    };
+
     const handlePageClick = (data) => {
+        setCurrentPage(data.selected);
         fetchProducts(data.selected);
     };
 
     useEffect(() => {
-        fetchProducts();
-    }, []);
+        fetchProducts(currentPage);
+    }, [currentPage, itemsPerPage, searchTerm]);
 
-    // Add handleDelete function
     const handleDelete = async (productId) => {
-        // if (!window.confirm('Are you sure you want to delete this product?')) {
-        //     return;
-        // }
-
         try {
             await axios.delete(`${process.env.REACT_APP_API_URL}/products/deleteProduct/${productId}`);
-            // Refresh the product list after deletion
-            fetchProducts(currentPage);
+
+            // Check if we need to go to previous page
+            if (products.length === 1 && currentPage > 0) {
+                setCurrentPage(currentPage - 1);
+            } else {
+                fetchProducts(currentPage);
+            }
+
+            toast.success('Product deleted successfully');
         } catch (err) {
             toast.error(err.response?.data?.message || 'Failed to delete product');
             console.error('Delete error:', err);
@@ -48,66 +61,25 @@ const ProductList = () => {
     };
 
     return (
-        // <div className="product-list">
-        //     <h2>Manage Products</h2>
-        //     <table>
-        //         <thead>
-        //             <tr>
-        //                 <th>Name</th>
-        //                 <th>Price</th>
-        //                 <th>Images</th>
-        //                 <th>Actions</th>
-        //             </tr>
-        //         </thead>
-        //         <tbody>
-        //             {products.map(product => (
-        //                 <tr key={product._id}>
-        //                     <td>{product.name}</td>
-        //                     <td>${product.price}</td>
-        //                     <td>
-        //                         {product.images.slice(0, 3).map((img, index) => (
-        //                             <img
-        //                                 key={index}
-        //                                 src={img.url}
-        //                                 alt={`Product ${index + 1}`}
-        //                                 style={{ width: '50px', marginRight: '5px' }}
-        //                             />
-        //                         ))}
-        //                     </td>
-        //                     <td>
-        //                         <Link to={`/productEdit/${product._id}`}>
-        //                             Edit
-        //                         </Link>
-        //                         <button onClick={() => handleDelete(product._id)}>
-        //                             Delete
-        //                         </button>
-        //                     </td>
-        //                 </tr>
-        //             ))}
-        //         </tbody>
-        //     </table>
-
-        //     {/* Pagination */}
-        //     <div className="pagination">
-        //         {Array.from({ length: totalPages }, (_, i) => (
-        //             <button
-        //                 key={i + 1}
-        //                 onClick={() => fetchProducts(i + 1)}
-        //                 disabled={currentPage === i + 1}
-        //             >
-        //                 {i + 1}
-        //             </button>
-        //         ))}
-        //     </div>
-        // </div>
         <>
-        <AdminSidebar/>
+            <AdminSidebar />
             <div className="admin-list-container">
-                <div className="admin-header">
+            <div className="admin-header">
                     <h1>Product Management</h1>
-                    <Link to={'/AddProduct'} className="admin-button primary">
-                        + New Product
-                    </Link>
+                    <div className="admin-controls">
+                        <div className="search-box">
+                            <input
+                                type="text"
+                                placeholder="Search products or categories..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                            <i className="fas fa-search"></i>
+                        </div>
+                        <Link to={'/AddProduct'} className="admin-button primary">
+                            + New Product
+                        </Link>
+                    </div>
                 </div>
 
 
@@ -134,8 +106,8 @@ const ProductList = () => {
                                     </td>
                                     <td>${product.price}</td>
                                     <td>
-                                        <span className={`status-badge ${product.stock > 0 ? 'in-stock' : 'out-of-stock'}`}>
-                                            {product.stock > 0 ? 'In Stock' : 'Out of Stock'}
+                                        <span className={`status-badge ${product.quantity > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                                            {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
                                         </span>
                                     </td>
                                     <td>{product.category || 'Uncategorized'}</td>
@@ -175,22 +147,39 @@ const ProductList = () => {
                         </tbody>
                     </table>
                 </div>
+                <div className="pagination-controls">
+                    <div className="page-size-selector">
+                        <span>Items per page: </span>
+                        <select
+                            value={itemsPerPage}
+                            onChange={handleItemsPerPageChange}
+                            className="page-size-select"
+                        >
+                            {[10, 20, 30, 50].map(size => (
+                                <option key={size} value={size}>{size}</option>
+                            ))}
+                        </select>
+                    </div>
 
-                <ReactPaginate
-                    previousLabel={'Previous'}
-                    nextLabel={'Next'}
-                    breakLabel={'...'}
-                    pageCount={totalPages}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={handlePageClick}
-                    containerClassName={'pagination-container'}
-                    pageClassName={'pagination-item'}
-                    activeClassName={'active'}
-                    previousClassName={'pagination-nav'}
-                    nextClassName={'pagination-nav'}
-                    disabledClassName={'disabled'}
-                />
+                    <ReactPaginate
+                        previousLabel={'Previous'}
+                        nextLabel={'Next'}
+                        breakLabel={'...'}
+                        pageCount={totalPages}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={5}
+                        onPageChange={handlePageClick}
+                        containerClassName={'pagination-container'}
+                        pageClassName={'pagination-item'}
+                        activeClassName={'active'}
+                        previousClassName={'pagination-nav'}
+                        nextClassName={'pagination-nav'}
+                        disabledClassName={'disabled'}
+                        forcePage={currentPage}
+                    />
+                </div>
+
+
             </div>
         </>
     );

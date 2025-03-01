@@ -158,7 +158,123 @@
 .pagination-container {
     display: flex;
     justify-content: center;
+    padding: 20px 0;
     list-style: none;
-    padding: 2rem 0;
-    gap: 0.5rem;
+}
+
+.pagination-item {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination-item.active {
+    background: #4361ee;
+    color: white;
+    border-color: #4361ee;
+}
+
+.pagination-nav {
+    padding: 5px 10px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination-nav.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* Pagination Controls */
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding: 1rem 0;
+    border-top: 1px solid #eee;
+}
+
+.page-size-selector {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.page-size-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.page-size-select:hover {
+    border-color: #4361ee;
+}
+
+.page-size-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pagination-controls {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .page-size-selector {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+
+/* Search Box */
+.admin-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.search-box {
+    position: relative;
+    flex-grow: 1;
+    max-width: 400px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.8rem 2rem 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.search-box .fa-search {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .admin-controls {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .search-box {
+        max-width: 100%;
+    }
 }

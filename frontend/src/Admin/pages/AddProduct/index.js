@@ -152,7 +152,7 @@ const AddProduct = () => {
     quantity: 0,
     discountPrice: '',
     weight: '',
-    colors: [],
+    // colors: [],
   });
 
 
@@ -329,9 +329,9 @@ const AddProduct = () => {
                   required
                 >
                   <option value="">Select Category</option>
-                  <option value="electronics">Electronics</option>
-                  <option value="fashion">Fashion</option>
-                  <option value="home">Home & Kitchen</option>
+                  <option value="turmeric powder">Turmeric Powder</option>
+                  {/* <option value="fashion">Fashion</option>
+                  <option value="home">Home & Kitchen</option> */}
                 </select>
               </div>
 
@@ -387,7 +387,7 @@ const AddProduct = () => {
               <div className="input-group">
                 <label>Weight (kg)</label>
                 <input
-                  type="number"
+                  type="text"
                   name="weight"
                   value={formData.weight}
                   onChange={handleInputChange}
@@ -398,7 +398,7 @@ const AddProduct = () => {
           </div>
 
           {/* Color Selection */}
-          <div className="form-section">
+          {/* <div className="form-section">
             <h2 className="section-title">Available Colors</h2>
             <div className="color-grid">
               {['red', 'blue', 'black', 'white', 'green'].map(color => (
@@ -416,7 +416,7 @@ const AddProduct = () => {
                 </label>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Image Upload */}
           <div className="form-section">

@@ -51,7 +51,7 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
 
         const user = await User.create({ email, password, role, phone, fullName, avatar });
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: '30d'
         });
 
@@ -76,7 +76,7 @@ router.post('/login', async (req, res) => {
         const isMatch = await user.matchPassword(password);
         if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: user._id, }, process.env.JWT_SECRET, {
             expiresIn: '30d'
         });
 

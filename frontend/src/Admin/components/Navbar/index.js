@@ -1,15 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './index.css';
-import { FaCube, FaGlobe } from "react-icons/fa";
+import { FaCube } from "react-icons/fa";
 import { IoIosSettings } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
 import { useAuth } from '../../../context/AuthContext';
 import { IoIosLogOut } from "react-icons/io";
 import { CiCreditCard1 } from "react-icons/ci";
-
-
-
+import { HiMiniShoppingBag } from "react-icons/hi2";
+import { MdAddToPhotos } from "react-icons/md";
+import { FaUsers } from "react-icons/fa";
 
 
 const AdminSidebar = () => {
@@ -39,13 +39,13 @@ const AdminSidebar = () => {
                                 </li>
                                 <li class="nav-item">
                                     <Link to={'/allProducts'} class="nav-link">
-                                        <FaGlobe className='sidebar_icons' />
+                                        <HiMiniShoppingBag className='sidebar_icons' />
                                         <span>Products</span>
                                     </Link>
                                 </li>
                                 <li class="nav-item">
                                     <Link to={'/AddProduct'} class="nav-link">
-                                        <FaGlobe className='sidebar_icons' />
+                                        <MdAddToPhotos className='sidebar_icons' />
                                         <span>Add Products</span>
                                     </Link>
                                 </li>
@@ -58,7 +58,7 @@ const AdminSidebar = () => {
                                 </li>
                                 <li class="nav-item">
                                     <Link to={'/UsersList'} class="nav-link">
-                                        <CiCreditCard1 className='sidebar_icons' />
+                                        <FaUsers className='sidebar_icons' />
                                         <span>Users List</span>
                                     </Link>
                                 </li>
