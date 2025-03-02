@@ -152,6 +152,7 @@ const AddProduct = () => {
     quantity: 0,
     discountPrice: '',
     weight: '',
+    specification: '',
     // colors: [],
   });
 
@@ -473,6 +474,20 @@ const AddProduct = () => {
                 onChange={handleInputChange}
                 rows="5"
                 placeholder="Enter detailed product description..."
+              />
+            </div>
+          </div>
+
+          {/* Specification */}
+          <div className="form-section">
+            <h2 className="section-title">Product Specifications</h2>
+            <div className="input-group">
+              <textarea
+                name="specification"
+                value={formData.specification}
+                onChange={handleInputChange}
+                rows="5"
+                placeholder="Enter detailed product specification..."
               />
             </div>
           </div>

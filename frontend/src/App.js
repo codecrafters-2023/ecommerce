@@ -30,6 +30,7 @@ import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import ProductList from "./Admin/pages/Products";
 import ProductEditForm from "./Admin/components/ProductEditForm";
+import ProductDetail from "./pages/ProductDetail";
 
 
 
@@ -51,7 +52,8 @@ function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/profile" element={<Profile />} /> {/* ✅ Profile Route */}
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/productDetail/:id" element={<ProductDetail />} />
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>

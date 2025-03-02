@@ -9,7 +9,7 @@ const { cloudinary } = require('../config/cloudinary');
 router.post('/addProducts', upload.array('images'), async (req, res) => {
     try {
         // Validate required fields
-        const requiredFields = ['name', 'price', 'description', 'category', 'brand'];
+        const requiredFields = ['name', 'price', 'description', 'category',];
         const missingFields = requiredFields.filter(field => !req.body[field]);
 
         if (missingFields.length > 0) {
@@ -154,6 +154,7 @@ router.put('/updateProduct/:id', upload.array('newImages'), async (req, res) => 
         product.name = req.body.name || product.name;
         product.price = Number(req.body.price) || product.price;
         product.description = req.body.description || product.description;
+        product.specification = req.body.specification || product.specification;
         product.category = req.body.category || product.category;
         product.brand = req.body.brand || product.brand;
         product.quantity = Number(req.body.quantity) || product.quantity;

@@ -415,7 +415,17 @@ const ProductEditForm = () => {
                                     value={product.description}
                                     onChange={handleInputChange}
                                     className="form-textarea"
-                                    rows="9"
+                                    rows="4"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label className="form-label">Specification</label>
+                                <textarea
+                                    name="specification"
+                                    value={product.specification}
+                                    onChange={handleInputChange}
+                                    className="form-textarea"
+                                    rows="4"
                                 />
                             </div>
                         </div>

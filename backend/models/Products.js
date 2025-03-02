@@ -30,6 +30,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Product description is required']
   },
+  specification: {
+    type: String,
+    required: [true, 'Product specification is required']
+  },
   category: {
     type: String,
     required: [true, 'Product category is required'],
