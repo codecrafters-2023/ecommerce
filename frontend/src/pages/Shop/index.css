@@ -137,10 +137,10 @@
 }
 
 .product-title {
-    font-size: 1rem;
+    font-size: 20px!important;
     color: var(--text-color);
     margin-bottom: 0.5rem;
-    height: 40px;
+    height: auto;
     overflow: hidden;
 }
 

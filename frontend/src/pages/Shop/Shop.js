@@ -205,13 +205,15 @@ const ProductListPage = () => {
               products.map(product => (
                 <div key={product._id} className="product-card">
                   <div className="product-image-container">
-                    <img
-                      src={product.images[0]?.url}
-                      alt={product.name}
-                    />
-                    <button className="quick-view-button">
-                      <Link to={`/productDetail/${product._id}`}>Quick View</Link>
-                    </button>
+                    <Link to={`/productDetail/${product._id}`}>
+                      <img
+                        src={product.images[0]?.url}
+                        alt={product.name}
+                      />
+                    </Link>
+                    {/* <button className="quick-view-button">
+                      uick View
+                    </button> */}
                   </div>
 
                   <div className="product-details">
