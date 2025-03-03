@@ -354,7 +354,7 @@ const AddProduct = () => {
             <h2 className="section-title">Pricing & Inventory</h2>
             <div className="form-grid">
               <div className="input-group">
-                <label>Price ($)</label>
+                <label>Price (₹)</label>
                 <input
                   type="number"
                   name="price"
@@ -365,7 +365,7 @@ const AddProduct = () => {
               </div>
 
               <div className="input-group">
-                <label>Discount Price ($)</label>
+                <label>Discount Price (₹)</label>
                 <input
                   type="number"
                   name="discountPrice"

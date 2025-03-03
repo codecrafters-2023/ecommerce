@@ -69,6 +69,7 @@ import './index.css';
 import Header from '../../components/header'
 import { FiStar, FiShoppingCart, FiSearch } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { useCart } from '../../context/CartContext';
 
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
@@ -84,6 +85,8 @@ const ProductListPage = () => {
   });
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProductsAndCategories = async () => {
@@ -236,7 +239,7 @@ const ProductListPage = () => {
                       )}
                     </div>
 
-                    <button className="add-to-cart-button">
+                    <button className="add-to-cart-button" onClick={() => addToCart(product)}>
                       <FiShoppingCart />
                       Add to Cart
                     </button>
