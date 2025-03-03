@@ -68,6 +68,7 @@ const ProductDetail = () => {
 
                 {/* Product Info */}
                 <div className="product-info">
+                    <p className='product-brand'>{product.brand}</p>
                     <h1 className="product-title">{product.name}</h1>
 
                     <div className="product-rating">
@@ -83,9 +84,9 @@ const ProductDetail = () => {
                         {/* {product.discountPrice > 0 && (
                             <span className="discount-badge">₹ {product.discountPrice}</span>
                         )} */}
-                        <span className="current-price">₹{product.price}</span>
-                        {product.discountPrice && (
-                            <span className="original-price">₹{product.discountPrice}</span>
+                        <span className="current-price">₹{product.discountPrice}</span>
+                        {product.price && (
+                            <span className="original-price">₹{product.price}</span>
                         )}
                     </div>
 

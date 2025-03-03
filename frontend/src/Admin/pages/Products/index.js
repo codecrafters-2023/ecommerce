@@ -104,7 +104,7 @@ const ProductList = () => {
                                             <span className="product-id">ID: {product._id}</span>
                                         </div>
                                     </td>
-                                    <td>${product.price}</td>
+                                    <td>₹{product.discountPrice}</td>
                                     <td>
                                         <span className={`status-badge ${product.quantity > 0 ? 'in-stock' : 'out-of-stock'}`}>
                                             {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}

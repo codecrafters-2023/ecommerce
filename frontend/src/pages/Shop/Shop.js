@@ -194,6 +194,7 @@ const ProductListPage = () => {
               />
             </div>
           </div>
+          
 
           {/* Product Grid */}
           <div className="product-grid">
@@ -221,20 +222,20 @@ const ProductListPage = () => {
 
                   <div className="product-details">
                     <h3 className="product-title">{product.name}</h3>
-                    <div className="product-rating">
+                    {/* <div className="product-rating">
                       {[...Array(5)].map((_, i) => (
                         <FiStar key={i} className={i < 4 ? 'filled' : ''} />
                       ))}
                       <span>({product.reviews})</span>
-                    </div>
+                    </div> */}
 
                     <div className="price-container">
                       <span className="current-price">
-                        ${product.price}
+                        ${product.discountPrice}
                       </span>
-                      {product.originalPrice && (
+                      {product.price && (
                         <span className="original-price">
-                          ${product.originalPrice}
+                          ${product.price}
                         </span>
                       )}
                     </div>

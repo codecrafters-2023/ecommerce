@@ -61,6 +61,13 @@
     padding: 0 1rem;
 }
 
+.product-brand{
+    text-transform: uppercase;
+    font-weight: 400;
+    font-size: 13px;
+    color: #9f9f9f;
+}
+
 .product-title {
     font-size: 2rem;
     margin-bottom: 1rem;
