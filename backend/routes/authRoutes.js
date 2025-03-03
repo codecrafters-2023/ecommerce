@@ -66,23 +66,75 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
 });
 
 // Login
+// router.post('/login', async (req, res) => {
+//     const { email, password } = req.body;
+
+//     try {
+//         const user = await User.findOne({ email });
+//         if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+//         const isMatch = await user.matchPassword(password);
+//         if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+//         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
+//             expiresIn: '30d'
+//         });
+
+//         user.tokens = user.tokens.concat({
+//             token: token,
+//             expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+//         });
+
+//         res.json({ _id: user._id, email: user.email, role: user.role, token });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
+
 router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-
     try {
+        const { email, password } = req.body;
         const user = await User.findOne({ email });
-        if (!user) return res.status(401).json({ message: 'Invalid credentials' });
 
-        const isMatch = await user.matchPassword(password);
-        if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+        if (!user || !(await user.matchPassword(password))) {
+            return res.status(401).json({
+                success: false,
+                message: 'Invalid credentials'
+            });
+        }
 
-        const token = jwt.sign({ id: user._id, }, process.env.JWT_SECRET, {
-            expiresIn: '30d'
+        // Generate token
+        const token = jwt.sign(
+            { id: user._id, role: user.role },
+            process.env.JWT_SECRET,
+            { expiresIn: '30d' }
+        );
+
+        // Store token in user document (optional)
+        user.tokens.push({ token, expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) });
+        await user.save();
+
+        // Set token in response
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         });
 
-        res.json({ _id: user._id, email: user.email, role: user.role, token });
+        res.json({
+            success: true,
+            token, // For localStorage
+            user: {
+                _id: user._id,
+                email: user.email,
+                role: user.role
+            }
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            success: false,
+            message: 'Server error'
+        });
     }
 });
 
@@ -137,6 +189,7 @@ router.post('/reset-password/:token', async (req, res) => {
         if (!user) return res.status(400).json({ message: 'Invalid or expired token' });
 
         user.password = password;
+        user.passwordChangedAt = Date.now() - 1000;
         user.resetPasswordToken = undefined;
         user.resetPasswordExpires = undefined;
         await user.save();

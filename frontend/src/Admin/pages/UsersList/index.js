@@ -18,14 +18,13 @@ const UserManagement = () => {
 
   useEffect(() => {
     fetchUsers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage]);
 
   const fetchUsers = async () => {
     try {
       const backendPage = currentPage + 1; // Convert to 1-based index for backend
       const data = await getUsers(backendPage, itemsPerPage);
-
-      console.log('API Response:', data); // Debug log
 
       setUsers(data.users);
       setTotalPages(data.totalPages);

@@ -1,69 +1,101 @@
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState({ items: [] });
+  const [loading, setLoading] = useState(true);
 
-  // Function to add item to cart
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id);
-
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-
-      return [...prevCart, { ...product, quantity: 1 }];
-    });
+  const fetchCart = async () => {
+    try {
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart/`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setCart(data);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+    }
   };
 
-  // Function to remove an item from cart
-  const removeFromCart = (productId) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+  const addToCart = async (productId, quantity = 1) => {
+    try {
+      await axios.post(`${process.env.REACT_APP_API_URL}/cart`,
+        { productId, quantity },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+      await fetchCart();
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
   };
 
-  // Function to increase quantity
-  const increaseQuantity = (productId) => {
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  // Function to decrease quantity (removes if quantity is 1)
-  const decreaseQuantity = (productId) => {
-    setCart((prevCart) =>
-      prevCart
-        .map((item) =>
-          item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
+  const updateQuantity = async (itemId, newQuantity) => {
+    try {
+      // Ensure quantity doesn't go below 1
+      const quantity = Math.max(newQuantity, 1);
+      
+      await axios.put(`${process.env.REACT_APP_API_URL}/cart/${itemId}`, { quantity }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      // Update local state immediately for better UX
+      setCart(prev => ({
+        ...prev,
+        items: prev.items.map(item => 
+          item._id === itemId ? { ...item, quantity } : item
         )
-        .filter((item) => item.quantity > 0) // Remove item if quantity reaches 0
-    );
+      }));
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+    }
   };
 
-  // Get total cart item count
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const removeFromCart = async (itemId) => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/cart/${itemId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      // Update local state
+      setCart(prev => ({
+        ...prev,
+        items: prev.items.filter(item => item._id !== itemId)
+      }));
+      
+    } catch (error) {
+      console.error('Error removing item:', error);
+      if (error.response?.status === 401) {
+        // Handle unauthorized error
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
+    }
+  };
 
-  // Get total cart price
-  const cartTotalPrice = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        loading,
         addToCart,
+        updateQuantity,
         removeFromCart,
-        increaseQuantity,
-        decreaseQuantity,
-        cartCount,
-        cartTotalPrice,
+        cartCount: cart.items.reduce((sum, item) => sum + item.quantity, 0)
       }}
     >
       {children}
@@ -71,5 +103,4 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use CartContext
 export const useCart = () => useContext(CartContext);

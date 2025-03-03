@@ -15,7 +15,7 @@ import UsersList from "./Admin/pages/UsersList";
 import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
 import ResetPassword from "./pages/resetPassword/ResetPassword";
 import Shop from "./pages/Shop/Shop";
-import Cart from "./pages/Cart/Carts";
+import Cart from "./pages/Cart";
 import Profile from "./pages/Profile/profile";
 
 
@@ -31,10 +31,19 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import ProductList from "./Admin/pages/Products";
 import ProductEditForm from "./Admin/components/ProductEditForm";
 import ProductDetail from "./pages/ProductDetail";
-
+import { useEffect } from "react";
+import api from "./utils/axiosConfig";
 
 
 function App() {
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }, []);
+
   return (
     <Router>
       <AuthProvider>

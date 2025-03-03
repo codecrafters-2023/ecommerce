@@ -8,8 +8,8 @@ import { useCart } from '../../context/CartContext';
 const Header = ({ onSearch }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isProfileOpen, setIsProfileOpen] = useState(false); // Toggle Profile Dropdown
-    const { user, logout } = useAuth(); 
-    const { cartCount } = useCart(); // Get cart count from context
+    const { user, logout } = useAuth();
+    const { cartCount } = useCart();
     const [searchTerm, setSearchTerm] = useState("");
 
     const toggleMenu = () => {
@@ -26,6 +26,8 @@ const Header = ({ onSearch }) => {
             onSearch(e.target.value);
         }
     };
+
+    
 
     return (
         <header className="header">
@@ -46,9 +48,9 @@ const Header = ({ onSearch }) => {
                     {/* Search Bar */}
                     <div className="search-container">
                         <FaSearch className="search-icon" />
-                        <input 
-                            type="text" 
-                            placeholder="Search products..." 
+                        <input
+                            type="text"
+                            placeholder="Search products..."
                             value={searchTerm}
                             onChange={handleSearch}
                         />
@@ -89,11 +91,7 @@ const Header = ({ onSearch }) => {
                         <div className="cart-icon relative">
                             <Link to="/cart">
                                 <FaShoppingCart className="icon" />
-                                {cartCount > 0 && (
-                                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-2">
-                                        {cartCount}
-                                    </span>
-                                )}
+                                {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
                             </Link>
                         </div>
                     </div>

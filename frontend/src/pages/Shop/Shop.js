@@ -67,9 +67,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './index.css';
 import Header from '../../components/header'
-import { FiStar, FiShoppingCart, FiSearch } from 'react-icons/fi';
+import { FiShoppingCart, FiSearch } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '../../context/CartContext'
 
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
@@ -87,6 +87,9 @@ const ProductListPage = () => {
   const [loading, setLoading] = useState(false);
 
   const { addToCart } = useCart();
+
+  console.log(products);
+
 
   useEffect(() => {
     const fetchProductsAndCategories = async () => {
@@ -122,6 +125,7 @@ const ProductListPage = () => {
   const handlePageChange = (newPage) => {
     setFilters(prev => ({ ...prev, page: newPage }));
   };
+
 
   return (
     <>
@@ -194,7 +198,7 @@ const ProductListPage = () => {
               />
             </div>
           </div>
-          
+
 
           {/* Product Grid */}
           <div className="product-grid">
@@ -240,7 +244,10 @@ const ProductListPage = () => {
                       )}
                     </div>
 
-                    <button className="add-to-cart-button" onClick={() => addToCart(product)}>
+                    <button
+                      className="add-to-cart-button"
+                      onClick={() => addToCart(product._id)}
+                    >
                       <FiShoppingCart />
                       Add to Cart
                     </button>
