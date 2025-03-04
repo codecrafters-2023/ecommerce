@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { FiStar, FiShoppingCart, FiHeart, FiTruck } from 'react-icons/fi';
 import './index.css';
 import Header from '../../components/header';
+import { useCart } from '../../context/CartContext';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -13,7 +14,7 @@ const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState('description');
 
-    console.log(product);
+    const { addToCart } = useCart();
 
 
     useEffect(() => {
@@ -101,7 +102,9 @@ const ProductDetail = () => {
                     </div>
 
                     <div className="action-buttons">
-                        <button className="add-to-cart">
+                        <button className="add-to-cart"
+                        onClick={() => addToCart(product._id)}
+                        >
                             <FiShoppingCart /> Add to Cart
                         </button>
                         <button className="buy-now">Buy Now</button>
