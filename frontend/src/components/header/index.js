@@ -109,27 +109,14 @@
 // export default Header;
 
 
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiMenu, FiX, FiSearch, FiShoppingCart } from 'react-icons/fi';
 import { FaUser, FaSignOutAlt } from 'react-icons/fa';
-import { useAuth } from '../../context/AuthContext';
 import { RiAdminFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
 import './index.css';
-
-const useClickOutside = (ref, callback) => {
-    useEffect(() => {
-        const handleClick = (e) => {
-            if (ref.current && !ref.current.contains(e.target)) {
-                callback();
-            }
-        };
-        document.addEventListener('mousedown', handleClick);
-        return () => document.removeEventListener('mousedown', handleClick);
-    }, [ref, callback]);
-};
 
 const Header = () => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -139,10 +126,16 @@ const Header = () => {
     const { user, logout } = useAuth();
     const profileRef = useRef(null);
 
-    const toggleProfile = () => {
-        setIsProfileOpen(!isProfileOpen);
-    };
-
+    // Click outside handler for profile dropdown
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (profileRef.current && !profileRef.current.contains(event.target)) {
+                setIsProfileOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const navItems = [
         { name: 'Home', path: '/' },
@@ -151,57 +144,21 @@ const Header = () => {
         { name: 'Contact', path: '/contact' },
     ];
 
-    const menuVariants = {
-        open: {
-            opacity: 1,
-            x: 0,
-            transition: { staggerChildren: 0.1, delayChildren: 0.2 }
-        },
-        closed: {
-            opacity: 0,
-            x: '100%',
-            transition: { staggerChildren: 0.05, staggerDirection: -1 }
-        },
-    };
-
-    const itemVariants = {
-        open: { opacity: 1, x: 0 },
-        closed: { opacity: 0, x: 20 },
-    };
-
-    // Use click outside hook for profile dropdown
-    useClickOutside(profileRef, () => {
-        setIsProfileOpen(false);
-    });
     return (
         <>
-            {/* Removed initial animation from navbar */}
             <nav className="navbar">
                 <div className="navbar-container">
-                    {/* Logo Section */}
-                    <motion.div
-                        className="logo"
-                        whileHover={{ scale: 1.05 }}
-                        transition={{ type: 'spring', stiffness: 300 }}
-                    >
+                    {/* Logo Section - Removed motion */}
+                    <div className="logo">
                         <Link to="/" className="logo-link">
                             <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" />
-                            {/* <GiClothes className="logo-icon" />
-                            <span className="logo-text">AVANTI</span> */}
                         </Link>
-                    </motion.div>
+                    </div>
 
-                    {/* Desktop Navigation */}
+                    {/* Desktop Navigation - Removed motion */}
                     <div className="nav-links">
                         {navItems.map((item) => (
-                            <motion.div
-                                key={item.name}
-                                whileHover={{
-                                    scale: 1.05,
-                                    color: '#FF4D4D'
-                                }}
-                                transition={{ type: 'spring', stiffness: 300 }}
-                            >
+                            <div key={item.name}>
                                 <Link
                                     to={item.path}
                                     className="nav-item"
@@ -210,130 +167,95 @@ const Header = () => {
                                     {item.name}
                                     <div className="underline" />
                                 </Link>
-                            </motion.div>
+                            </div>
                         ))}
                     </div>
 
-                    {/* Action Icons */}
+                    {/* Action Icons - Removed motion */}
                     <div className="action-section">
-                        <motion.button
+                        <button
                             className="icon-btn"
                             onClick={() => setSearchOpen(!searchOpen)}
-                            whileHover={{ scale: 1.1 }}
                         >
                             <FiSearch />
-                        </motion.button>
+                        </button>
 
-                        <motion.button
-                            className="icon-btn"
-                            whileHover={{ scale: 1.1 }}
-                        >
+                        <div className="profile-section" ref={profileRef}>
                             {user ? (
-                                // If user is logged in, show profile icon & name
-                                <div className="profile-section" ref={profileRef}>
-                                    <div className="profile-icon" onClick={toggleProfile}>
-                                        <FaUser className="profile-icon" />
-                                        {/* <span className="username">{user?.name}</span> */}
-                                    </div>
-
-                                    {/* Profile Dropdown Menu */}
+                                <>
+                                    <button
+                                        className="icon-btn"
+                                        onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                    >
+                                        <FaUser />
+                                    </button>
                                     {isProfileOpen && (
                                         <div className="profile-dropdown">
-                                            <button className='profile'>
-                                                <FaUser  className='logout-icon'/>
-                                                <Link to="/profile" className='profile-name profile'>Profile</Link>
-                                            </button>
-                                            <button onClick={logout} className='profile'>
-                                                <FaSignOutAlt className='logout-icon' /> Logout
-                                            </button>
+                                            <Link to="/profile" className="profile-item">
+                                                <FaUser className='icon' /> Profile
+                                            </Link>
                                             {user.role === 'admin' && (
-                                                <button className='profile'>
-                                                    <RiAdminFill  className='logout-icon'/>
-                                                    <Link to="/admin" className=' profile'>Admin</Link>
-                                                </button>
+                                                <Link to="/admin" className="profile-item">
+                                                    <RiAdminFill className='icon' /> Admin
+                                                </Link>
                                             )}
+                                            <button onClick={logout} className="profile-item">
+                                                <FaSignOutAlt className='icon' /> Logout
+                                            </button>
                                         </div>
                                     )}
-                                </div>
+                                </>
                             ) : (
-                                // If user is not logged in, show login icon
-                                // <Link to={'/login'}><FaUser className="icon" /></Link>
-                                <Link to={'/login'}>Sign In</Link>
+                                <Link to="/login" className="sign-in">
+                                    Sign In
+                                </Link>
                             )}
-                        </motion.button>
+                        </div>
 
                         <Link to="/cart" className="icon-btn">
-                            <motion.button
-                                whileHover={{ scale: 1.1 }}
-                            >
-                                <FiShoppingCart />
-                                {cartCount > 0 &&
-                                    <motion.span className="badge">{cartCount}</motion.span>}
-                            </motion.button>
+                            <FiShoppingCart />
+                            {cartCount > 0 && <span className="badge">{cartCount}</span>}
                         </Link>
 
-                        {/* Mobile Menu Toggle */}
-                        <motion.button
+                        <button
                             className="menu-toggle"
                             onClick={() => setIsOpen(!isOpen)}
-                            whileHover={{ rotate: 90 }}
                         >
                             {isOpen ? <FiX /> : <FiMenu />}
-                        </motion.button>
+                        </button>
                     </div>
 
                     {/* Search Bar */}
-                    <AnimatePresence>
-                        {searchOpen && (
-                            <motion.div
-                                className="navbar-search-container"
-                                initial={{ opacity: 0, width: 0 }}
-                                animate={{ opacity: 1, width: 300 }}
-                                exit={{ opacity: 0, width: 0 }}
+                    {searchOpen && (
+                        <div className="navbar-search-container">
+                            <input type="text" placeholder="Search..." />
+                            <button
+                                className="close-search"
+                                onClick={() => setSearchOpen(false)}
                             >
-                                <input type="text" placeholder="Search..." />
-                                <button
-                                    className="close-search"
-                                    onClick={() => setSearchOpen(false)}
-                                >
-                                    &times;
-                                </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                                &times;
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Mobile Menu */}
-                <AnimatePresence>
-                    {isOpen && (
-                        <motion.div
-                            className="mobile-menu"
-                            initial="closed"
-                            animate="open"
-                            exit="closed"
-                            variants={menuVariants}
-                        >
-                            {navItems.map((item) => (
-                                <motion.div
-                                    key={item.name}
-                                    variants={itemVariants}
-                                    whileHover={{ scale: 1.05 }}
-                                >
-                                    <Link
-                                        to={item.path}
-                                        className="mobile-item"
-                                        onClick={() => setIsOpen(false)}
-                                    >
-                                        {item.name}
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                {isOpen && (
+                    <div className="mobile-menu">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.name}
+                                to={item.path}
+                                className="mobile-item"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {item.name}
+                            </Link>
+                        ))}
+                    </div>
+                )}
             </nav>
 
-            {/* Content wrapper to prevent overlap */}
             <div className="content-wrapper">
                 {/* Your page content here */}
             </div>
