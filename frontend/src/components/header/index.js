@@ -180,6 +180,11 @@ const Header = () => {
                             <FiSearch />
                         </button>
 
+                        <Link to="/cart" className="icon-btn">
+                            <FiShoppingCart />
+                            {cartCount > 0 && <span className="badge">{cartCount}</span>}
+                        </Link>
+
                         <div className="profile-section" ref={profileRef}>
                             {user ? (
                                 <>
@@ -212,10 +217,7 @@ const Header = () => {
                             )}
                         </div>
 
-                        <Link to="/cart" className="icon-btn">
-                            <FiShoppingCart />
-                            {cartCount > 0 && <span className="badge">{cartCount}</span>}
-                        </Link>
+                        
 
                         <button
                             className="menu-toggle"

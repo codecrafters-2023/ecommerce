@@ -88,9 +88,6 @@ const ProductListPage = () => {
 
   const { addToCart } = useCart();
 
-  console.log(products);
-
-
   useEffect(() => {
     const fetchProductsAndCategories = async () => {
       try {

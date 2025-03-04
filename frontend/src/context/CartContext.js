@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState({ items: [] });
   const [loading] = useState(true);
+  
 
   const fetchCart = async () => {
     try {
@@ -31,8 +33,14 @@ export const CartProvider = ({ children }) => {
         }
       );
       await fetchCart();
+
     } catch (error) {
       console.error('Error adding to cart:', error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+        toast.error('Please log in to add items to your cart');
+        window.location.href = '/login';
+      }
     }
   };
 
@@ -76,7 +84,6 @@ export const CartProvider = ({ children }) => {
     } catch (error) {
       console.error('Error removing item:', error);
       if (error.response?.status === 401) {
-        // Handle unauthorized error
         localStorage.removeItem('token');
         window.location.href = '/login';
       }
