@@ -26,7 +26,6 @@ const ProductListPage = () => {
   useEffect(() => {
     const fetchProductsAndCategories = async () => {
       try {
-        setLoading(true);
         const [productsRes, categoriesRes] = await Promise.all([
           axios.get(`${process.env.REACT_APP_API_URL}/users/getAllProducts`, { params: filters }),
           axios.get(`${process.env.REACT_APP_API_URL}/users/categories`)
@@ -37,13 +36,11 @@ const ProductListPage = () => {
         setCategories(categoriesRes.data.categories);
       } catch (error) {
         console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     fetchProductsAndCategories();
-  }, [filters]);
+  }, [filters, products]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -134,9 +131,7 @@ const ProductListPage = () => {
 
           {/* Product Grid */}
           <div className="product-grid">
-            {loading ? (
-              <div className="loading-spinner"></div>
-            ) : products.length === 0 ? (
+            {products.length === 0 ? (
               <div className="no-results">
                 <h2>No products found</h2>
                 <p>Try adjusting your search filters</p>
