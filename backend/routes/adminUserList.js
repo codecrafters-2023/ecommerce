@@ -5,24 +5,12 @@ const userAuthMiddleware = require('../middleware/userAuthMiddleware')
 const adminMiddleware = require('../middleware/adminMiddleware')
 
 // Get all users
-// router.get('/users', async (req, res) => {
-//     try {
-//         const users = await User.find().select('-password');
-//         res.json(users);
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send('Server Error');
-//     }
-// });
-
-// routes/adminUserList.js
 router.get('/users', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        console.log(limit);
         
 
         const total = await User.countDocuments();

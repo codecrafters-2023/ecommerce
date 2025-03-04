@@ -2,32 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
 const Cart = require('../models/Cart');
-// const Product = require('../models/Products');
 const Product = require('../models/Products')
 
 // Get user's cart
-// In routes/cartRoutes.js
-// router.get('/', protect, async (req, res) => {
-//     try {
-//         const cart = await Cart.findOne({ user: req.user._id })
-//             .populate({
-//                 path: 'items.product',
-//                 model: 'eproducts', // Must match exactly
-//                 select: 'price quantity'
-//             });
-
-//         if (!cart) return res.json({ items: [] });
-
-//         res.json(cart);
-//     } catch (error) {
-//         console.error('Cart Fetch Error:', error);
-//         res.status(500).json({
-//             success: false,
-//             message: 'Failed to fetch cart'
-//         });
-//     }
-// });
-
 router.get('/', protect, async (req, res) => {
     try {
         const cart = await Cart.findOne({ user: req.user._id });
@@ -44,36 +21,8 @@ router.get('/', protect, async (req, res) => {
     }
 });
 
+
 // Add to cart
-// router.post('/', protect, async (req, res) => {
-//     try {
-//         const { productId, quantity } = req.body;
-
-//         const product = await Product.findById(productId);
-//         if (!product) return res.status(404).json({ message: 'Product not found' });
-
-//         let cart = await Cart.findOne({ user: req.user._id });
-
-//         if (!cart) {
-//             cart = new Cart({ user: req.user._id, items: [] });
-//         }
-
-//         const existingItem = cart.items.find(item => item.product.toString() === productId);
-
-//         if (existingItem) {
-//             existingItem.quantity += Number(quantity);
-//         } else {
-//             cart.items.push({ product: productId, quantity: Number(quantity) });
-//         }
-
-//         await cart.save();
-//         res.status(201).json(cart);
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// });
-
-
 router.post('/', protect, async (req, res) => {
     try {
         const { productId, quantity } = req.body;

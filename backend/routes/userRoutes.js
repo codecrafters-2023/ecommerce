@@ -87,29 +87,6 @@ router.get('/categories', async (req, res) => {
     }
 });
 
-// router.get('/products/:id', async (req, res) => {
-//     try {
-
-//         const id = req.params.id;
-//         console.log(id);
-        
-
-//         const product = await Product.findById(id)
-//             // .populate('reviews')
-//             // .populate('relatedItems');
-
-//         res.json({
-//             ...product._doc,
-//             reviewCount: product.reviews.length,
-//             relatedItems: await Product.find({ category: product.category }).limit(4)
-//         });
-
-//         console.log(product);
-        
-//     } catch (error) {
-//         res.status(404).json({ message: 'Product not found' });
-//     }
-// });
 
 router.get('/products/:id', async (req, res) => {
     try {

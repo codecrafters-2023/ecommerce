@@ -212,7 +212,7 @@ const Header = () => {
                                 </>
                             ) : (
                                 <Link to="/login" className="sign-in">
-                                    Sign In
+                                    <FaUser className='icon' />
                                 </Link>
                             )}
                         </div>
