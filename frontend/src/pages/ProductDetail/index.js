@@ -103,7 +103,7 @@ const ProductDetail = () => {
 
                     <div className="action-buttons">
                         <button className="add-to-cart"
-                        onClick={() => addToCart(product._id)}
+                            onClick={() => addToCart(product._id)}
                         >
                             <FiShoppingCart /> Add to Cart
                         </button>
@@ -142,11 +142,21 @@ const ProductDetail = () => {
 
                     <div className="tab-content">
                         {activeTab === 'description' && (
-                            <p className="product-description">{product.description}</p>
+                            <div className="domain-description">
+                                <div className="formatted-content">
+                                    {product.description}
+                                </div>
+                            </div>
+                            // <p className="product-description">{product.description}</p>
                         )}
-                     
+
                         {activeTab === 'specs' && (
-                            <p className="product-description">{product.specification}</p>
+                            <div className="domain-description">
+                                <div className="formatted-content">
+                                    {product.specification}
+                                </div>
+                            </div>
+                            // <p className="product-description">{product.specification}</p>
                         )}
 
                         {/* {activeTab === 'specs' && (

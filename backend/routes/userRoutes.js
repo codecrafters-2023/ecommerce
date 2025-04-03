@@ -32,15 +32,15 @@ router.get('/getAllProducts', async (req, res) => {
 
         // Price range filter
         if (minPrice || maxPrice) {
-            query.price = {};
-            if (minPrice) query.price.$gte = parseFloat(minPrice);
-            if (maxPrice) query.price.$lte = parseFloat(maxPrice);
+            query.discountPrice = {};
+            if (minPrice) query.discountPrice.$gte = parseFloat(minPrice);
+            if (maxPrice) query.discountPrice.$lte = parseFloat(maxPrice);
         }
 
         // Sorting
         const sortOptions = {
-            'price-asc': { price: 1 },
-            'price-desc': { price: -1 },
+            'price-asc': { discountPrice: 1 },
+            'price-desc': { discountPrice: -1 },
             'newest': { createdAt: -1 },
             'popular': { rating: -1 }
         };

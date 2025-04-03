@@ -50,7 +50,6 @@ const protect = async (req, res, next) => {
             message = 'Invalid token, please log in again';
         }
 
-        console.error('Authentication error:', error.message);
         res.status(401).json({
             success: false,
             message,

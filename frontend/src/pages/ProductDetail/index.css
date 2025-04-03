@@ -61,7 +61,7 @@
     padding: 0 1rem;
 }
 
-.product-brand{
+.product-brand {
     text-transform: uppercase;
     font-weight: 400;
     font-size: 13px;
@@ -276,6 +276,11 @@
     object-fit: cover;
     border-radius: 6px;
     margin-bottom: 1rem;
+}
+
+.formatted-content {
+    white-space: pre-line;
+    line-height: 1.6;
 }
 
 @media (max-width: 1024px) {

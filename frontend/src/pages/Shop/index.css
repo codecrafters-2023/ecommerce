@@ -140,9 +140,9 @@
 }
 
 .product-title {
-    font-size: 17px!important;
+    font-size: 17px !important;
     color: var(--text-color);
-    margin-bottom: 0!important;
+    margin-bottom: 0 !important;
     height: auto;
     font-weight: 500;
     overflow: hidden;
@@ -265,17 +265,65 @@
 .add-to-cart-button.loading {
     opacity: 0.7;
     cursor: not-allowed;
-  }
-  
-  .add-to-cart-button.loading:after {
+}
+
+.add-to-cart-button.loading:after {
     content: '...';
     display: inline-block;
     animation: dots 1s steps(5, end) infinite;
-  }
-  
-  @keyframes dots {
-    0%, 20% { content: '.'; }
-    40% { content: '..'; }
-    60% { content: '...'; }
-    80%, 100% { content: ''; }
-  }
+}
+
+@keyframes dots {
+
+    0%,
+    20% {
+        content: '.';
+    }
+
+    40% {
+        content: '..';
+    }
+
+    60% {
+        content: '...';
+    }
+
+    80%,
+    100% {
+        content: '';
+    }
+}
+
+/* Filter Buttons */
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-left: 15px;
+}
+
+.apply-filters,
+.clear-filters {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.apply-filters {
+    background-color: #2c3e50;
+    color: white;
+}
+
+.apply-filters:hover {
+    background-color: #34495e;
+}
+
+.clear-filters {
+    background-color: #e74c3c;
+    color: white;
+}
+
+.clear-filters:hover {
+    background-color: #c0392b;
+}

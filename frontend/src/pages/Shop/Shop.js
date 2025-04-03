@@ -9,7 +9,7 @@ import { useCart } from '../../context/CartContext'
 const ProductListPage = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [filters, setFilters] = useState({
+  const [tempFilters, setTempFilters] = useState({
     search: '',
     category: '',
     minPrice: '',
@@ -18,8 +18,8 @@ const ProductListPage = () => {
     page: 1,
     limit: 20
   });
+  const [appliedFilters, setAppliedFilters] = useState({ ...tempFilters });
   const [totalPages, setTotalPages] = useState(1);
-  const [loading, setLoading] = useState(false);
 
   const { addToCart } = useCart();
 
@@ -27,7 +27,9 @@ const ProductListPage = () => {
     const fetchProductsAndCategories = async () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
-          axios.get(`${process.env.REACT_APP_API_URL}/users/getAllProducts`, { params: filters }),
+          axios.get(`${process.env.REACT_APP_API_URL}/users/getAllProducts`, {
+            params: appliedFilters
+          }),
           axios.get(`${process.env.REACT_APP_API_URL}/users/categories`)
         ]);
 
@@ -36,23 +38,43 @@ const ProductListPage = () => {
         setCategories(categoriesRes.data.categories);
       } catch (error) {
         console.error('Error fetching data:', error);
-      } 
+      }
     };
 
     fetchProductsAndCategories();
-  }, [filters, products]);
+  }, [appliedFilters]);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters(prev => ({
+    setTempFilters(prev => ({
       ...prev,
-      [name]: value,
-      page: 1 // Reset to first page when filters change
+      [name]: value
     }));
   };
 
+  const applyFilters = () => {
+    setAppliedFilters({
+      ...tempFilters,
+      page: 1 // Reset to first page when applying new filters
+    });
+  };
+
+  const clearFilters = () => {
+    const resetFilters = {
+      search: '',
+      category: '',
+      minPrice: '',
+      maxPrice: '',
+      sort: 'newest',
+      page: 1,
+      limit: 20
+    };
+    setTempFilters(resetFilters);
+    setAppliedFilters(resetFilters);
+  };
+
   const handlePageChange = (newPage) => {
-    setFilters(prev => ({ ...prev, page: newPage }));
+    setAppliedFilters(prev => ({ ...prev, page: newPage }));
   };
 
 
@@ -68,7 +90,7 @@ const ProductListPage = () => {
               type="text"
               placeholder="Search products..."
               name="search"
-              value={filters.search}
+              value={tempFilters.search}
               onChange={handleFilterChange}
             />
           </div>
@@ -77,22 +99,7 @@ const ProductListPage = () => {
             <div className="filter-group">
               <select
                 name="category"
-                value={filters.category}
-                onChange={handleFilterChange}
-              >
-                <option value="">All Categories</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <select
-                name="sort"
-                value={filters.sort}
+                value={tempFilters.category}
                 onChange={handleFilterChange}
               >
                 <option value="newest">New Arrivals</option>
@@ -100,6 +107,26 @@ const ProductListPage = () => {
                 <option value="price-desc">Price: High to Low</option>
                 <option value="popular">Most Popular</option>
               </select>
+            </div>
+
+            
+
+            {/* Add Filter Buttons Here */}
+            <div className="filter-buttons">
+              <button
+                type="button"
+                className="apply-filters"
+                onClick={applyFilters}
+              >
+                Apply Filters
+              </button>
+              <button
+                type="button"
+                className="clear-filters"
+                onClick={clearFilters}
+              >
+                Clear Filters
+              </button>
             </div>
           </div>
         </div>
@@ -114,7 +141,7 @@ const ProductListPage = () => {
                 type="number"
                 placeholder="Min"
                 name="minPrice"
-                value={filters.minPrice}
+                value={tempFilters.minPrice}
                 onChange={handleFilterChange}
               />
               <span>-</span>
@@ -122,7 +149,7 @@ const ProductListPage = () => {
                 type="number"
                 placeholder="Max"
                 name="maxPrice"
-                value={filters.maxPrice}
+                value={tempFilters.maxPrice}
                 onChange={handleFilterChange}
               />
             </div>
@@ -191,7 +218,7 @@ const ProductListPage = () => {
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
             <button
               key={page}
-              className={`pagination-item ${filters.page === page ? 'active' : ''}`}
+              className={`pagination-item ${tempFilters.page === page ? 'active' : ''}`}
               onClick={() => handlePageChange(page)}
             >
               {page}
