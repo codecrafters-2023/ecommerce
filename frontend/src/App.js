@@ -3,12 +3,15 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
+import api from "./utils/axiosConfig";
 
 // ======Admin routes =====
 import AdminRoute from "./Admin/components/AdminRoute";
 import AdminPanel from "./Admin/pages/AdminPanel/AdminPanel";
 import AddProduct from "./Admin/pages/AddProduct";
 import UsersList from "./Admin/pages/UsersList";
+import ProductEditForm from "./Admin/components/ProductEditForm";
+import ProductList from "./Admin/pages/Products";
 
 
 // ======User routes =====
@@ -19,8 +22,6 @@ import Cart from "./pages/Cart";
 import Profile from "./pages/Profile/profile";
 
 
-
-
 // ===============Public routes ==================
 import "./App.css";
 import About from "./pages/About/about";
@@ -28,11 +29,10 @@ import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
-import ProductList from "./Admin/pages/Products";
-import ProductEditForm from "./Admin/components/ProductEditForm";
 import ProductDetail from "./pages/ProductDetail";
 import { useEffect } from "react";
-import api from "./utils/axiosConfig";
+import Checkout from "./pages/Checkout";
+import AddressBook from "./AddressBook";
 
 
 function App() {
@@ -63,6 +63,8 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/productDetail/:id" element={<ProductDetail />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/account/addresses" element={<AddressBook />} />
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>

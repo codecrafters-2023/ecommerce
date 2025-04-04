@@ -24,6 +24,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         // required: true
     },
+    addresses: [{
+        _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            default: () => new mongoose.Types.ObjectId().toString(), // Force string conversion
+            required: true,
+            unique: true // Explicit unique constraint
+        },
+        name: String,
+        email: String,
+        phone: String,
+        address: String,
+        city: String,
+        state: String,
+        zip: String,
+        isPrimary: { type: Boolean, default: false }
+    }],
     role: {
         type: String,
         enum: ['user', 'admin'],

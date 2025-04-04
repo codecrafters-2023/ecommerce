@@ -331,8 +331,8 @@ const AddProduct = () => {
                 >
                   <option value="">Select Category</option>
                   <option value="turmeric powder">Turmeric Powder</option>
-                  {/* <option value="fashion">Fashion</option>
-                  <option value="home">Home & Kitchen</option> */}
+                  {/* {/* <option value="fashion">Fashion</option> */}
+                  <option value="Jaggery Powder">Jaggery Powder</option>
                 </select>
               </div>
 

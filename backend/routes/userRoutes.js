@@ -27,14 +27,25 @@ router.get('/getAllProducts', async (req, res) => {
 
         // Category filter
         if (category) {
-            query.category = category;
+            query.category = { $regex: new RegExp(category, 'i') };
         }
 
         // Price range filter
         if (minPrice || maxPrice) {
-            query.discountPrice = {};
-            if (minPrice) query.discountPrice.$gte = parseFloat(minPrice);
-            if (maxPrice) query.discountPrice.$lte = parseFloat(maxPrice);
+            query.$or = [
+                {
+                    discountPrice: {
+                        ...(minPrice && { $gte: parseFloat(minPrice) }),
+                        ...(maxPrice && { $lte: parseFloat(maxPrice) })
+                    }
+                },
+                {
+                    price: {
+                        ...(minPrice && { $gte: parseFloat(minPrice) }),
+                        ...(maxPrice && { $lte: parseFloat(maxPrice) })
+                    }
+                }
+            ];
         }
 
         // Sorting

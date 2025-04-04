@@ -59,7 +59,7 @@ const Cart = () => {
                                 sum + (item.discountPrice || item.price) * item.quantity, 0
                             ).toFixed(2)}
                         </h3>
-                        <button className="checkout-button">Secure Checkout</button>
+                        <button className="checkout-button"><Link to={'/checkout'}>Secure Checkout</Link></button>
                     </div>
                 </>
             )}

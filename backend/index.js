@@ -7,6 +7,7 @@ const productRoutes = require('./routes/productRoutes')
 const adminUserList = require('./routes/adminUserList')
 const userRoutes = require('./routes/userRoutes')
 const cartRoutes = require('./routes/cartRoutes')
+const orderRoutes = require('./routes/orderRoute')
 const cors = require('cors');
 const path = require('path');
 
@@ -41,6 +42,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/userlist', adminUserList);
 app.use('/api/users', userRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 const PORT = 8080 || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

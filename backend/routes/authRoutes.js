@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer')
+const mongoose = require('mongoose');
 
 
 // Configure Cloudinary
@@ -274,4 +275,97 @@ router.put('/userUpdate/:id', upload.single('avatar'), async (req, res) => {
     });
 })
 
+
+// Get saved addresses
+router.get('/addresses', protect, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        res.json({ success: true, addresses: user.addresses });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to fetch addresses' });
+    }
+});
+
+// Update/Add address
+router.put('/addresses', protect, async (req, res) => {
+    try {
+        // Step 1: Mark all existing addresses as non-primary
+        await User.updateOne(
+            { _id: req.user._id },
+            { $set: { "addresses.$[].isPrimary": false } }
+        );
+
+        // Step 2: Add the new address
+        const newUser = await User.findOneAndUpdate(
+            { _id: req.user._id },
+            {
+                $push: {
+                    addresses: {
+                        ...req.body,
+                        _id: new mongoose.Types.ObjectId().toString(), // Ensure unique ID
+                        isPrimary: true
+                    }
+                }
+            },
+            { new: true, runValidators: true }
+        );
+
+        res.json({ success: true, addresses: newUser.addresses });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message,
+            errorCode: 'ADDRESS_ID_CONFLICT'
+        });
+    }
+});
+
+router.put('/addresses/:id/primary', protect, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        // Update primary status
+        user.addresses.forEach(addr => {
+            addr.isPrimary = addr._id.toString() === req.params.id;
+        });
+
+        await user.save();
+        res.json({
+            success: true,
+            addresses: user.addresses
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update primary address'
+        });
+    }
+});
+
+router.delete('/addresses/:id', protect, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        // Filter out the deleted address
+        user.addresses = user.addresses.filter(
+            addr => addr._id.toString() !== req.params.id
+        );
+
+        // Set new primary if needed
+        if (user.addresses.length > 0 && !user.addresses.some(addr => addr.isPrimary)) {
+            user.addresses[0].isPrimary = true;
+        }
+
+        await user.save();
+        res.json({
+            success: true,
+            addresses: user.addresses
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to delete address'
+        });
+    }
+});
 module.exports = router;

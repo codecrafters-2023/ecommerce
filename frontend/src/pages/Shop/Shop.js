@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './index.css';
 import Header from '../../components/header'
-import { FiShoppingCart, FiSearch } from 'react-icons/fi';
+import { FiShoppingCart, FiSearch, FiGrid, FiList } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext'
 
@@ -20,6 +20,8 @@ const ProductListPage = () => {
   });
   const [appliedFilters, setAppliedFilters] = useState({ ...tempFilters });
   const [totalPages, setTotalPages] = useState(1);
+  const [viewMode, setViewMode] = useState('grid');
+  const [showViewOptions, setShowViewOptions] = useState(false);
 
   const { addToCart } = useCart();
 
@@ -28,7 +30,11 @@ const ProductListPage = () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
           axios.get(`${process.env.REACT_APP_API_URL}/users/getAllProducts`, {
-            params: appliedFilters
+            params: {
+              ...appliedFilters,
+              page: appliedFilters.page,
+              limit: appliedFilters.limit
+            }
           }),
           axios.get(`${process.env.REACT_APP_API_URL}/users/categories`)
         ]);
@@ -96,10 +102,26 @@ const ProductListPage = () => {
           </div>
 
           <div className="filters-container">
+
             <div className="filter-group">
               <select
                 name="category"
                 value={tempFilters.category}
+                onChange={handleFilterChange}
+              >
+                <option value="">All Categories</option>
+                {categories.map(category => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <select
+                name="sort"
+                value={tempFilters.sort}
                 onChange={handleFilterChange}
               >
                 <option value="newest">New Arrivals</option>
@@ -109,7 +131,53 @@ const ProductListPage = () => {
               </select>
             </div>
 
-            
+            <div className="view-selector">
+              <div
+                className="view-selector-header"
+                onClick={() => setShowViewOptions(!showViewOptions)}
+              >
+                {viewMode === 'grid' ? <FiGrid /> : <FiList />}
+                <span>{viewMode === 'grid' ? 'Grid View' : 'List View'}</span>
+              </div>
+
+              {showViewOptions && (
+                <div className="view-options">
+                  <div
+                    className={`view-option ${viewMode === 'grid' ? 'active' : ''}`}
+                    onClick={() => {
+                      setViewMode('grid');
+                      setShowViewOptions(false);
+                    }}
+                  >
+                    <FiGrid />
+                    <span>Grid View</span>
+                  </div>
+                  <div
+                    className={`view-option ${viewMode === 'list' ? 'active' : ''}`}
+                    onClick={() => {
+                      setViewMode('list');
+                      setShowViewOptions(false);
+                    }}
+                  >
+                    <FiList />
+                    <span>List View</span>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="limit-selector">
+              <select
+                value={tempFilters.limit}
+                name="limit"
+                onChange={handleFilterChange}
+              >
+                <option value="12">12 Products</option>
+                <option value="24">24 Products</option>
+                <option value="36">36 Products</option>
+              </select>
+            </div>
+
 
             {/* Add Filter Buttons Here */}
             <div className="filter-buttons">
@@ -157,7 +225,7 @@ const ProductListPage = () => {
 
 
           {/* Product Grid */}
-          <div className="product-grid">
+          <div className={`product-grid ${viewMode === 'list' ? 'list-view' : ''}`}>
             {products.length === 0 ? (
               <div className="no-results">
                 <h2>No products found</h2>
@@ -190,11 +258,11 @@ const ProductListPage = () => {
 
                     <div className="price-container">
                       <span className="current-price">
-                        ${product.discountPrice}
+                        ₹{product.discountPrice}
                       </span>
                       {product.price && (
                         <span className="original-price">
-                          ${product.price}
+                          ₹{product.price}
                         </span>
                       )}
                     </div>

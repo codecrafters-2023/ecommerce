@@ -37,7 +37,7 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Product category is required'],
-    enum: ['turmeric powder', 'other']
+    // enum: ['turmeric powder', 'other']
   },
   brand: {
     type: String,

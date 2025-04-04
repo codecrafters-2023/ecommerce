@@ -3,6 +3,12 @@ const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
 const Cart = require('../models/Cart');
 const Product = require('../models/Products')
+const razorpay = require('razorpay');
+
+const razorpayInstance = new razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET
+});
 
 // Get user's cart
 router.get('/', protect, async (req, res) => {
@@ -96,6 +102,45 @@ router.delete('/:itemId', protect, async (req, res) => {
             message: error.message,
             stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
+    }
+});
+
+
+// Create Razorpay order
+router.post('/payment/create-order', protect, async (req, res) => {
+    try {
+        const amount = Math.round(req.body.amount * 100); // Convert to paise
+
+        const options = {
+            amount,
+            currency: "INR",
+            receipt: `order_${Date.now()}`
+        };
+
+        razorpayInstance.orders.create(options, (err, order) => {
+            if(err) {
+                console.error('Razorpay Error:', err);
+                return res.status(500).json({ message: 'Payment gateway error' });
+            }
+            res.json(order);
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.delete('/', protect, async (req, res) => {
+    try {
+        const cart = await Cart.findOne({ user: req.user._id });
+        if (!cart) return res.status(404).json({ message: 'Cart not found' });
+
+        // Remove all items
+        cart.items = [];
+        await cart.save();
+
+        res.json({ message: 'Cart cleared successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error clearing cart' });
     }
 });
 

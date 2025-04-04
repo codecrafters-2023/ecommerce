@@ -94,6 +94,25 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, []);
 
+  const clearCart = async () => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/cart`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      setCart({ items: [] }); // Reset local cart state
+      toast.success('Cart cleared successfully');
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      if (error.response?.status === 401) {
+        localStorage.removeItem('token');
+        toast.error('Session expired. Please login again');
+        window.location.href = '/login';
+      }
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -102,6 +121,7 @@ export const CartProvider = ({ children }) => {
         addToCart,
         updateQuantity,
         removeFromCart,
+        clearCart,
         cartCount: cart.items.reduce((sum, item) => sum + item.quantity, 0)
       }}
     >
