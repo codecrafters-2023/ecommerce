@@ -28,7 +28,7 @@ const Cart = () => {
                                 <img src={item.images[0]?.url} alt={item.name} />
                                 <div className="item-details">
                                     <h3>{item.name}</h3>
-                                    <p>${(item.discountPrice || item.price).toFixed(2)}</p>
+                                    <p>₹{item.price}</p>
                                     <div className="quantity-controls">
                                         <button
                                             onClick={() => updateQuantity(item._id, item.quantity - 1)}

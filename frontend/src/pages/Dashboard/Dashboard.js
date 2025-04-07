@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/header";
+import HeroSection from "../../components/heroSection";
 
 const Dashboard = () => {
     const { user, logout } = useAuth();
@@ -8,7 +9,7 @@ const Dashboard = () => {
     return (
         <>
             <Header />
-            {/* <Hero /> */}
+            <HeroSection />
             <div className="dashboard">
                 <h1>Welcome {user?.fullName || "User"}</h1>  {/* Fallback if name is missing */}
                 <div className="user-info">

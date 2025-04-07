@@ -1,6 +1,6 @@
 /* ProductList.css */
 :root {
-    --primary-color: #ff9900;
+    --primary-color: #2563eb;
     --secondary-color: #232f3e;
     --background-color: #f5f5f5;
     --text-color: #111;
@@ -115,7 +115,7 @@
     object-fit: cover;
 }
 
-.quick-view-button {
+/* .quick-view-button {
     position: absolute;
     bottom: 1rem;
     left: 50%;
@@ -128,7 +128,7 @@
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.2s;
-}
+} */
 
 .product-card:hover .quick-view-button {
     opacity: 1;
@@ -195,7 +195,7 @@
 }
 
 .add-to-cart-button:hover {
-    background: #ff8400;
+    background: #1256eb;
 }
 
 .modern-pagination {

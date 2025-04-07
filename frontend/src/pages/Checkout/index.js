@@ -5,7 +5,7 @@ import Header from '../../components/header';
 import './checkout.css';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 const Checkout = () => {
@@ -16,6 +16,7 @@ const Checkout = () => {
     const { register, handleSubmit, formState: { errors }, setValue, trigger } = useForm({
         mode: 'onChange'
     });
+    const navigate = useNavigate();
 
     // Fetch saved addresses
     useEffect(() => {
@@ -133,18 +134,37 @@ const Checkout = () => {
                 key: process.env.REACT_APP_RAZORPAY_KEY_ID,
                 amount: response.data.amount.toString(),
                 currency: "INR",
-                name: "Your Store Name",
+                name: "FarFoo",
                 description: "Order Transaction",
                 order_id: response.data.id,
                 handler: async (paymentResponse) => {
-                    await axios.post(`${process.env.REACT_APP_API_URL}/orders`, {
+                    const { data: order } = await axios.post(`${process.env.REACT_APP_API_URL}/orders`, {
                         razorpayPaymentId: paymentResponse.razorpay_payment_id,
                         razorpayOrderId: paymentResponse.razorpay_order_id,
                         razorpaySignature: paymentResponse.razorpay_signature,
-                        shippingAddress: formData
+                        shippingAddress: { // Send only necessary address fields
+                            name: formData.name,
+                            phone: formData.phone,
+                            address: formData.address,
+                            city: formData.city,
+                            state: formData.state,
+                            zip: formData.zip,
+                            email: formData.email
+                        },
+                        items: cart.items.map(item => ({
+                            productId: item._id,
+                            name: item.name,
+                            quantity: item.quantity,
+                            price: item.discountPrice || item.price
+                        })),
+                        totalAmount: cart.items.reduce((sum, item) =>
+                            sum + (item.discountPrice || item.price) * item.quantity, 0
+                        )
+                    }, {
+                        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
                     });
                     clearCart();
-                    window.location.href = '/order-success';
+                    navigate('/order-success', { state: { order } });
                 },
                 prefill: {
                     name: formData.name,

@@ -113,7 +113,7 @@
 
 .role-badge.user {
     background-color: #e2e3ff;
-    color: var(--primary-color);
+    color: #2563eb;
 }
 
 .status-indicator {
@@ -152,7 +152,7 @@
 
 .edit-btn {
     background-color: #e2e3ff;
-    color: var(--primary-color);
+    color: #2563eb;
 }
 
 .delete-btn {

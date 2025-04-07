@@ -32,7 +32,8 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import ProductDetail from "./pages/ProductDetail";
 import { useEffect } from "react";
 import Checkout from "./pages/Checkout";
-import AddressBook from "./AddressBook";
+import AddressBook from "./components/AddressBook";
+import OrderSuccess from "./components/order-success";
 
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
             <Route path="/productDetail/:id" element={<ProductDetail />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/account/addresses" element={<AddressBook />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>

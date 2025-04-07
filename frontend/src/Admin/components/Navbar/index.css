@@ -9,7 +9,7 @@
 
 .sidebar {
     width: var(--sidebar-width);
-    background: var(--primary-color);
+    background: #2563eb!important;
     color: white;
     padding: 20px;
     transition: var(--transition);

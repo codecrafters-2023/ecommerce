@@ -1,29 +1,71 @@
-import React from 'react';
-import { Link } from 'react-router-dom'
-import './index.css';
+// HeroSectionAlt.js
+import React, { useEffect, useState } from 'react';
+import { useInView } from 'react-intersection-observer';
+import { FiTruck, FiHeadphones } from 'react-icons/fi';
+import './HeroSection.css';
+import { Link } from 'react-router-dom';
 
-const Hero = () => {
+const HeroSection = () => {
+    const [animated, setAnimated] = useState(false);
+    const { ref, inView } = useInView({
+        triggerOnce: true,
+        threshold: 0.1,
+    });
+
+    useEffect(() => {
+        if (inView) setAnimated(true);
+    }, [inView]);
+
     return (
-        <section className="hero">
-            <div className="hero-content">
-                <div className="text-content">
-                    <h1 className="hero-title">New Collection 2024</h1>
-                    <p className="hero-subtitle">Discover our curated selection of premium fashion</p>
-                    <div className="cta-buttons">
-                        <Link to={'/shop'} className="cta-primary">Shop Now</Link>
-                        <Link to={'/shop'} className="cta-secondary">Explore More</Link>
+        <section ref={ref} className="hero-alt">
+            <div className="hero-background" aria-hidden="true"></div>
+
+            <div className={`hero-content ${animated ? 'animated' : ''}`}>
+                <div className="product-info">
+                    <h1 className="title">
+                        <span>Premium</span>
+                        Turmeric Powder
+                    </h1>
+                    <p className="subtitle">With Natural Curcumin Extract</p>
+                    <div className="features">
+                        <div className="feature-item">
+                            <FiTruck className="feature-icon" />
+                            <span>Free Worldwide Shipping</span>
+                        </div>
+                        <div className="feature-item">
+                            <FiHeadphones className="feature-icon" />
+                            <span>24/7 Support</span>
+                        </div>
+                    </div>
+                    <button className="cta-button">
+                        <Link to={'/shop'}>Shop Now <span className="cta-arrow">→</span></Link>
+                    </button>
+                </div>
+
+                <div className="product-visual">
+                    <img
+                        src={process.env.PUBLIC_URL + '/farfoo.png'}
+                        alt="Turmeric Powder"
+                        className="main-product"
+                    />
+                    <div className="particles">
+                        <div className="particle particle-1"></div>
+                        <div className="particle particle-2"></div>
+                        <div className="particle particle-3"></div>
                     </div>
                 </div>
-                <div className="image-content">
-                    <img
-                        src="https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                        alt="Fashion Collection"
-                        className="hero-image"
-                    />
-                </div>
             </div>
+
+            {/* <div className="service-cards">
+                <div className="service-card">
+                    <FiClock className="service-icon" />
+                    <h3>Fast Delivery</h3>
+                    <p>Same day shipping</p>
+                    <div className="timing">15:30 • 16:30 • 17:00</div>
+                </div>
+            </div> */}
         </section>
     );
 };
 
-export default Hero;
+export default HeroSection;
