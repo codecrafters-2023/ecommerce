@@ -34,6 +34,7 @@ import { useEffect } from "react";
 import Checkout from "./pages/Checkout";
 import AddressBook from "./components/AddressBook";
 import OrderSuccess from "./components/order-success";
+import AdminOrders from "./Admin/pages/AdminOrders";
 
 
 function App() {
@@ -57,8 +58,6 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPassword />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/about" element={<About />} />
-
-            {/* =============== User Routes ============== */}
             <Route path="/" element={<Dashboard />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/cart" element={<Cart />} />
@@ -67,6 +66,7 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/account/addresses" element={<AddressBook />} />
             <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="/orders" element={<AdminOrders />} />
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>

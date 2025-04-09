@@ -80,7 +80,7 @@
 .nav-item {
     position: relative;
     font-weight: 500;
-    color: var(--text);
+    color: var(--text)!important;
     text-decoration: none;
     padding: 0.5rem 0;
     transition: var(--transition);
