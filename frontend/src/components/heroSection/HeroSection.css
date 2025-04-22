@@ -124,6 +124,8 @@
     transform: rotateY(-20deg);
     animation: productFloat 4s ease-in-out infinite;
     filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+    position: relative;
+    z-index: 100;
 }
 
 @keyframes productFloat {

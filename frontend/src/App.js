@@ -35,6 +35,7 @@ import Checkout from "./pages/Checkout";
 import AddressBook from "./components/AddressBook";
 import OrderSuccess from "./components/order-success";
 import AdminOrders from "./Admin/pages/AdminOrders";
+import CancelledOrders from "./Admin/pages/CancelledOrders";
 
 
 function App() {
@@ -66,7 +67,6 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/account/addresses" element={<AddressBook />} />
             <Route path="/order-success" element={<OrderSuccess />} />
-            <Route path="/orders" element={<AdminOrders />} />
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>
@@ -75,6 +75,8 @@ function App() {
               <Route path="/productEdit/:id" element={<ProductEditForm />} />
               <Route path="/AddProduct" element={<AddProduct />} />
               <Route path="/UsersList" element={<UsersList />} />
+              <Route path="/orders" element={<AdminOrders />} />
+              <Route path="/cancelorders" element={<CancelledOrders />} />
             </Route>
           </Routes>
           <ToastContainer />

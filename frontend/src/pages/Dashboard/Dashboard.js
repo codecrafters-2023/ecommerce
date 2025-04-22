@@ -2,16 +2,18 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/header";
 import HeroSection from "../../components/heroSection";
+import HomeProducts from "../../components/featuredCollection";
 
 const Dashboard = () => {
-    const { user, logout } = useAuth();
+    // const { user, logout } = useAuth();
 
     return (
         <>
             <Header />
             <HeroSection />
-            <div className="dashboard">
-                <h1>Welcome {user?.fullName || "User"}</h1>  {/* Fallback if name is missing */}
+            <HomeProducts />
+            {/* <div className="dashboard">
+                <h1>Welcome {user?.fullName || "User"}</h1> 
                 <div className="user-info">
                     <p>Role: {user?.role}</p>
                     <button onClick={logout} className="logout-btn">
@@ -24,7 +26,7 @@ const Dashboard = () => {
                         <Link to="/admin">Go to Admin Panel</Link>
                     </div>
                 )}
-            </div>
+            </div> */}
         </>
     );
 };

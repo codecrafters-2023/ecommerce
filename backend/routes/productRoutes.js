@@ -212,4 +212,25 @@ router.delete('/deleteProduct/:id', async (req, res) => {
 });
 
 
+// Get latest products for homepage
+router.get('/getLatestProducts', async (req, res) => {
+    try {
+        const products = await Product.find()
+            .sort({ createdAt: -1 })
+            .limit(4);
+
+        res.json({
+            success: true,
+            products
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Server Error'
+        });
+    }
+});
+
+
 module.exports = router;
