@@ -12,6 +12,7 @@
     padding: 2rem;
     background-color: white;
     border-radius: 12px;
+    max-width: 1350px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
@@ -361,7 +362,7 @@
 /* Large devices (desktops, 1024px and up) */
 @media (min-width: 1024px) {
     .user-management {
-        max-width: 1200px;
+        /* max-width: 1200px; */
         margin: 2rem auto;
     }
 }

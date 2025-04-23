@@ -8,6 +8,7 @@ const adminUserList = require('./routes/adminUserList')
 const userRoutes = require('./routes/userRoutes')
 const cartRoutes = require('./routes/cartRoutes')
 const orderRoutes = require('./routes/orderRoute')
+const adminDashboardRoutes = require('./routes/adminDashboard');
 const cors = require('cors');
 const path = require('path');
 
@@ -38,6 +39,7 @@ if (process.env.NODE_ENV === 'production') {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminDashboardRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/userlist', adminUserList);
 app.use('/api/users', userRoutes);

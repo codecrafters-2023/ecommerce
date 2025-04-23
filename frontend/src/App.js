@@ -7,7 +7,9 @@ import api from "./utils/axiosConfig";
 
 // ======Admin routes =====
 import AdminRoute from "./Admin/components/AdminRoute";
-import AdminPanel from "./Admin/pages/AdminPanel/AdminPanel";
+import AdminOrders from "./Admin/pages/AdminOrders";
+import CancelledOrders from "./Admin/pages/CancelledOrders";
+import AdminDashboard from "./Admin/pages/AdminDashboard/AdminDashboard";
 import AddProduct from "./Admin/pages/AddProduct";
 import UsersList from "./Admin/pages/UsersList";
 import ProductEditForm from "./Admin/components/ProductEditForm";
@@ -34,8 +36,6 @@ import { useEffect } from "react";
 import Checkout from "./pages/Checkout";
 import AddressBook from "./components/AddressBook";
 import OrderSuccess from "./components/order-success";
-import AdminOrders from "./Admin/pages/AdminOrders";
-import CancelledOrders from "./Admin/pages/CancelledOrders";
 
 
 function App() {
@@ -70,7 +70,7 @@ function App() {
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>
-              <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/allProducts" element={<ProductList />} />
               <Route path="/productEdit/:id" element={<ProductEditForm />} />
               <Route path="/AddProduct" element={<AddProduct />} />

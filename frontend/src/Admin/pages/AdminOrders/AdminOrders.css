@@ -18,7 +18,7 @@
 
 .admin-orders {
     padding: 2rem;
-    max-width: 1400px;
+    max-width: 1400px!important;
     margin: 0 auto;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
