@@ -39,7 +39,7 @@ h1 {
 .orders-table-container {
     background: #ffffff;
     border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
@@ -123,18 +123,21 @@ tr:hover {
 }
 
 .pending {
-    background-color: #ffedd5;
-    color: #c2410c;
+    background-color: #ffedd5 !important;
+    color: #c2410c !important;
+    border: none!important;
 }
 
 .completed {
-    background-color: #dcfce7;
-    color: #166534;
+    background-color: #dcfce7 !important;
+    color: #166534 !important;
+    border: none!important;
 }
 
 .failed {
-    background-color: #fee2e2;
-    color: #b91c1c;
+    background-color: #fee2e2 !important;
+    color: #b91c1c !important;
+    border: none!important;
 }
 
 .actions-cell {
@@ -180,7 +183,7 @@ tr:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -193,7 +196,7 @@ tr:hover {
     border-radius: 12px;
     width: 90%;
     max-width: 400px;
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .modal-actions {
@@ -208,21 +211,22 @@ tr:hover {
     .admin-orders {
         padding: 1rem;
     }
-    
-    th, td {
+
+    th,
+    td {
         padding: 1rem;
     }
-    
+
     .orders-table-container {
         border-radius: 8px;
     }
-    
+
     table {
         display: block;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
-    
+
     .btn {
         padding: 0.5rem;
         font-size: 0.8125rem;
@@ -235,20 +239,20 @@ tr:hover {
         align-items: flex-start;
         gap: 1rem;
     }
-    
+
     h1 {
         font-size: 1.5rem;
     }
-    
+
     td {
         padding: 0.75rem;
     }
-    
+
     .status-badge {
         font-size: 0.75rem;
         padding: 0.25rem 0.5rem;
     }
-    
+
     .user-email {
         font-size: 0.75rem;
     }

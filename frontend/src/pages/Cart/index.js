@@ -54,7 +54,7 @@ const Cart = () => {
                         ))}
                     </div>
                     <div className="cart-total">
-                        <h3>Total: $
+                        <h3>Total: ₹
                             {cart.items.reduce((sum, item) => 
                                 sum + (item.discountPrice || item.price) * item.quantity, 0
                             ).toFixed(2)}

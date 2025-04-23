@@ -81,10 +81,11 @@
     background-color: #f8f9fa;
 }
 
-.user-info {
+.users-table-container .user-info {
     display: flex;
-    align-items: center;
-    gap: 1rem;
+    /* align-items: center; */
+    /* gap: 1rem; */
+    margin: 0!important;
 }
 
 .user-avatar {
