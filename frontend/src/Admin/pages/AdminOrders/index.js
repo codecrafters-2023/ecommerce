@@ -10,7 +10,16 @@ const AdminOrders = () => {
 
     useEffect(() => {
         fetchOrders();
-    }, []);
+    }, [orders]);
+    
+    useEffect(() => {
+        if (orders.length > 0) {
+            const hasCancelled = orders.some(order => 
+                selectedOrder?._id === order._id && status === 'cancelled'
+            );
+            if (hasCancelled) fetchOrders();
+        }
+    }, [status, orders, selectedOrder]);
 
     const fetchOrders = async () => {
         try {

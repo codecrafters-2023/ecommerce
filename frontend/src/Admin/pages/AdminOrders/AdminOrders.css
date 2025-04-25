@@ -74,10 +74,11 @@ tr:hover {
     background-color: #f8fafc;
 }
 
-.user-info {
+.orders-table-container .user-info {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    margin: 0!important;
 }
 
 .user-name {

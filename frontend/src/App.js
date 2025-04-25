@@ -36,6 +36,7 @@ import { useEffect } from "react";
 import Checkout from "./pages/Checkout";
 import AddressBook from "./components/AddressBook";
 import OrderSuccess from "./components/order-success";
+import Settings from "./Admin/pages/Settings";
 
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
               <Route path="/UsersList" element={<UsersList />} />
               <Route path="/orders" element={<AdminOrders />} />
               <Route path="/cancelorders" element={<CancelledOrders />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
           </Routes>
           <ToastContainer />

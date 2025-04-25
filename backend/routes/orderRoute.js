@@ -6,53 +6,136 @@ const { protect, admin } = require('../middleware/authMiddleware');
 
 // import { sendOrderConfirmation } from '../utils/emailService';
 const { sendOrderConfirmation } = require('../utils/emailService');
+const Coupon = require('../models/Coupon');
 
 router.post('/', protect, async (req, res) => {
     try {
-        const { razorpayPaymentId, razorpayOrderId, razorpaySignature, shippingAddress, items, totalAmount } = req.body;
+        const {
+            razorpayPaymentId,
+            razorpayOrderId,
+            razorpaySignature,
+            shippingAddress,
+            items,
+            totalAmount,
+            coupon
+        } = req.body;
 
+        // Get product images and validate products
         const itemsWithImages = await Promise.all(items.map(async item => {
             const product = await Product.findById(item.productId);
+            if (!product) throw new Error(`Product ${item.productId} not found`);
+
             return {
                 ...item,
-                image: product.images // Assuming your Product model has 'image' field
+                image: product.images[0]?.url || ''
             };
         }));
 
+        const itemsWithPrices = await Promise.all(items.map(async item => {
+            const product = await Product.findById(item.productId);
+            if (!product) throw new Error(`Product ${item.productId} not found`);
+            return {
+                ...item,
+                price: product.discountPrice || product.price
+            };
+        }));
+
+        // 2. Calculate actual subtotal
+        const subtotal = itemsWithPrices.reduce((sum, item) =>
+            sum + item.price * item.quantity, 0);
+
+        // 3. Revalidate coupon and discount
+        let discount = 0;
+        if (coupon?.code) {
+            const validCoupon = await Coupon.findOne({
+                code: coupon.code,
+                active: true
+            });
+
+            if (!validCoupon || validCoupon.usedCount >= validCoupon.maxUses) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Coupon no longer valid"
+                });
+            }
+
+            // Recalculate discount
+            if (validCoupon.discountType === 'percentage') {
+                discount = (subtotal * validCoupon.discountAmount) / 100;
+                if (validCoupon.maxDiscount) {
+                    discount = Math.min(discount, validCoupon.maxDiscount);
+                }
+            } else {
+                discount = validCoupon.discountAmount;
+            }
+
+            // Validate total matches
+            if (Math.abs(totalAmount - (subtotal - discount)) > 1) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Price mismatch detected"
+                });
+            }
+        }
+
+        // Create order with coupon data
         const order = new Order({
             user: req.user._id,
-            items,
-            image: itemsWithImages,
+            items: itemsWithPrices.map(item => ({
+                productId: item.productId,
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+                image: item.image
+            })),
             shippingAddress,
             razorpayPaymentId,
             razorpayOrderId,
             razorpaySignature,
-            totalAmount
+            totalAmount: subtotal - discount, // Enforce correct total
+            coupon: coupon || null
         });
 
         await order.save();
+
+        // Update coupon usage if applied
+        if (coupon?.code) {
+            try {
+                await Coupon.updateOne(
+                    { code: coupon.code },
+                    { $inc: { usedCount: 1 } }
+                );
+            } catch (couponError) {
+                console.error('Coupon usage update failed:', couponError);
+            }
+        }
 
         // Send emails
         try {
             // To customer
             await sendOrderConfirmation(order, req.user.email);
 
-            // To admin (replace with your admin email)
+            // To admin
             await sendOrderConfirmation(order, process.env.ADMIN_EMAIL, true);
         } catch (emailError) {
             console.error('Email sending failed:', emailError);
         }
 
         res.status(201).json(order);
+
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Order Creation Error:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 });
 
 // Get all orders
 router.get('/getOrders', protect, admin, async (req, res) => {
     try {
-        const orders = await Order.find({ deletedAt: { $exists: false } })
+        const orders = await Order.find({ deletedAt: { $exists: false }, status: { $ne: 'cancelled' } })
             .populate('user', 'name email')
             .sort({ createdAt: -1 });
 
@@ -99,40 +182,16 @@ router.get('/my-orders', protect, admin, async (req, res) => {
     }
 });
 
-// User cancels order
-// router.put('/:id/cancel', protect, async (req, res) => {
-//     try {
-//         const order = await Order.findById(req.params.id);
 
-//         if (!order) return res.status(404).json({ message: 'Order not found' });
-//         if (order.user.toString() !== req.user._id.toString()) {
-//             return res.status(403).json({ message: 'Not authorized' });
-//         }
-
-//         const updatedOrder = await Order.findByIdAndUpdate(
-//             req.params.id,
-//             {
-//                 status: 'cancelled',
-//                 cancelledAt: Date.now(),
-//                 cancelledBy: req.user._id
-//             },
-//             { new: true }
-//         );
-
-//         res.json(updatedOrder);
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// });
-
+// order cancelled
 router.get('/cancelled', protect, admin, async (req, res) => {
     try {
         const orders = await Order.find({
             status: 'cancelled',
             deletedAt: { $exists: false }
         })
-        .populate('user', 'name email')
-        .sort({ cancelledAt: -1 });
+            .populate('user', 'name email')
+            .sort({ cancelledAt: -1 });
         res.json(orders);
     } catch (error) {
         res.status(500).json({ message: error.message });

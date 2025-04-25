@@ -5,18 +5,20 @@ import { toast } from 'react-toastify';
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState({ items: [] });
+  const [cart, setCart] = useState({ items: [], totalAfterDiscount: 0 });
   const [loading] = useState(true);
   
 
   const fetchCart = async () => {
     try {
       const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart/`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
-      setCart(data);
+      setCart({
+        items: data.items,
+        totalAfterDiscount: data.totalAfterDiscount || 0,
+        coupon: data.coupon || null
+      });
     } catch (error) {
       console.error('Error fetching cart:', error);
     }
@@ -62,8 +64,10 @@ export const CartProvider = ({ children }) => {
           item._id === itemId ? { ...item, quantity } : item
         )
       }));
+      await fetchCart();
     } catch (error) {
       console.error('Error updating quantity:', error);
+      await fetchCart();
     }
   };
 
@@ -97,11 +101,13 @@ export const CartProvider = ({ children }) => {
   const clearCart = async () => {
     try {
       await axios.delete(`${process.env.REACT_APP_API_URL}/cart`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
-      setCart({ items: [] }); // Reset local cart state
+      setCart({ 
+        items: [], 
+        totalAfterDiscount: 0, 
+        coupon: null 
+      });
       toast.success('Cart cleared successfully');
     } catch (error) {
       console.error('Error clearing cart:', error);
@@ -110,6 +116,43 @@ export const CartProvider = ({ children }) => {
         toast.error('Session expired. Please login again');
         window.location.href = '/login';
       }
+    }
+  };
+
+  const applyCoupon = async (code) => {
+    try {
+      const { data } = await axios.post(
+        `${process.env.REACT_APP_API_URL}/cart/apply-coupon`,
+        { code },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+      
+      setCart(prev => ({
+        ...prev,
+        totalAfterDiscount: data.totalAfterDiscount,
+        coupon: data.coupon
+      }));
+      
+      return data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const removeCoupon = async () => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/cart/coupon`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      setCart(prev => ({
+        ...prev,
+        totalAfterDiscount: 0,
+        coupon: null
+      }));
+      
+    } catch (error) {
+      console.error('Error removing coupon:', error);
     }
   };
 
@@ -122,7 +165,10 @@ export const CartProvider = ({ children }) => {
         updateQuantity,
         removeFromCart,
         clearCart,
-        cartCount: cart.items.reduce((sum, item) => sum + item.quantity, 0)
+        applyCoupon,
+        removeCoupon,
+        cartCount: cart.items.reduce((sum, item) => sum + item.quantity, 0),
+        fetchCart
       }}
     >
       {children}

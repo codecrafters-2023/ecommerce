@@ -18,6 +18,9 @@ const Checkout = () => {
     });
     const navigate = useNavigate();
 
+    console.log('cart', cart);
+
+
     // Fetch saved addresses
     useEffect(() => {
         const fetchAddresses = async () => {
@@ -110,6 +113,12 @@ const Checkout = () => {
         try {
             setLoading(true);
 
+            // Calculate totals with coupon discount
+            const subtotal = cart.items.reduce((sum, item) =>
+                sum + (item.discountPrice || item.price) * item.quantity, 0);
+            const discount = cart.coupon?.discount || 0;
+            const totalAmount = subtotal - discount;
+
             // Save address if requested
             if (formData.saveAddress && user) {
                 const data = await axios.put(`${process.env.REACT_APP_API_URL}/auth/addresses`, formData, {
@@ -118,51 +127,61 @@ const Checkout = () => {
                 setSavedAddresses(data.addresses);
             }
 
-            // Create payment order
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/cart/payment/create-order`, {
-                amount: cart.items.reduce((sum, item) =>
-                    sum + (item.discountPrice || item.price) * item.quantity, 0
-                ),
-                shippingAddress: formData
-            }, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
+            const paymentAmount = cart.totalAfterDiscount || 
+            cart.items.reduce((sum, item) => 
+                sum + (item.price * item.quantity), 0
+            );
+
+            // Create payment order with discounted amount
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL}/cart/payment/create-order`,
+                {
+                    amount: paymentAmount,
+                    shippingAddress: formData
+                },
+                {
+                    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                }
+            );
 
             // Initialize Razorpay payment
             await loadScript('https://checkout.razorpay.com/v1/checkout.js');
             const paymentOptions = {
                 key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-                amount: response.data.amount.toString(),
+                amount: (totalAmount * 100).toString(), // Convert to paise
                 currency: "INR",
                 name: "FarFoo",
                 description: "Order Transaction",
                 order_id: response.data.id,
                 handler: async (paymentResponse) => {
-                    const { data: order } = await axios.post(`${process.env.REACT_APP_API_URL}/orders`, {
-                        razorpayPaymentId: paymentResponse.razorpay_payment_id,
-                        razorpayOrderId: paymentResponse.razorpay_order_id,
-                        razorpaySignature: paymentResponse.razorpay_signature,
-                        shippingAddress: { // Send only necessary address fields
-                            name: formData.name,
-                            phone: formData.phone,
-                            address: formData.address,
-                            city: formData.city,
-                            state: formData.state,
-                            zip: formData.zip,
-                            email: formData.email
+                    const { data: order } = await axios.post(
+                        `${process.env.REACT_APP_API_URL}/orders`,
+                        {
+                            razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                            razorpayOrderId: paymentResponse.razorpay_order_id,
+                            razorpaySignature: paymentResponse.razorpay_signature,
+                            shippingAddress: {
+                                name: formData.name,
+                                phone: formData.phone,
+                                address: formData.address,
+                                city: formData.city,
+                                state: formData.state,
+                                zip: formData.zip,
+                                email: formData.email
+                            },
+                            items: cart.items.map(item => ({
+                                productId: item._id,
+                                name: item.name,
+                                quantity: item.quantity,
+                                price: item.discountPrice || item.price
+                            })),
+                            totalAmount: totalAmount, // Use discounted amount
+                            coupon: cart.coupon // Include coupon details
                         },
-                        items: cart.items.map(item => ({
-                            productId: item._id,
-                            name: item.name,
-                            quantity: item.quantity,
-                            price: item.discountPrice || item.price
-                        })),
-                        totalAmount: cart.items.reduce((sum, item) =>
-                            sum + (item.discountPrice || item.price) * item.quantity, 0
-                        )
-                    }, {
-                        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-                    });
+                        {
+                            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                        }
+                    );
                     clearCart();
                     navigate('/order-success', { state: { order } });
                 },
@@ -366,19 +385,37 @@ const Checkout = () => {
                         </div>
 
                         <div className="total-section">
-                            <div className="total-row">
-                                <span>Subtotal</span>
-                                <span>₹{cart.items.reduce((sum, item) => sum + (item.discountPrice || item.price) * item.quantity, 0).toFixed(2)}</span>
-                            </div>
-                            <div className="total-row">
-                                <span>Shipping</span>
-                                <span>Free</span>
-                            </div>
-                            <div className="total-row grand-total">
-                                <span>Total</span>
-                                <span>₹{cart.items.reduce((sum, item) => sum + (item.discountPrice || item.price) * item.quantity, 0).toFixed(2)}</span>
-                            </div>
-                        </div>
+  <div className="total-row">
+    <span>Subtotal</span>
+    <span>
+      ₹{cart.items.reduce((sum, item) => 
+        sum + item.price * item.quantity, 0
+      ).toFixed(2)}
+    </span>
+  </div>
+
+  {cart.coupon && (
+    <div className="total-row discount-row">
+      <span>Discount ({cart.coupon.code})</span>
+      <span>-₹{cart.coupon.discount.toFixed(2)}</span>
+    </div>
+  )}
+
+  <div className="total-row">
+    <span>Shipping</span>
+    <span>Free</span>
+  </div>
+
+  <div className="total-row grand-total">
+    <span>Total</span>
+    <span>
+      ₹{(cart.totalAfterDiscount || 
+        cart.items.reduce((sum, item) => 
+          sum + item.price * item.quantity, 0
+        )).toFixed(2)}
+    </span>
+  </div>
+</div>
 
                         <button
                             type="submit"
