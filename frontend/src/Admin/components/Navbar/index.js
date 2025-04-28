@@ -94,7 +94,9 @@ import { FaUsers } from "react-icons/fa";
 // ModernSidebar.js
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { FiMenu, FiX, FiHome, FiGlobe, FiPlus, FiUsers, FiSettings, FiLogOut } from 'react-icons/fi';
+import { FiMenu, FiX, FiUsers, FiSettings, FiLogOut } from 'react-icons/fi';
+import { RiDiscountPercentFill } from "react-icons/ri";
+import { FaCartArrowDown } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import { LuLayoutPanelLeft } from "react-icons/lu";
 import { motion, AnimatePresence } from 'framer-motion';
@@ -111,9 +113,10 @@ const AdminSidebar = () => {
         { path: '/admin', name: 'Dashboard', icon: <MdDashboard /> },
         { path: '/allProducts', name: 'Products', icon: <HiMiniShoppingBag /> },
         { path: '/AddProduct', name: 'Add Products', icon: <MdAddToPhotos /> },
-        { path: '/orders', name: 'Orders', icon: <MdAddToPhotos /> },
+        { path: '/orders', name: 'Orders', icon: <FaCartArrowDown /> },
         { path: '/cancelorders', name: 'Cancelled Orders', icon: <MdCancel  /> },
         { path: '/', name: 'Billing', icon: <CiCreditCard1 /> },
+        { path: '/discounts', name: 'Discounts', icon: <RiDiscountPercentFill /> },
         { path: '/UsersList', name: 'Users', icon: <FiUsers /> },
         { path: '/settings', name: 'Settings', icon: <FiSettings /> },
         { path: '/', name: 'User Panel', icon: <LuLayoutPanelLeft /> },

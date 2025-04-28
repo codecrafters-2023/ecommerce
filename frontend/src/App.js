@@ -37,6 +37,7 @@ import Checkout from "./pages/Checkout";
 import AddressBook from "./components/AddressBook";
 import OrderSuccess from "./components/order-success";
 import Settings from "./Admin/pages/Settings";
+import Discounts from "./Admin/pages/Discounts";
 
 
 function App() {
@@ -78,6 +79,7 @@ function App() {
               <Route path="/UsersList" element={<UsersList />} />
               <Route path="/orders" element={<AdminOrders />} />
               <Route path="/cancelorders" element={<CancelledOrders />} />
+              <Route path="/discounts" element={<Discounts />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
           </Routes>
