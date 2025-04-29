@@ -3,10 +3,12 @@ import axios from 'axios';
 import './index.css';
 import Header from '../../components/header'
 import { FiShoppingCart, FiSearch, FiGrid, FiList } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useCart } from '../../context/CartContext'
 
 const ProductListPage = () => {
+  const [searchParams] = useSearchParams();
+  const initialCategory = searchParams.get('category') || '';
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [tempFilters, setTempFilters] = useState({
@@ -50,6 +52,19 @@ const ProductListPage = () => {
     fetchProductsAndCategories();
   }, [appliedFilters]);
 
+  useEffect(() => {
+    // Update filters when category URL param changes
+    setTempFilters(prev => ({
+      ...prev,
+      category: initialCategory
+    }));
+    setAppliedFilters(prev => ({
+      ...prev,
+      category: initialCategory,
+      page: 1
+    }));
+  }, [initialCategory]);
+
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setTempFilters(prev => ({
@@ -61,7 +76,7 @@ const ProductListPage = () => {
   const applyFilters = () => {
     setAppliedFilters({
       ...tempFilters,
-      page: 1 // Reset to first page when applying new filters
+      page: 1
     });
   };
 

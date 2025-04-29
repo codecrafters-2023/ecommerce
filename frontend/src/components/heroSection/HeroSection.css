@@ -81,11 +81,11 @@
 
 .feature-icon {
     font-size: 1.5rem;
-    color: #65a30d;
+    color: #008001;
 }
 
 .cta-button {
-    background: #65a30d;
+    background: #008001;
     color: white;
     padding: 1.2rem 3rem;
     border: none;
@@ -99,7 +99,7 @@
 }
 
 .cta-button:hover {
-    background: #4d7c0f;
+    background: #025902;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(101, 163, 13, 0.3);
 }

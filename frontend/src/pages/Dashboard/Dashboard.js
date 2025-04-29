@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+// import { Link } from "react-router-dom";
+// import { useAuth } from "../../context/AuthContext";
 import Header from "../../components/header";
 import HeroSection from "../../components/heroSection";
 import HomeProducts from "../../components/featuredCollection";
+import FeaturedCategories from "../../components/FeaturedCategories/FeaturedCategories";
 
 const Dashboard = () => {
     // const { user, logout } = useAuth();
@@ -11,6 +12,7 @@ const Dashboard = () => {
         <>
             <Header />
             <HeroSection />
+            <FeaturedCategories />
             <HomeProducts />
             {/* <div className="dashboard">
                 <h1>Welcome {user?.fullName || "User"}</h1> 

@@ -109,9 +109,9 @@
 
 .view-all-btn {
     padding: 0.75rem 2rem;
-    background-color: #3b82f6;
+    background-color: #008001;
     color: white;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     font-weight: 500;
     transition: all 0.3s ease;
     border: none;
@@ -119,13 +119,14 @@
 }
 
 .view-all-btn:hover {
-    background-color: #2563eb;
+    background-color: #026102;
     transform: translateY(-1px);
 }
 
 @media (max-width: 768px) {
     .products-flex {
-        gap: 1rem;
+        gap: 1rem!important;
+        justify-content: center;
     }
     
     .product-card {
