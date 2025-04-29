@@ -4,6 +4,8 @@ import Header from "../../components/header";
 import HeroSection from "../../components/heroSection";
 import HomeProducts from "../../components/featuredCollection";
 import FeaturedCategories from "../../components/FeaturedCategories/FeaturedCategories";
+import NewsletterSignup from "../../components/NewsletterSignup/NewsletterSignup";
+import WhyChooseUs from "../../components/WhyChooseUs/WhyChooseUs";
 
 const Dashboard = () => {
     // const { user, logout } = useAuth();
@@ -14,6 +16,8 @@ const Dashboard = () => {
             <HeroSection />
             <FeaturedCategories />
             <HomeProducts />
+            <WhyChooseUs />
+            <NewsletterSignup />
             {/* <div className="dashboard">
                 <h1>Welcome {user?.fullName || "User"}</h1> 
                 <div className="user-info">

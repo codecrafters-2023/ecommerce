@@ -30,7 +30,7 @@ const HomeProducts = () => {
         <section className="home-products">
             <div className="products-container">
                 <div className="section-header">
-                    <h2 className="section-title">New Arrivals</h2>
+                    <h2 className="section-title">Our Products</h2>
                     <button className="view-all-btn">
                         <Link to="/shop" className="view-all-link">Explore All Products</Link>
                     </button>
