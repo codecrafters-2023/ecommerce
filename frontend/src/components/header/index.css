@@ -92,7 +92,7 @@
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--secondary);
+    background: #008001;
     transition: var(--transition);
 }
 
@@ -141,7 +141,7 @@
     position: absolute;
     top: -6px!important;
     right: -6px!important;
-    background: var(--secondary);
+    background: #008001;
     color: white;
     width: 20px;
     height: 20px;

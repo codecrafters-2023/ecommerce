@@ -1,0 +1,259 @@
+/* ContactPage.css */
+:root {
+    --primary: #3A5F0B;
+    --secondary: #8DA242;
+    --accent: #F4A261;
+    --light: #F8F9F2;
+    --dark: #2B3D07;
+}
+
+.contact-container {
+    font-family: 'Poppins', sans-serif;
+    color: var(--dark);
+    line-height: 1.6;
+}
+
+/* Hero Section */
+.hero-section {
+    height: 60vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+        url('https://images.unsplash.com/photo-1603072387863-1a0b1045a0ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.hero-overlay {
+    text-align: center;
+    color: var(--light);
+    padding: 2rem;
+    max-width: 800px;
+}
+
+.hero-overlay h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    font-weight: 300;
+    opacity: 0.9;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    /* padding: 4rem 2rem; */
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Contact Cards */
+.contact-cards {
+    display: grid;
+    gap: 2rem;
+}
+
+.contact-card {
+    background: var(--light);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.contact-item {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.contact-icon {
+    font-size: 1.8rem;
+    margin-top: 0.5rem;
+}
+
+.contact-team {
+    margin: 0.8rem 0;
+}
+
+.email-link {
+    color: var(--primary);
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+.email-link:hover {
+    opacity: 0.8;
+}
+
+/* Farm Philosophy */
+.farm-philosophy {
+    background: var(--primary);
+    color: var(--light);
+    padding: 2rem;
+    border-radius: 20px;
+}
+
+.certification-badge {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* Contact Form */
+.contact-form {
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    height: 640px;
+}
+
+.form-title {
+    color: var(--dark);
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.form-group.floating input,
+.form-group.floating textarea {
+    width: 100%;
+    padding: 1rem;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    background: transparent;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-group.floating label {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    color: #666;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.form-group.floating input:focus,
+.form-group.floating textarea:focus,
+.form-group.floating input:not(:placeholder-shown),
+.form-group.floating textarea:not(:placeholder-shown) {
+    border-color: var(--primary);
+    box-shadow: none;
+}
+
+.form-group.floating input:focus~label,
+.form-group.floating textarea:focus~label,
+.form-group.floating input:not(:placeholder-shown)~label,
+.form-group.floating textarea:not(:placeholder-shown)~label {
+    transform: translateY(-1.5rem);
+    font-size: 0.8rem;
+    color: var(--primary);
+}
+
+.submit-btn {
+    position: relative;
+    background: #008001;
+    color: white;
+    border: none;
+    padding: 1.2rem 2.5rem;
+    border-radius: 0px;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #046704!important;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.hover-effect {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.2);
+    width: 50px;
+    height: 100%;
+    left: -50px;
+    top: 0;
+    transform: skewX(-30deg);
+    transition: left 0.4s ease;
+}
+
+.submit-btn:hover .hover-effect {
+    left: 120%;
+}
+
+/* Map Section */
+.map-section {
+    height: 500px;
+    margin: 4rem 0;
+}
+
+.interactive-map {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .content-wrapper {
+        grid-template-columns: 1fr;
+        max-width: 800px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-overlay h1 {
+        font-size: 2.5rem;
+    }
+
+    .contact-item {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-form {
+        padding: 2rem;
+    }
+
+    .submit-btn {
+        width: 100%;
+    }
+}
