@@ -11,6 +11,29 @@ const razorpayInstance = new razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET
 });
 
+const validateCartCoupon = async (cart) => {
+    if (!cart.coupon) return cart;
+
+    const coupon = await Coupon.findOne({ code: cart.coupon.code });
+    const totalAmount = cart.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    const isValid = coupon && 
+        coupon.active &&
+        (!coupon.validUntil || new Date() < coupon.validUntil) &&
+        (!coupon.validFrom || new Date() >= coupon.validFrom) &&
+        (coupon.maxUses ? coupon.usedCount < coupon.maxUses : true) &&
+        (totalAmount >= coupon.minOrderAmount);
+
+    if (!isValid) {
+        cart.coupon = undefined;
+        cart.totalAfterDiscount = 0;
+        await cart.save();
+    }
+
+    return cart;
+};
+
+
 // Get user's cart
 router.get('/', protect, async (req, res) => {
     try {
@@ -18,20 +41,25 @@ router.get('/', protect, async (req, res) => {
             .select('-__v -createdAt -updatedAt')
             .lean();
 
-        if (!cart) return res.json({ items: [], totalAfterDiscount: 0 });
+        const safeCart = {
+            items: cart?.items || [],
+            totalAfterDiscount: cart?.totalAfterDiscount || 0,
+            coupon: null // Force null until validated
+        };
 
-        // Calculate total if missing (for backward compatibility)
-        const calculatedTotal = cart.items.reduce((sum, item) => 
-            sum + (item.price * item.quantity), 0
-        );
-        
-        res.json({
-            items: cart.items,
-            totalAfterDiscount: cart.totalAfterDiscount || calculatedTotal,
-            coupon: cart.coupon || null
-        });
+        if (cart?.coupon) {
+            const coupon = await Coupon.findOne({ code: cart.coupon.code });
+            if (coupon) {
+                safeCart.coupon = { 
+                    code: coupon.code,
+                    discount: cart.coupon.discount,
+                    discountType: coupon.discountType
+                };
+            }
+        }
+
+        res.json(safeCart);
     } catch (error) {
-        console.error('Cart Fetch Error:', error);
         res.status(500).json({ message: 'Failed to fetch cart' });
     }
 });
@@ -68,6 +96,7 @@ router.post('/', protect, async (req, res) => {
         }
 
         await cart.save();
+        await validateCartCoupon(cart);
         res.status(201).json(cart);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -85,6 +114,7 @@ router.put('/:itemId', protect, async (req, res) => {
 
         item.quantity = quantity;
         await cart.save();
+        await validateCartCoupon(cart);
         res.json(cart);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -103,6 +133,7 @@ router.delete('/:itemId', protect, async (req, res) => {
         // Remove the item using Mongoose's pull
         cart.items.pull(req.params.itemId);
         const updatedCart = await cart.save();
+        await validateCartCoupon(cart);
 
         res.json(updatedCart);
 
@@ -231,6 +262,44 @@ router.post('/apply-coupon', protect, async (req, res) => {
             success: false,
             message: error.message 
         });
+    }
+});
+
+router.delete('/', protect, async (req, res) => {
+    try {
+        const cart = await Cart.findOneAndUpdate(
+            { user: req.user._id },
+            {
+                $set: {
+                    items: [],
+                    totalAfterDiscount: 0,
+                    coupon: null
+                }
+            },
+            { new: true }
+        );
+        res.json({ message: 'Cart cleared successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error clearing cart' });
+    }
+});
+
+router.post('/reset', protect, async (req, res) => {
+    try {
+        await Cart.findOneAndUpdate(
+            { user: req.user._id },
+            {
+                $set: {
+                    items: [],
+                    totalAfterDiscount: 0,
+                    coupon: null
+                }
+            },
+            { new: true, upsert: true }
+        );
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ message: 'Cart reset failed' });
     }
 });
 

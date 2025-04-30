@@ -43,4 +43,11 @@ const couponSchema = new mongoose.Schema({
     }
 });
 
+couponSchema.pre('save', function(next) {
+    if (this.validUntil && this.validUntil < new Date()) {
+        this.active = false;
+    }
+    next();
+});
+
 module.exports = mongoose.model('Coupon', couponSchema);

@@ -281,6 +281,8 @@
 .formatted-content {
     white-space: pre-line;
     line-height: 1.6;
+    font-family: 'poppins', sans-serif;
+    font-size: 15px;
 }
 
 @media (max-width: 1024px) {

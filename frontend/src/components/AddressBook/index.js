@@ -4,6 +4,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import './AddressBook.css';
 import Header from '../header';
+import Footer from '../Footer/Footer';
 
 const AddressBook = () => {
     const [addresses, setAddresses] = useState([]);
@@ -97,6 +98,7 @@ const AddressBook = () => {
                 </div>
             ))}
         </div>
+        <Footer/>
         </>
     );
 };

@@ -5,12 +5,15 @@ import Header from '../../components/header';
 import './checkout.css';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Footer from '../../components/Footer/Footer';
 
 const Checkout = () => {
-    const { cart, clearCart } = useCart();
-    const { user } = useAuth(); // Get user from auth context
+    const { cart, clearCart, fetchCart, resetCart } = useCart();
+    const location = useLocation();
+    const { productId, quantity, totalAmount, name } = location.state || {};
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
     const [savedAddresses, setSavedAddresses] = useState([]);
     const { register, handleSubmit, formState: { errors }, setValue, trigger } = useForm({
@@ -18,8 +21,21 @@ const Checkout = () => {
     });
     const navigate = useNavigate();
 
-    console.log('cart', cart);
 
+    useEffect(() => {
+        if (location.state?.isDirectPurchase) {
+            // Ensure cart is properly loaded
+            fetchCart();
+        }
+    }, [location.state, fetchCart]);
+
+    useEffect(() => {
+        fetchCart(); // Refresh cart when component mounts
+    }, [fetchCart]);
+
+    useEffect(() => {
+        if (cart.coupon) fetchCart(); // Refresh after coupon changes
+    }, [cart.coupon, fetchCart]);
 
     // Fetch saved addresses
     useEffect(() => {
@@ -112,12 +128,20 @@ const Checkout = () => {
     const handlePayment = async (formData) => {
         try {
             setLoading(true);
+            await fetchCart();
+
+            if (cart.coupon && !formData.couponCode) {
+                await resetCart();
+            }
 
             // Calculate totals with coupon discount
-            const subtotal = cart.items.reduce((sum, item) =>
-                sum + (item.discountPrice || item.price) * item.quantity, 0);
-            const discount = cart.coupon?.discount || 0;
-            const totalAmount = subtotal - discount;
+            // const subtotal = cart.items.reduce((sum, item) =>
+            //     sum + (item.discountPrice || item.price) * item.quantity, 0);
+            // const discount = cart.coupon?.discount || 0;
+            // const totalAmount = subtotal - discount;
+            const totalAmount = cart.items.reduce((sum, item) =>
+                sum + (item.discountPrice || item.price) * item.quantity, 0
+            ) - (cart.coupon?.discount || 0);
 
             // Save address if requested
             if (formData.saveAddress && user) {
@@ -127,10 +151,10 @@ const Checkout = () => {
                 setSavedAddresses(data.addresses);
             }
 
-            const paymentAmount = cart.totalAfterDiscount || 
-            cart.items.reduce((sum, item) => 
-                sum + (item.price * item.quantity), 0
-            );
+            const paymentAmount = cart.totalAfterDiscount ||
+                cart.items.reduce((sum, item) =>
+                    sum + (item.price * item.quantity), 0
+                );
 
             // Create payment order with discounted amount
             const response = await axios.post(
@@ -154,36 +178,57 @@ const Checkout = () => {
                 description: "Order Transaction",
                 order_id: response.data.id,
                 handler: async (paymentResponse) => {
-                    const { data: order } = await axios.post(
-                        `${process.env.REACT_APP_API_URL}/orders`,
-                        {
-                            razorpayPaymentId: paymentResponse.razorpay_payment_id,
-                            razorpayOrderId: paymentResponse.razorpay_order_id,
-                            razorpaySignature: paymentResponse.razorpay_signature,
-                            shippingAddress: {
-                                name: formData.name,
-                                phone: formData.phone,
-                                address: formData.address,
-                                city: formData.city,
-                                state: formData.state,
-                                zip: formData.zip,
-                                email: formData.email
-                            },
-                            items: cart.items.map(item => ({
-                                productId: item._id,
-                                name: item.name,
-                                quantity: item.quantity,
-                                price: item.discountPrice || item.price
-                            })),
-                            totalAmount: totalAmount, // Use discounted amount
-                            coupon: cart.coupon // Include coupon details
-                        },
-                        {
-                            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                    try {
+                        if (!paymentResponse.razorpay_payment_id) {
+                            throw new Error('Payment verification failed');
                         }
-                    );
-                    clearCart();
-                    navigate('/order-success', { state: { order } });
+                        const { data: order } = await axios.post(
+                            `${process.env.REACT_APP_API_URL}/orders`,
+                            {
+                                razorpayPaymentId: paymentResponse.razorpay_payment_id,
+                                razorpayOrderId: paymentResponse.razorpay_order_id,
+                                razorpaySignature: paymentResponse.razorpay_signature,
+                                shippingAddress: {
+                                    name: formData.name,
+                                    phone: formData.phone,
+                                    address: formData.address,
+                                    city: formData.city,
+                                    state: formData.state,
+                                    zip: formData.zip,
+                                    email: formData.email
+                                },
+                                items: location.state?.isDirectPurchase
+                                    ? [{
+                                        product: productId, // Send as 'product' instead of 'productId'
+                                        name: name,
+                                        quantity: quantity,
+                                        price: totalAmount / quantity
+                                    }]
+                                    : cart.items.map(item => ({
+                                        product: item.product, // Ensure this matches your product ID field
+                                        name: item.name,
+                                        quantity: item.quantity,
+                                        price: item.discountPrice || item.price
+                                    })),
+                                totalAmount: totalAmount, // Use discounted amount
+                                coupon: cart.coupon // Include coupon details
+                            },
+                            {
+                                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+                            }
+                        );
+                        await clearCart();
+                        await fetchCart();
+                        navigate('/order-success', { state: { order } });
+                    } catch (error) {
+                        console.error('Order completion failed:', {
+                            error,
+                            paymentResponse,
+                            cart: cart.items
+                        });
+                        alert(`Order processing failed: ${error.response?.data?.message || error.message}`);
+                        await fetchCart(); // Refresh cart state
+                    }
                 },
                 prefill: {
                     name: formData.name,
@@ -385,37 +430,38 @@ const Checkout = () => {
                         </div>
 
                         <div className="total-section">
-  <div className="total-row">
-    <span>Subtotal</span>
-    <span>
-      ₹{cart.items.reduce((sum, item) => 
-        sum + item.price * item.quantity, 0
-      ).toFixed(2)}
-    </span>
-  </div>
+                            <div className="total-row">
+                                <span>Subtotal</span>
+                                <span>
+                                    ₹{cart.items.reduce((sum, item) =>
+                                        sum + item.price * item.quantity, 0
+                                    ).toFixed(2)}
+                                </span>
+                            </div>
 
-  {cart.coupon && (
-    <div className="total-row discount-row">
-      <span>Discount ({cart.coupon.code})</span>
-      <span>-₹{cart.coupon.discount.toFixed(2)}</span>
-    </div>
-  )}
+                            {cart.coupon && (
+                                <div className="total-row discount-row">
+                                    <span>Discount ({cart.coupon.code})</span>
+                                    <span>-₹{cart.coupon.discount.toFixed(2)}</span>
+                                </div>
+                            )}
 
-  <div className="total-row">
-    <span>Shipping</span>
-    <span>Free</span>
-  </div>
+                            <div className="total-row">
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </div>
 
-  <div className="total-row grand-total">
-    <span>Total</span>
-    <span>
-      ₹{(cart.totalAfterDiscount || 
-        cart.items.reduce((sum, item) => 
-          sum + item.price * item.quantity, 0
-        )).toFixed(2)}
-    </span>
-  </div>
-</div>
+                            <div className="total-row grand-total">
+                                <span>Total</span>
+                                <span>
+                                    ₹{(
+                                        cart.items.reduce((sum, item) =>
+                                            sum + (item.discountPrice || item.price) * item.quantity, 0
+                                        ) - (cart.coupon?.discount || 0)
+                                    ).toFixed(2)}
+                                </span>
+                            </div>
+                        </div>
 
                         <button
                             type="submit"
@@ -427,6 +473,7 @@ const Checkout = () => {
                     </div>
                 </form>
             </div>
+            <Footer />
         </>
     );
 };

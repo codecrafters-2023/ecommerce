@@ -6,6 +6,7 @@ import HomeProducts from "../../components/featuredCollection";
 import FeaturedCategories from "../../components/FeaturedCategories/FeaturedCategories";
 import NewsletterSignup from "../../components/NewsletterSignup/NewsletterSignup";
 import WhyChooseUs from "../../components/WhyChooseUs/WhyChooseUs";
+import Footer from "../../components/Footer/Footer";
 
 const Dashboard = () => {
     // const { user, logout } = useAuth();
@@ -18,6 +19,7 @@ const Dashboard = () => {
             <HomeProducts />
             <WhyChooseUs />
             <NewsletterSignup />
+            <Footer />
             {/* <div className="dashboard">
                 <h1>Welcome {user?.fullName || "User"}</h1> 
                 <div className="user-info">

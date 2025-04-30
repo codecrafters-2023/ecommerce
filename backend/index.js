@@ -20,8 +20,9 @@ app.use(express.json());
 app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:3000',
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    exposedHeaders: ['Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control'],
+    exposedHeaders: ['Authorization', 'Content-Disposition'],
+    
 }));
 
 // Database

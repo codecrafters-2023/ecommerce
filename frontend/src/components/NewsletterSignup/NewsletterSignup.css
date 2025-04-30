@@ -53,23 +53,22 @@
 
 .newsletter-input:focus {
     outline: none;
-    border-color: #6c5ce7;
+    border-color: #008001;
     box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
 }
 
 .newsletter-button {
     padding: 1rem 2rem;
-    background: #6c5ce7;
+    background: #008001;
     color: white;
     border: none;
-    border-radius: 12px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .newsletter-button:hover {
-    background: #5b4bc4;
+    background: #015a01;
     transform: translateY(-1px);
 }
 

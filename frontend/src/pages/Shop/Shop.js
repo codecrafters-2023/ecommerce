@@ -5,6 +5,7 @@ import Header from '../../components/header'
 import { FiShoppingCart, FiSearch, FiGrid, FiList } from 'react-icons/fi';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useCart } from '../../context/CartContext'
+import Footer from '../../components/Footer/Footer';
 
 const ProductListPage = () => {
   const [searchParams] = useSearchParams();
@@ -309,6 +310,7 @@ const ProductListPage = () => {
           ))}
         </div>
       </div>
+      <Footer />
     </>
   );
 };

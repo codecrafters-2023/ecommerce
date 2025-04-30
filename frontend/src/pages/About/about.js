@@ -46,6 +46,7 @@
 import React from 'react';
 import Header from '../../components/header';
 import './About.css';
+import Footer from '../../components/Footer/Footer';
 
 const About = () => {
   return (
@@ -179,6 +180,7 @@ const About = () => {
           </div>
         </section>
       </div>
+      <Footer />
     </>
   );
 };

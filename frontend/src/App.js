@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import api from "./utils/axiosConfig";
+import "./App.css";
+// import axios from "axios";
 
 // ======Admin routes =====
 import AdminRoute from "./Admin/components/AdminRoute";
@@ -14,30 +17,31 @@ import AddProduct from "./Admin/pages/AddProduct";
 import UsersList from "./Admin/pages/UsersList";
 import ProductEditForm from "./Admin/components/ProductEditForm";
 import ProductList from "./Admin/pages/Products";
+import Settings from "./Admin/pages/Settings";
+import Discounts from "./Admin/pages/Discounts";
 
 
-// ======User routes =====
-import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
-import ResetPassword from "./pages/resetPassword/ResetPassword";
-import Shop from "./pages/Shop/Shop";
-import Cart from "./pages/Cart";
-import Profile from "./pages/Profile/profile";
+// ===============User routes ==================
 
-
-// ===============Public routes ==================
-import "./App.css";
 import About from "./pages/About/about";
 import Contact from "./pages/Contact/Contact";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import ProductDetail from "./pages/ProductDetail";
-import { useEffect } from "react";
 import Checkout from "./pages/Checkout";
+import ForgotPassword from "./pages/forgotPassword/ForgotPassword";
+import ResetPassword from "./pages/resetPassword/ResetPassword";
+import Shop from "./pages/Shop/Shop";
+import Cart from "./pages/Cart";
+import Profile from "./pages/Profile/profile";
 import AddressBook from "./components/AddressBook";
 import OrderSuccess from "./components/order-success";
-import Settings from "./Admin/pages/Settings";
-import Discounts from "./Admin/pages/Discounts";
+import PrivacyPolicy from "./components/PrivacyPolicy/PrivacyPolicy";
+import RefundPolicy from "./components/RefundPolicy/RefundPolicy";
+import ShippingPolicy from "./components/ShippingPolicy/ShippingPolicy";
+import TermsOfServices from "./components/TermsOfServices/TermsOfServices";
+import ContactInformation from "./components/ContactInformation/ContactInformation";
 
 
 function App() {
@@ -49,12 +53,29 @@ function App() {
     }
   }, []);
 
+//   useEffect(() => {
+//     const validateCart = async () => {
+//         const token = localStorage.getItem('token');
+//         if (token) {
+//             try {
+//                 const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart`);
+//                 if (data.coupon && data.items.length === 0) {
+//                     await axios.post(`${process.env.REACT_APP_API_URL}/cart/reset`);
+//                 }
+//             } catch (error) {
+//                 console.error('Cart validation failed:', error);
+//             }
+//         }
+//     };
+//     validateCart();
+// }, []);
+
   return (
     <Router>
       <AuthProvider>
         <CartProvider>
           <Routes>
-            {/* =============== Public Routes ============== */}
+            {/* =============== User Routes ============== */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -69,6 +90,11 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/account/addresses" element={<AddressBook />} />
             <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/shipping-policy" element={<ShippingPolicy />} />
+            <Route path="/terms-of-services" element={<TermsOfServices />} />
+            <Route path="/contact-information" element={<ContactInformation />} />
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>

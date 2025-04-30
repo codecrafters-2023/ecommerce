@@ -7,22 +7,44 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState({ items: [], totalAfterDiscount: 0 });
   const [loading] = useState(true);
-  
+
 
   const fetchCart = async () => {
     try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart/`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setCart({
-        items: data.items,
-        totalAfterDiscount: data.totalAfterDiscount || 0,
-        coupon: data.coupon || null
-      });
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart/`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+
+        // Force reset if invalid coupon remains
+        const validatedCart = {
+            items: data.items || [],
+            totalAfterDiscount: data.totalAfterDiscount || 0,
+            coupon: data.coupon?.code ? data.coupon : null,
+            _version: Date.now()
+        };
+
+        if (validatedCart.coupon && !validatedCart.items.length) {
+            validatedCart.coupon = null;
+            validatedCart.totalAfterDiscount = 0;
+        }
+
+        setCart(validatedCart);
     } catch (error) {
-      console.error('Error fetching cart:', error);
+        setCart({
+            items: [],
+            totalAfterDiscount: 0,
+            coupon: null,
+            _version: Date.now()
+        });
     }
-  };
+};
+
+const resetCart = async () => {
+  await axios.post(`${process.env.REACT_APP_API_URL}/cart/reset`, {}, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+  });
+  await fetchCart();
+};
 
   const addToCart = async (productId, quantity = 1) => {
     try {
@@ -50,17 +72,17 @@ export const CartProvider = ({ children }) => {
     try {
       // Ensure quantity doesn't go below 1
       const quantity = Math.max(newQuantity, 1);
-      
+
       await axios.put(`${process.env.REACT_APP_API_URL}/cart/${itemId}`, { quantity }, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
-      
+
       // Update local state immediately for better UX
       setCart(prev => ({
         ...prev,
-        items: prev.items.map(item => 
+        items: prev.items.map(item =>
           item._id === itemId ? { ...item, quantity } : item
         )
       }));
@@ -78,13 +100,13 @@ export const CartProvider = ({ children }) => {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
       });
-      
+
       // Update local state
       setCart(prev => ({
         ...prev,
         items: prev.items.filter(item => item._id !== itemId)
       }));
-      
+
     } catch (error) {
       console.error('Error removing item:', error);
       if (error.response?.status === 401) {
@@ -98,44 +120,40 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, []);
 
-  const clearCart = async () => {
+const clearCart = async () => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/cart`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      });
-      setCart({ 
-        items: [], 
-        totalAfterDiscount: 0, 
-        coupon: null 
-      });
-      toast.success('Cart cleared successfully');
+        const { data } = await axios.delete(`${process.env.REACT_APP_API_URL}/cart`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+        });
+
+        // Force complete state reset with version update
+        setCart({
+            items: [],
+            totalAfterDiscount: 0,
+            coupon: null,
+            _version: Date.now()
+        });
     } catch (error) {
-      console.error('Error clearing cart:', error);
-      if (error.response?.status === 401) {
-        localStorage.removeItem('token');
-        toast.error('Session expired. Please login again');
-        window.location.href = '/login';
-      }
+        console.error('Error clearing cart:', error);
     }
-  };
+};
 
   const applyCoupon = async (code) => {
     try {
-      const { data } = await axios.post(
+      const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/cart/apply-coupon`,
         { code },
-        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }}
       );
-      
-      setCart(prev => ({
-        ...prev,
-        totalAfterDiscount: data.totalAfterDiscount,
-        coupon: data.coupon
-      }));
-      
-      return data;
+  
+      if (response.data.success) {
+        // Use cart context to refresh data
+        // const { fetchCart } = useCart();
+        await fetchCart();
+        toast.success('Coupon applied successfully!');
+      }
     } catch (error) {
-      throw error;
+      toast.error(error.response?.data?.message || 'Error applying coupon');
     }
   };
 
@@ -145,12 +163,8 @@ export const CartProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       
-      setCart(prev => ({
-        ...prev,
-        totalAfterDiscount: 0,
-        coupon: null
-      }));
-      
+      // Force complete cart refresh
+      await fetchCart();
     } catch (error) {
       console.error('Error removing coupon:', error);
     }
@@ -167,6 +181,7 @@ export const CartProvider = ({ children }) => {
         clearCart,
         applyCoupon,
         removeCoupon,
+        resetCart,
         cartCount: cart.items.reduce((sum, item) => sum + item.quantity, 0),
         fetchCart
       }}

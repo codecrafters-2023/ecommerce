@@ -1,10 +1,211 @@
+// import React, { useState, useEffect } from 'react';
+// import axios from 'axios';
+// import { useParams } from 'react-router-dom';
+// import { FiStar, FiShoppingCart, FiHeart, FiTruck } from 'react-icons/fi';
+// import './index.css';
+// import Header from '../../components/header';
+// import { useCart } from '../../context/CartContext';
+// import HomeProducts from '../../components/featuredCollection';
+// import Footer from '../../components/Footer/Footer';
+
+// const ProductDetail = () => {
+//     const { id } = useParams();
+//     const [product, setProduct] = useState(null);
+//     const [loading, setLoading] = useState(true);
+//     const [selectedImage, setSelectedImage] = useState(0);
+//     const [quantity, setQuantity] = useState(1);
+//     const [activeTab, setActiveTab] = useState('description');
+
+//     const { addToCart } = useCart();
+
+
+//     useEffect(() => {
+//         const fetchProduct = async () => {
+//             try {
+//                 const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/products/${id}`);
+//                 setProduct(response.data);
+//                 // setSelectedVariant(response.data.variants[0]);
+//             } catch (error) {
+//                 console.error('Error fetching product:', error);
+//             } finally {
+//                 setLoading(false);
+//             }
+//         };
+
+//         fetchProduct();
+//     }, [id]);
+
+//     if (loading) {
+//         return <div className="loading-spinner"></div>;
+//     }
+
+//     if (!product) {
+//         return <div className="error-message">Product not found</div>;
+//     }
+
+//     return (
+//         <>
+//             <Header />
+
+//             <div className="product-detail-container">
+//                 {/* Image Gallery */}
+//                 <div className="product-gallery">
+//                     <div className="main-image">
+//                         <img
+//                             src={product.images[selectedImage].url}
+//                             alt={product.name}
+//                         />
+//                     </div>
+//                     <div className="thumbnail-grid">
+//                         {product?.images.map((image, index) => (
+//                             <img
+//                                 key={index}
+//                                 src={image.url}
+//                                 alt={`Thumbnail ${index + 1}`}
+//                                 className={index === selectedImage ? 'active' : ''}
+//                                 onClick={() => setSelectedImage(index)}
+//                             />
+//                         ))}
+//                     </div>
+//                 </div>
+
+//                 {/* Product Info */}
+//                 <div className="product-info">
+//                     <p className='product-brand'>{product.brand}</p>
+//                     <h1 className="product-title">{product.name}</h1>
+
+//                     <div className="product-rating">
+//                         <div className="stars">
+//                             {[...Array(5)].map((_, i) => (
+//                                 <FiStar key={i} className={i < product.rating ? 'filled' : ''} />
+//                             ))}
+//                         </div>
+//                         <span>({product.reviewCount} reviews)</span>
+//                     </div>
+
+//                     <div className="price-section">
+//                         {/* {product.discountPrice > 0 && (
+//                             <span className="discount-badge">₹ {product.discountPrice}</span>
+//                         )} */}
+//                         <span className="current-price">₹{product.discountPrice}</span>
+//                         {product.price && (
+//                             <span className="original-price">₹{product.price}</span>
+//                         )}
+//                     </div>
+
+
+//                     <div className="quantity-selector">
+//                         <h3>Quantity:</h3>
+//                         <div className="quantity-control">
+//                             <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
+//                             <span>{quantity}</span>
+//                             <button onClick={() => setQuantity(quantity + 1)}>+</button>
+//                         </div>
+//                     </div>
+
+//                     <div className="action-buttons">
+//                         <button className="add-to-cart"
+//                             onClick={() => addToCart(product._id)}
+//                         >
+//                             <FiShoppingCart /> Add to Cart
+//                         </button>
+//                         <button className="buy-now">Buy Now</button>
+//                         <button className="wishlist">
+//                             <FiHeart /> Wishlist
+//                         </button>
+//                     </div>
+
+//                     {/* <div className="delivery-info">
+//                         <FiTruck />
+//                         <span>Free delivery on orders over $50</span>
+//                     </div> */}
+
+//                     {/* Product Tabs */}
+//                     <div className="product-tabs">
+//                         <button
+//                             className={activeTab === 'description' ? 'active' : ''}
+//                             onClick={() => setActiveTab('description')}
+//                         >
+//                             Description
+//                         </button>
+//                         <button
+//                             className={activeTab === 'specs' ? 'active' : ''}
+//                             onClick={() => setActiveTab('specs')}
+//                         >
+//                             Specifications
+//                         </button>
+//                         <button
+//                             className={activeTab === 'reviews' ? 'active' : ''}
+//                             onClick={() => setActiveTab('reviews')}
+//                         >
+//                             Reviews ({product.reviewCount})
+//                         </button>
+//                     </div>
+
+//                     <div className="tab-content">
+//                         {activeTab === 'description' && (
+//                             <div className="domain-description">
+//                                 <div className="formatted-content">
+//                                     {product.description}
+//                                 </div>
+//                             </div>
+//                             // <p className="product-description">{product.description}</p>
+//                         )}
+
+//                         {activeTab === 'specs' && (
+//                             <div className="domain-description">
+//                                 <div className="formatted-content">
+//                                     {product.specification}
+//                                 </div>
+//                             </div>
+//                             // <p className="product-description">{product.specification}</p>
+//                         )}
+
+//                         {/* {activeTab === 'specs' && (
+//                         <div className="specifications">
+//                             {product.specs.map((spec, index) => (
+//                                 <div key={index} className="spec-item">
+//                                     <span className="spec-name">{spec.name}:</span>
+//                                     <span className="spec-value">{spec.value}</span>
+//                                 </div>
+//                             ))}
+//                         </div>
+//                     )} */}
+//                     </div>
+//                 </div>
+
+
+//                 {/* Related Products Section */}
+//                 {/* <section className="related-products">
+//                 <h2>You Might Also Like</h2>
+//                 <div className="related-grid">
+//                 {product.relatedItems.map(item => (
+//                     <div key={item.id} className="related-product">
+//                     <img src={item.image} alt={item.name} />
+//                     <h4>{item.name}</h4>
+//                     <p>${item.price}</p>
+//                     </div>
+//                     ))}
+//                     </div>
+//                     </section> */}
+//             </div>
+//                     <HomeProducts />
+//                     <Footer />
+//         </>
+//     );
+// };
+
+// export default ProductDetail;
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { FiStar, FiShoppingCart, FiHeart, FiTruck } from 'react-icons/fi';
+import { useNavigate, useParams } from 'react-router-dom';
+import { FiStar, FiShoppingCart, FiHeart, FiChevronRight, FiTruck, FiTag } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 import './index.css';
 import Header from '../../components/header';
 import { useCart } from '../../context/CartContext';
+import Footer from '../../components/Footer/Footer';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -13,55 +214,93 @@ const ProductDetail = () => {
     const [selectedImage, setSelectedImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
     const [activeTab, setActiveTab] = useState('description');
+    const { addToCart, clearCart } = useCart();
 
-    const { addToCart } = useCart();
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/products/${id}`);
-                setProduct(response.data);
-                // setSelectedVariant(response.data.variants[0]);
+                const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/users/products/${id}`);
+                setProduct(data);
             } catch (error) {
                 console.error('Error fetching product:', error);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchProduct();
     }, [id]);
 
+    const imageVariants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.3 } }
+    };
+
+    const tabContentVariants = {
+        hidden: { y: 20, opacity: 0 },
+        visible: { y: 0, opacity: 1, transition: { duration: 0.3 } }
+    };
+
     if (loading) {
-        return <div className="loading-spinner"></div>;
+        return (
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="loading-spinner-container"
+            >
+                <div className="loading-spinner"></div>
+            </motion.div>
+        );
     }
 
     if (!product) {
-        return <div className="error-message">Product not found</div>;
+        return (
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="error-message"
+            >
+                Product not found
+            </motion.div>
+        );
     }
 
     return (
         <>
             <Header />
-
-            <div className="product-detail-container">
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="product-detail-container"
+            >
                 {/* Image Gallery */}
                 <div className="product-gallery">
-                    <div className="main-image">
-                        <img
+                    <motion.div
+                        className="main-image"
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                        <motion.img
+                            key={selectedImage}
                             src={product.images[selectedImage].url}
                             alt={product.name}
+                            initial="hidden"
+                            animate="visible"
+                            variants={imageVariants}
                         />
-                    </div>
+                    </motion.div>
+
                     <div className="thumbnail-grid">
-                        {product?.images.map((image, index) => (
-                            <img
+                        {product.images.map((image, index) => (
+                            <motion.img
                                 key={index}
                                 src={image.url}
                                 alt={`Thumbnail ${index + 1}`}
                                 className={index === selectedImage ? 'active' : ''}
                                 onClick={() => setSelectedImage(index)}
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ type: 'spring', stiffness: 300 }}
                             />
                         ))}
                     </div>
@@ -69,123 +308,212 @@ const ProductDetail = () => {
 
                 {/* Product Info */}
                 <div className="product-info">
-                    <p className='product-brand'>{product.brand}</p>
-                    <h1 className="product-title">{product.name}</h1>
+                    <motion.div initial={{ y: 20 }} animate={{ y: 0 }}>
+                        <p className="product-brand">{product.brand}</p>
+                        <h1 className="product-title">{product.name}</h1>
 
-                    <div className="product-rating">
-                        <div className="stars">
-                            {[...Array(5)].map((_, i) => (
-                                <FiStar key={i} className={i < product.rating ? 'filled' : ''} />
-                            ))}
+                        <div className="product-rating">
+                            <div className="stars">
+                                {[...Array(5)].map((_, i) => (
+                                    <FiStar
+                                        key={i}
+                                        className={i < product.rating ? 'filled' : ''}
+                                    />
+                                ))}
+                            </div>
+                            <span>({product.reviewCount} reviews)</span>
                         </div>
-                        <span>({product.reviewCount} reviews)</span>
-                    </div>
 
-                    <div className="price-section">
-                        {/* {product.discountPrice > 0 && (
-                            <span className="discount-badge">₹ {product.discountPrice}</span>
-                        )} */}
-                        <span className="current-price">₹{product.discountPrice}</span>
-                        {product.price && (
-                            <span className="original-price">₹{product.price}</span>
-                        )}
-                    </div>
-
-
-                    <div className="quantity-selector">
-                        <h3>Quantity:</h3>
-                        <div className="quantity-control">
-                            <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>-</button>
-                            <span>{quantity}</span>
-                            <button onClick={() => setQuantity(quantity + 1)}>+</button>
+                        <div className="price-section">
+                            <div className="price-container">
+                                <span className="current-price">
+                                    ₹{product.discountPrice}
+                                </span>
+                                {product.price && (
+                                    <span className="original-price">
+                                        ₹{product.price}
+                                    </span>
+                                )}
+                                {product.discountPrice < product.price && (
+                                    <motion.span
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="discount-badge"
+                                    >
+                                        {Math.round(
+                                            ((product.price - product.discountPrice) /
+                                                product.price) *
+                                            100
+                                        )}
+                                        % OFF
+                                    </motion.span>
+                                )}
+                            </div>
                         </div>
-                    </div>
 
-                    <div className="action-buttons">
-                        <button className="add-to-cart"
-                            onClick={() => addToCart(product._id)}
-                        >
-                            <FiShoppingCart /> Add to Cart
-                        </button>
-                        <button className="buy-now">Buy Now</button>
-                        <button className="wishlist">
-                            <FiHeart /> Wishlist
-                        </button>
-                    </div>
+                        <div className="delivery-info">
+                            <FiTruck />
+                            <span>Free delivery on orders above ₹499</span>
+                        </div>
 
-                    {/* <div className="delivery-info">
-                        <FiTruck />
-                        <span>Free delivery on orders over $50</span>
-                    </div> */}
+                        <div className="quantity-selector">
+                            <h3>Quantity:</h3>
+                            <motion.div className="quantity-control">
+                                <motion.button
+                                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    -
+                                </motion.button>
+                                <motion.span
+                                    key={quantity}
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                >
+                                    {quantity}
+                                </motion.span>
+                                <motion.button
+                                    onClick={() => setQuantity(quantity + 1)}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    +
+                                </motion.button>
+                            </motion.div>
+                        </div>
+
+                        <div className="action-buttons">
+                            <motion.button
+                                className="add-to-cart"
+                                onClick={() => addToCart(product._id, quantity)}
+                                whileHover={{ y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <FiShoppingCart /> Add to Cart
+                            </motion.button>
+                            <motion.button
+                                className="buy-now"
+                                whileHover={{ y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={async () => {
+                                    try {
+                                        // Clear existing cart items
+                                        await clearCart();
+
+                                        // Add the single product directly to cart
+                                        await addToCart(product._id, quantity);
+
+                                        // Navigate to checkout with direct purchase flag
+                                        navigate('/checkout', {
+                                            state: {
+                                                isDirectPurchase: true,
+                                                productId: product._id,
+                                                quantity: quantity,
+                                                unitPrice: product.discountPrice || product.price
+                                            }
+                                        });
+                                    } catch (error) {
+                                        console.error('Error proceeding to checkout:', error);
+                                    }
+                                }}
+                            >
+                                Buy Now
+                            </motion.button>
+                            {/* <motion.button
+                                className="wishlist"
+                                whileHover={{ y: -2 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <FiHeart /> Wishlist
+                            </motion.button> */}
+                        </div>
+                    </motion.div>
 
                     {/* Product Tabs */}
                     <div className="product-tabs">
-                        <button
-                            className={activeTab === 'description' ? 'active' : ''}
-                            onClick={() => setActiveTab('description')}
-                        >
-                            Description
-                        </button>
-                        <button
-                            className={activeTab === 'specs' ? 'active' : ''}
-                            onClick={() => setActiveTab('specs')}
-                        >
-                            Specifications
-                        </button>
-                        <button
-                            className={activeTab === 'reviews' ? 'active' : ''}
-                            onClick={() => setActiveTab('reviews')}
-                        >
-                            Reviews ({product.reviewCount})
-                        </button>
+                        {['description', 'specs', 'reviews'].map((tab) => (
+                            <motion.button
+                                key={tab}
+                                className={activeTab === tab ? 'active' : ''}
+                                onClick={() => setActiveTab(tab)}
+                                whileHover={{ y: -2 }}
+                            >
+                                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                                {activeTab === tab && (
+                                    <motion.div
+                                        className="underline"
+                                        layoutId="underline"
+                                    />
+                                )}
+                            </motion.button>
+                        ))}
                     </div>
 
-                    <div className="tab-content">
-                        {activeTab === 'description' && (
-                            <div className="domain-description">
-                                <div className="formatted-content">
-                                    {product.description}
-                                </div>
-                            </div>
-                            // <p className="product-description">{product.description}</p>
-                        )}
+                    <AnimatePresence mode='wait'>
+                        <motion.div
+                            key={activeTab}
+                            variants={tabContentVariants}
+                            initial="hidden"
+                            animate="visible"
+                            exit="hidden"
+                            className="tab-content"
+                        >
+                            {activeTab === 'description' && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="domain-description"
+                                >
+                                    <div className="formatted-content">
+                                        {product.description}
+                                    </div>
+                                </motion.div>
+                            )}
 
-                        {activeTab === 'specs' && (
-                            <div className="domain-description">
-                                <div className="formatted-content">
-                                    {product.specification}
-                                </div>
-                            </div>
-                            // <p className="product-description">{product.specification}</p>
-                        )}
 
-                        {/* {activeTab === 'specs' && (
-                        <div className="specifications">
-                            {product.specs.map((spec, index) => (
-                                <div key={index} className="spec-item">
-                                    <span className="spec-name">{spec.name}:</span>
-                                    <span className="spec-value">{spec.value}</span>
+                            {activeTab === 'specs' && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="domain-description"
+                                >
+                                    <div className="formatted-content">
+                                        {product.specification}
+                                    </div>
+                                </motion.div>
+                            )}
+
+                            {/* {activeTab === 'reviews' && (
+                                <div className="reviews-container">
+                                    {product.reviews.map((review) => (
+                                        <motion.div
+                                            key={review._id}
+                                            className="review-card"
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                        >
+                                            <div className="review-header">
+                                                <span className="review-author">
+                                                    {review.user.name}
+                                                </span>
+                                                <div className="review-rating">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <FiStar
+                                                            key={i}
+                                                            className={i < review.rating ? 'filled' : ''}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <p className="review-text">{review.comment}</p>
+                                        </motion.div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
-                    )} */}
-                    </div>
+                            )} */}
+                        </motion.div>
+                    </AnimatePresence>
                 </div>
-
-                {/* Related Products Section */}
-                {/* <section className="related-products">
-                <h2>You Might Also Like</h2>
-                <div className="related-grid">
-                    {product.relatedItems.map(item => (
-                        <div key={item.id} className="related-product">
-                            <img src={item.image} alt={item.name} />
-                            <h4>{item.name}</h4>
-                            <p>${item.price}</p>
-                        </div>
-                    ))}
-                </div>
-            </section> */}
-            </div>
+            </motion.div>
+            <Footer />
         </>
     );
 };

@@ -5,6 +5,7 @@ import './index.css';
 import Header from '../../components/header';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Footer from '../../components/Footer/Footer';
 
 const Cart = () => {
     const { cart, updateQuantity, removeFromCart } = useCart();
@@ -97,6 +98,7 @@ const Cart = () => {
                     </>
                 )}
             </div>
+            <Footer />
         </>
     );
 };
