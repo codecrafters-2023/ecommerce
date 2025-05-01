@@ -296,210 +296,209 @@ const AddProduct = () => {
 
   return (
     <>
-     <div className="admin-layout">
+         <div className="apd-root">
       <AdminSidebar />
-      
-      <div className="add-product-wrapper">
-        <div className="form-header">
-          <h1>Add New Product</h1>
-          <p>Fill in the product details below</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="product-form">
-          {/* Product Basic Info */}
-          <div className="form-section">
-            <h2 className="section-title">Basic Information</h2>
-            <div className="form-grid">
-              <div className="input-group">
-                <label>Product Name</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Category</label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleInputChange}
-                  required
-                >
-                  <option value="">Select Category</option>
-                  <option value="turmeric powder">Turmeric Powder</option>
-                  {/* {/* <option value="fashion">Fashion</option> */}
-                  <option value="Jaggery Powder">Jaggery Powder</option>
-                </select>
-              </div>
-
-              <div className="input-group">
-                <label>Brand</label>
-                <input
-                  type="text"
-                  name="brand"
-                  value={formData.brand}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-            </div>
+      <div className="apd-main-content">
+        <div className="apd-form-card">
+          <div className="apd-form-header">
+            <h1 className="apd-form-header__title">Add New Product</h1>
+            <p className="apd-form-header__subtitle">
+              Fill in the product details below
+            </p>
           </div>
 
-          {/* Pricing & Inventory */}
-          <div className="form-section">
-            <h2 className="section-title">Pricing & Inventory</h2>
-            <div className="form-grid">
-              <div className="input-group">
-                <label>Price (₹)</label>
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Discount Price (₹)</label>
-                <input
-                  type="number"
-                  name="discountPrice"
-                  value={formData.discountPrice}
-                  onChange={handleInputChange}
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Quantity</label>
-                <input
-                  type="number"
-                  name="quantity"
-                  value={formData.quantity}
-                  onChange={handleInputChange}
-                  min="0"
-                />
-              </div>
-
-              <div className="input-group">
-                <label>Weight (kg)</label>
-                <input
-                  type="text"
-                  name="weight"
-                  value={formData.weight}
-                  onChange={handleInputChange}
-                  step="0.1"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Color Selection */}
-          {/* <div className="form-section">
-            <h2 className="section-title">Available Colors</h2>
-            <div className="color-grid">
-              {['red', 'blue', 'black', 'white', 'green'].map(color => (
-                <label key={color} className="color-option">
+          <form className="apd-form" onSubmit={handleSubmit}>
+            {/* Basic Information Section */}
+            <div className="apd-form-section">
+              <h2 className="apd-form-section__title">Basic Information</h2>
+              <div className="apd-form-grid">
+                <div className="apd-input-group">
+                  <label className="apd-input-group__label">Product Name</label>
                   <input
-                    type="checkbox"
-                    name="colors"
-                    value={color}
-                    checked={formData.colors.includes(color)}
+                    type="text"
+                    name="name"
+                    value={formData.name}
                     onChange={handleInputChange}
+                    className="apd-input-group__field"
+                    required
                   />
-                  <span className={`color-box ${color}`}>
-                    {formData.colors.includes(color) && <span className="checkmark">✓</span>}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </div> */}
+                </div>
 
-          {/* Image Upload */}
-          <div className="form-section">
-            <h2 className="section-title">Product Images</h2>
-            <div 
-              className={`image-upload ${isDragging ? 'dragging' : ''}`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
-            >
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={(e) => handleFileSelection(e.target.files)}
-                id="file-input"
-                style={{display:"none"}}
-              />
-              <label htmlFor="file-input">
-                <div className="upload-content">
-                  <span className="upload-icon">📷</span>
-                  <div className="upload-text">
+                <div className="apd-input-group">
+                  <label className="apd-input-group__label">Category</label>
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    className="apd-input-group__field"
+                    required
+                  >
+                    <option value="">Select Category</option>
+                    <option value="turmeric powder">Turmeric Powder</option>
+                    <option value="jaggery powder">Jaggery Powder</option>
+                  </select>
+                </div>
+
+                <div className="apd-input-group">
+                  <label className="apd-input-group__label">Brand</label>
+                  <input
+                    type="text"
+                    name="brand"
+                    value={formData.brand}
+                    onChange={handleInputChange}
+                    className="apd-input-group__field"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Pricing & Inventory Section */}
+            <div className="apd-form-section">
+              <h2 className="apd-form-section__title">Pricing & Inventory</h2>
+              <div className="apd-form-grid">
+                <div className="apd-input-group">
+                  <label className="apd-input-group__label">Price (₹)</label>
+                  <input
+                    type="number"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    className="apd-input-group__field"
+                    required
+                  />
+                </div>
+
+                <div className="apd-input-group">
+                  <label className="apd-input-group__label">Discount Price (₹)</label>
+                  <input
+                    type="number"
+                    name="discountPrice"
+                    value={formData.discountPrice}
+                    onChange={handleInputChange}
+                    className="apd-input-group__field"
+                  />
+                </div>
+
+                <div className="apd-input-group">
+                  <label className="apd-input-group__label">Quantity</label>
+                  <input
+                    type="number"
+                    name="quantity"
+                    value={formData.quantity}
+                    onChange={handleInputChange}
+                    className="apd-input-group__field"
+                    min="0"
+                  />
+                </div>
+
+                <div className="apd-input-group">
+                  <label className="apd-input-group__label">Weight (kg)</label>
+                  <input
+                    type="text"
+                    name="weight"
+                    value={formData.weight}
+                    onChange={handleInputChange}
+                    className="apd-input-group__field"
+                    step="0.1"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Image Upload Section */}
+            <div className="apd-form-section">
+              <h2 className="apd-form-section__title">Product Images</h2>
+              <div
+                className={`apd-upload-area ${isDragging ? 'apd-upload-area--dragging' : ''}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => handleFileSelection(e.target.files)}
+                  id="file-input"
+                  style={{ display: 'none' }}
+                />
+                <label htmlFor="file-input" className="apd-upload-area__content">
+                  <span className="apd-upload-area__icon">📷</span>
+                  <div className="apd-upload-area__text">
                     <p>Drag & drop images here</p>
                     <p>or click to browse</p>
                     <small>Max 5 images (5MB each)</small>
                   </div>
+                </label>
+                
+                <div className="apd-preview-grid">
+                  {files.map((file, index) => (
+                    <div key={index} className="apd-preview-item">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Preview ${index + 1}`}
+                        className="apd-preview-item__image"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        className="apd-preview-item__remove"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              </label>
-              
-              <div className="image-previews">
-                {files.map((file, index) => (
-                  <div key={index} className="preview-item">
-                    <img src={URL.createObjectURL(file)} alt={`Preview ${index + 1}`} />
-                    <button 
-                      type="button" 
-                      onClick={() => removeFile(index)}
-                      className="remove-btn"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
               </div>
             </div>
-          </div>
 
-          {/* Description */}
-          <div className="form-section">
-            <h2 className="section-title">Product Description</h2>
-            <div className="input-group">
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows="5"
-                placeholder="Enter detailed product description..."
-              />
+            {/* Description Section */}
+            <div className="apd-form-section">
+              <h2 className="apd-form-section__title">Product Description</h2>
+              <div className="apd-input-group">
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  className="apd-input-group__field"
+                  rows="5"
+                  placeholder="Enter detailed product description..."
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Specification */}
-          <div className="form-section">
-            <h2 className="section-title">Product Specifications</h2>
-            <div className="input-group">
-              <textarea
-                name="specification"
-                value={formData.specification}
-                onChange={handleInputChange}
-                rows="5"
-                placeholder="Enter detailed product specification..."
-              />
+            {/* Specifications Section */}
+            <div className="apd-form-section">
+              <h2 className="apd-form-section__title">Product Specifications</h2>
+              <div className="apd-input-group">
+                <textarea
+                  name="specification"
+                  value={formData.specification}
+                  onChange={handleInputChange}
+                  className="apd-input-group__field"
+                  rows="5"
+                  placeholder="Enter detailed product specifications..."
+                />
+              </div>
             </div>
-          </div>
 
-          <button 
-            type="submit" 
-            className="submit-btn"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Creating...' : 'Create Product'}
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="apd-submit-button"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? (
+                <>
+                  <span className="apd-submit-button__loader"></span>
+                  Creating...
+                </>
+              ) : (
+                'Create Product'
+              )}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
     </>

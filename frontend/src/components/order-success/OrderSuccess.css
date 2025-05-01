@@ -102,7 +102,7 @@ h1 {
     border-bottom: 1px solid #f1f5f9;
 }
 
-.order-items {
+.order-dashboard .order-items {
     background: white;
     padding: 1.5rem;
     border-radius: 1rem;
@@ -110,14 +110,21 @@ h1 {
     grid-column: 1 / -1;
 }
 
-.order-item {
+.order-dashboard .order-items h2{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.order-dashboard .order-item {
     display: flex;
     gap: 1rem;
+    align-items: center;
     padding: 1rem 0;
     border-bottom: 1px solid #f1f5f9;
 }
 
-.order-item img {
+.order-dashboard .order-item img {
     width: 80px;
     height: 80px;
     object-fit: cover;

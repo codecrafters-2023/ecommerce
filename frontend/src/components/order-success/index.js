@@ -12,49 +12,49 @@ const OrderSuccess = () => {
     const [order, setOrder] = useState(location.state?.order);
     const [loading, setLoading] = useState(!location.state?.order);
 
-    const handleDownloadInvoice = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please login to download invoice');
-                return navigate('/login');
-            }
+    // const handleDownloadInvoice = async () => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         if (!token) {
+    //             alert('Please login to download invoice');
+    //             return navigate('/login');
+    //         }
 
-            const response = await axios.get(
-                `${process.env.REACT_APP_API_URL}/orders/${order._id}/invoice`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    responseType: 'blob',
-                    timeout: 15000
-                }
-            );
+    //         const response = await axios.get(
+    //             `${process.env.REACT_APP_API_URL}/orders/${order._id}/invoice`,
+    //             {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token}`
+    //                 },
+    //                 responseType: 'blob',
+    //                 timeout: 15000
+    //             }
+    //         );
 
-            // Verify blob integrity
-            if (!response.data || response.data.size === 0) {
-                throw new Error('Empty PDF response');
-            }
+    //         // Verify blob integrity
+    //         if (!response.data || response.data.size === 0) {
+    //             throw new Error('Empty PDF response');
+    //         }
 
-            // Create download
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `invoice-${order._id}.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            URL.revokeObjectURL(url);
+    //         // Create download
+    //         const url = window.URL.createObjectURL(new Blob([response.data]));
+    //         const link = document.createElement('a');
+    //         link.href = url;
+    //         link.setAttribute('download', `invoice-${order._id}.pdf`);
+    //         document.body.appendChild(link);
+    //         link.click();
+    //         link.remove();
+    //         URL.revokeObjectURL(url);
 
-        } catch (error) {
-            console.error('[Invoice Download] Error:', {
-                status: error.response?.status,
-                data: error.response?.data,
-                orderId: order?._id
-            });
-            alert(error.response?.data?.message || 'Invoice download failed');
-        }
-    };
+    //     } catch (error) {
+    //         console.error('[Invoice Download] Error:', {
+    //             status: error.response?.status,
+    //             data: error.response?.data,
+    //             orderId: order?._id
+    //         });
+    //         alert(error.response?.data?.message || 'Invoice download failed');
+    //     }
+    // };
 
     useEffect(() => {
         if (!location.state?.order) {
@@ -150,10 +150,11 @@ const OrderSuccess = () => {
                                             e.target.nextElementSibling?.classList.add('show-fallback');
                                         }}
                                     />
-                                    <div className="item-info">
-                                        <h4>{item.name}</h4>
+                                    <h4>{item.name}</h4>
                                         <p>Quantity: {item.quantity}</p>
                                         <p>Price: ₹{(item.discountPrice || item.price).toFixed(2)}</p>
+                                    <div className="item-info">
+                                        
                                     </div>
                                 </div>
                             ))}
@@ -164,12 +165,12 @@ const OrderSuccess = () => {
                         <Link to="/shop" className="continue-shopping">
                             Continue Shopping
                         </Link>
-                        <button
+                        {/* <button
                             className="download-invoice"
                             onClick={handleDownloadInvoice}
                         >
                             Download Invoice
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>
