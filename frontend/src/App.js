@@ -19,6 +19,7 @@ import ProductEditForm from "./Admin/components/ProductEditForm";
 import ProductList from "./Admin/pages/Products";
 import Settings from "./Admin/pages/Settings";
 import Discounts from "./Admin/pages/Discounts";
+import GalleryImageUpload from "./Admin/pages/GalleryImageUpload/GalleryImageUpload";
 
 
 // ===============User routes ==================
@@ -42,6 +43,7 @@ import RefundPolicy from "./components/RefundPolicy/RefundPolicy";
 import ShippingPolicy from "./components/ShippingPolicy/ShippingPolicy";
 import TermsOfServices from "./components/TermsOfServices/TermsOfServices";
 import ContactInformation from "./components/ContactInformation/ContactInformation";
+import Gallery from "./pages/Gallery/Gallery";
 
 
 function App() {
@@ -95,6 +97,7 @@ function App() {
             <Route path="/shipping-policy" element={<ShippingPolicy />} />
             <Route path="/terms-of-services" element={<TermsOfServices />} />
             <Route path="/contact-information" element={<ContactInformation />} />
+            <Route path="/gallery" element={<Gallery />} />
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>
@@ -107,6 +110,7 @@ function App() {
               <Route path="/cancelorders" element={<CancelledOrders />} />
               <Route path="/discounts" element={<Discounts />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/gallery-image-upload" element={<GalleryImageUpload />} />
             </Route>
           </Routes>
           <ToastContainer />

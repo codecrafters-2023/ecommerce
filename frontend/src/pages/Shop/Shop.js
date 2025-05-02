@@ -283,13 +283,13 @@ const ProductListPage = () => {
                       )}
                     </div>
 
-                    <button
+                    {/* <button
                       className="add-to-cart-button"
                       onClick={() => addToCart(product._id)}
                     >
                       <FiShoppingCart />
                       Add to Cart
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               ))

@@ -86,7 +86,7 @@ const OrderSuccess = () => {
             <div className="order-success-container">
                 <div className="success-header">
                     <div className="success-icon">
-                        <FaCheckCircle />
+                        <FaCheckCircle style={{fontSize:"30px"}}/>
                     </div>
                     <h1>Order Confirmed!</h1>
                     <p className="confirmation-text">
@@ -95,7 +95,7 @@ const OrderSuccess = () => {
                 </div>
 
                 <div className="order-dashboard">
-                    <div className="order-timeline">
+                    {/* <div className="order-timeline">
                         <div className="timeline-step active">
                             <FaBox className="timeline-icon" />
                             <span>Order Placed</span>
@@ -108,7 +108,7 @@ const OrderSuccess = () => {
                             <FaCheckCircle className="timeline-icon" />
                             <span>Delivered</span>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="order-details-grid">
                         <div className="order-summary">

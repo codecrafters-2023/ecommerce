@@ -26,9 +26,9 @@ const NewsletterSignup = () => {
             <div className={`newsletter-container ${isSubscribed ? 'success' : ''}`}>
                 {!isSubscribed ? (
                     <>
-                        <h2 className="newsletter-title">Get Exclusive Offers!</h2>
+                        <h2 className="newsletter-title">Subscribe to our emails</h2>
                         <p className="newsletter-text">
-                            Subscribe to our newsletter for 10% off your first order
+                        Be the first to know about new collections and exclusive offers.
                         </p>
                         <form onSubmit={handleSubmit} className="newsletter-form">
                             <div className={`input-group ${isError ? 'error' : ''}`}>

@@ -1,11 +1,11 @@
 /* NewsletterSignup.css */
 .newsletter-section {
-    padding: 4rem 1rem;
-    background: #f9fafb;
+    padding: 5rem 1rem;
+    /* background: #f9fafb; */
 }
 
 .newsletter-container {
-    max-width: 600px;
+    max-width: 650px;
     margin: 0 auto;
     padding: 2.5rem;
     background: white;

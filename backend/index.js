@@ -10,6 +10,7 @@ const cartRoutes = require('./routes/cartRoutes')
 const orderRoutes = require('./routes/orderRoute')
 const adminDashboardRoutes = require('./routes/adminDashboard');
 const couponRoutes = require('./routes/CoupenRoutes')
+const galleryRoutes = require('./routes/Gallery')
 const cors = require('cors');
 const path = require('path');
 
@@ -22,7 +23,7 @@ app.use(cors({
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Cache-Control'],
     exposedHeaders: ['Authorization', 'Content-Disposition'],
-    
+
 }));
 
 // Database
@@ -48,6 +49,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/coupons', couponRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 const PORT = 8080 || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

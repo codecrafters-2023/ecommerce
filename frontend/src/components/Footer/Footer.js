@@ -2,7 +2,7 @@
 import React from 'react';
 import './Footer.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInstagram, faTiktok, faPinterest, faFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faInstagram, faFacebook, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
 // import logo from './logo.png'; // Replace with your logo path
 
@@ -22,6 +22,7 @@ const Footer = () => {
                             <li><Link to="/">Home</Link></li>
                             <li><Link to="/shop">Shop</Link></li>
                             <li><Link to="/about">About Us</Link></li>
+                            <li><Link to="/gallery">Gallery</Link></li>
                             <li><Link to="/contact">Contact</Link></li>
                         </ul>
                     </div>
@@ -43,8 +44,8 @@ const Footer = () => {
                     </div>
                 </div>
                     <div className="social-icons">
-                        <Link className='social' to="#"><FontAwesomeIcon icon={faInstagram} /></Link>
-                        <Link className='social' to="#"><FontAwesomeIcon icon={faFacebook} /></Link>
+                        <Link className='social' to="https://www.instagram.com/farfoo.in" target='_blank'><FontAwesomeIcon icon={faInstagram} /></Link>
+                        <Link className='social' to="https://www.facebook.com/people/FarFoo/61572242198690/?rdid=aPSXbQTDD3K2eVi6&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F1PvLMkWSiK" target='_blank'><FontAwesomeIcon icon={faFacebook} /></Link>
                         <Link className='social' to="#"><FontAwesomeIcon icon={faLinkedin} /></Link>
                     </div>
             </div>

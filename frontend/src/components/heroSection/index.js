@@ -22,7 +22,7 @@ const HeroSection = () => {
 
             <div className={`hero-content ${animated ? 'animated' : ''}`}>
                 <div className="product-info">
-                    <h1 className="title">
+                    <h1 id="title">
                         <span>Premium</span>
                         Turmeric Powder
                     </h1>

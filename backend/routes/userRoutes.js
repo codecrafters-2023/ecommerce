@@ -111,4 +111,16 @@ router.get('/products/:id', async (req, res) => {
     }
 });
 
+// top seling product
+
+// Backend route modification
+router.get('/top-selling', async (req, res) => {
+    try {
+        const topProduct = await Product.findOne({ weight: "1kg" }); // Direct weight filter
+        res.json(topProduct);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 module.exports = router;

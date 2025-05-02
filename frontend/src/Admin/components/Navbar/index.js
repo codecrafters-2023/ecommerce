@@ -115,9 +115,10 @@ const AdminSidebar = () => {
         { path: '/AddProduct', name: 'Add Products', icon: <MdAddToPhotos /> },
         { path: '/orders', name: 'Orders', icon: <FaCartArrowDown /> },
         { path: '/cancelorders', name: 'Cancelled Orders', icon: <MdCancel  /> },
-        { path: '/', name: 'Billing', icon: <CiCreditCard1 /> },
         { path: '/discounts', name: 'Discounts', icon: <RiDiscountPercentFill /> },
         { path: '/UsersList', name: 'Users', icon: <FiUsers /> },
+        { path: '/gallery-image-upload', name: 'Gallery', icon: <FiUsers /> },
+        { path: '/', name: 'Billing', icon: <CiCreditCard1 /> },
         { path: '/settings', name: 'Settings', icon: <FiSettings /> },
         { path: '/', name: 'User Panel', icon: <LuLayoutPanelLeft /> },
     ];
