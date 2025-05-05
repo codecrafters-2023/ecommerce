@@ -134,10 +134,10 @@
 .gau-upload-button {
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(135deg, #4299e1, #3182ce);
+  background: linear-gradient(135deg, #016801, #037203);
   color: white;
   border: none;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;

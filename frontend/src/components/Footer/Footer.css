@@ -71,8 +71,9 @@
 }
 
 .footer-column h4 {
-    color: var(--accent-color);
+    color: #fff;
     margin-bottom: 1.5rem;
+    font-weight: 600;
     font-size: 1.1rem;
     letter-spacing: 1px;
     position: relative;

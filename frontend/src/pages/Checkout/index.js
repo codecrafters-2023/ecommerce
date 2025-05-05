@@ -404,6 +404,7 @@ const Checkout = () => {
                                         <input
                                             type="checkbox"
                                             {...register("saveAddress")}
+                                            className="checkbox-input"
                                         />
                                         Save this address for future orders
                                     </label>

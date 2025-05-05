@@ -1,106 +1,15 @@
-// import React from 'react';
-// import { Link } from 'react-router-dom';
-// import './index.css';
-import { FaCube } from "react-icons/fa";
-import { IoIosSettings } from "react-icons/io";
-
-// import { useAuth } from '../../../context/AuthContext';
-import { IoIosLogOut } from "react-icons/io";
+import React, { useState } from 'react';
+import './index.css';
 import { CiCreditCard1 } from "react-icons/ci";
 import { HiMiniShoppingBag } from "react-icons/hi2";
 import { MdAddToPhotos } from "react-icons/md";
-import { FaUsers } from "react-icons/fa";
-
-
-// const AdminSidebar = () => {
-
-//     const { logout } = useAuth();
-
-//     return (
-//         <>
-//             <div class="admin-container">
-//                 {/* <!-- Sidebar --> */}
-//                 <div>
-//                     <aside class="sidebar">
-//                         <div class="logo-container">
-//                             <div class="admin_logo">
-//                                 <FaCube className='logo_icon' />
-//                                 <span>Admin</span>
-//                             </div>
-//                         </div>
-
-//                         <nav>
-//                             <ul class="nav-menu">
-//                                 <li class="nav-item active">
-//                                     <Link to={'/admin'} class="nav-link">
-//                                         <MdDashboard className='sidebar_icons' />
-//                                         <span>Dashboard</span>
-//                                     </Link>
-//                                 </li>
-//                                 <li class="nav-item">
-//                                     <Link to={'/allProducts'} class="nav-link">
-//                                         <HiMiniShoppingBag className='sidebar_icons' />
-//                                         <span>Products</span>
-//                                     </Link>
-//                                 </li>
-//                                 <li class="nav-item">
-//                                     <Link to={'/AddProduct'} class="nav-link">
-//                                         <MdAddToPhotos className='sidebar_icons' />
-//                                         <span>Add Products</span>
-//                                     </Link>
-//                                 </li>
-                                
-//                                 <li class="nav-item">
-//                                     <Link to={'#'} class="nav-link">
-//                                         <CiCreditCard1 className='sidebar_icons' />
-//                                         <span>Billing</span>
-//                                     </Link>
-//                                 </li>
-                                
-//                                 <li class="nav-item">
-//                                     <Link to={'/orders'} class="nav-link">
-//                                         <CiCreditCard1 className='sidebar_icons' />
-//                                         <span>Orders</span>
-//                                     </Link>
-//                                 </li>
-                                
-//                                 <li class="nav-item">
-//                                     <Link to={'/UsersList'} class="nav-link">
-//                                         <FaUsers className='sidebar_icons' />
-//                                         <span>Users List</span>
-//                                     </Link>
-//                                 </li>
-//                                 <li class="nav-item">
-//                                     <Link to={'#'} class="nav-link">
-//                                         <IoIosSettings className='sidebar_icons' />
-//                                         <span>Settings</span>
-//                                     </Link>
-//                                 </li>
-//                             </ul>
-//                         </nav>
-//                         <button className='logout_btn' onClick={logout}>Logout<IoIosLogOut /></button>
-//                     </aside>
-
-//                 </div>
-
-
-//             </div>
-//         </>
-//     );
-// };
-
-// export default AdminSidebar;
-
-// ModernSidebar.js
-import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FiMenu, FiX, FiUsers, FiSettings, FiLogOut } from 'react-icons/fi';
-import { RiDiscountPercentFill } from "react-icons/ri";
+import { RiDiscountPercentFill, RiGalleryFill } from "react-icons/ri";
 import { FaCartArrowDown } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import { LuLayoutPanelLeft } from "react-icons/lu";
 import { motion, AnimatePresence } from 'framer-motion';
-import './index.css'
 import { useAuth } from '../../../context/AuthContext';
 import { MdDashboard } from "react-icons/md";
 
@@ -114,10 +23,10 @@ const AdminSidebar = () => {
         { path: '/allProducts', name: 'Products', icon: <HiMiniShoppingBag /> },
         { path: '/AddProduct', name: 'Add Products', icon: <MdAddToPhotos /> },
         { path: '/orders', name: 'Orders', icon: <FaCartArrowDown /> },
-        { path: '/cancelorders', name: 'Cancelled Orders', icon: <MdCancel  /> },
+        { path: '/cancelorders', name: 'Cancelled Orders', icon: <MdCancel /> },
         { path: '/discounts', name: 'Discounts', icon: <RiDiscountPercentFill /> },
         { path: '/UsersList', name: 'Users', icon: <FiUsers /> },
-        { path: '/gallery-image-upload', name: 'Gallery', icon: <FiUsers /> },
+        { path: '/gallery-image-upload', name: 'Gallery', icon: <RiGalleryFill /> },
         { path: '/', name: 'Billing', icon: <CiCreditCard1 /> },
         { path: '/settings', name: 'Settings', icon: <FiSettings /> },
         { path: '/', name: 'User Panel', icon: <LuLayoutPanelLeft /> },
@@ -132,7 +41,7 @@ const AdminSidebar = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                {isOpen ? <FiX style={{color:"#000", fontSize:"20px"}}/> : <FiMenu style={{color:"#000", fontSize:"20px"}} />}
+                {isOpen ? <FiX style={{ color: "#000", fontSize: "20px" }} /> : <FiMenu style={{ color: "#000", fontSize: "20px" }} />}
             </motion.button>
 
             {/* Backdrop Overlay */}
@@ -195,7 +104,7 @@ const AdminSidebar = () => {
                     whileHover={{ scale: 1.02 }}
                     onClick={logout}
                 >
-                    <FiLogOut className="logout-icon"/>
+                    <FiLogOut className="logout-icon" />
                     <span>Logout</span>
                 </motion.div>
             </motion.aside>

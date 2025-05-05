@@ -171,7 +171,7 @@
 .buy-now {
     padding: 1rem 2rem;
     border: none;
-    border-radius: 6px;
+    /* border-radius: 6px; */
     font-weight: bold;
     cursor: pointer;
     display: flex;
@@ -181,7 +181,7 @@
 }
 
 .add-to-cart {
-    background: var(--productDetail-primary-color);
+    background: #008001;
     color: white;
 }
 

@@ -44,6 +44,7 @@ import ShippingPolicy from "./components/ShippingPolicy/ShippingPolicy";
 import TermsOfServices from "./components/TermsOfServices/TermsOfServices";
 import ContactInformation from "./components/ContactInformation/ContactInformation";
 import Gallery from "./pages/Gallery/Gallery";
+import ScrollToTop from "./components/ScrollToTop";
 
 
 function App() {
@@ -55,25 +56,9 @@ function App() {
     }
   }, []);
 
-//   useEffect(() => {
-//     const validateCart = async () => {
-//         const token = localStorage.getItem('token');
-//         if (token) {
-//             try {
-//                 const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/cart`);
-//                 if (data.coupon && data.items.length === 0) {
-//                     await axios.post(`${process.env.REACT_APP_API_URL}/cart/reset`);
-//                 }
-//             } catch (error) {
-//                 console.error('Cart validation failed:', error);
-//             }
-//         }
-//     };
-//     validateCart();
-// }, []);
-
   return (
     <Router>
+      <ScrollToTop />
       <AuthProvider>
         <CartProvider>
           <Routes>

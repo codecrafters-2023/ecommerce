@@ -206,18 +206,18 @@
 }
 
 .submit-button {
-    background-color: var(--primary-color);
+    background-color: #016801;
     color: white;
     padding: 1rem 2rem;
     border: none;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
 .submit-button:hover:not(:disabled) {
-    background-color: var(--hover-color);
+    background-color: #015101;
 }
 
 .submit-button:disabled {

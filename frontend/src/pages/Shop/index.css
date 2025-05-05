@@ -215,9 +215,9 @@
 }
 
 .pagination-item.active {
-    background: var(--primary-color);
+    background: #016801;
     color: white;
-    border-color: var(--primary-color);
+    border-color: #016801;
 }
 
 .loading-spinner {

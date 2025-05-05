@@ -91,9 +91,10 @@
     margin-bottom: 1.5rem;
 }
 
-.order-item {
+.checkout-container .order-item {
     display: flex;
     gap: 1rem;
+    align-items: center;
     padding: 1rem 0;
     border-bottom: 1px solid #e2e8f0;
 }
@@ -129,11 +130,11 @@
 
 .payment-button {
     width: 100%;
-    background: #4299e1;
+    background: #008001;
     color: white;
     padding: 1rem;
     border: none;
-    border-radius: 8px;
+    /* border-radius: 8px; */
     font-size: 1.1rem;
     font-weight: 500;
     cursor: pointer;
@@ -147,7 +148,7 @@
 }
 
 .payment-button:hover:not(:disabled) {
-    background: #3182ce;
+    background: #005f00;
 }
 
 .spinner {
@@ -182,8 +183,8 @@
 }
 
 .save-address input {
-    width: 15px;
-    height: 15px;
+    width: 15px!important;
+    height: 15px!important;
     cursor: pointer;
 }
 
@@ -246,6 +247,12 @@
     border-top: 2px solid #e2e8f0;
     padding-top: 0.5rem;
 }
+
+/* .checkbox-input{
+    width: 20px!important;
+    height: 20px!important;
+    cursor: pointer;
+} */
 
 @media (max-width: 768px) {
     .checkout-grid {
