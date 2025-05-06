@@ -26,7 +26,7 @@ const arrayBufferToBase64 = (buffer) => {
 const formatCurrency = (amount) => {
     // Convert to number and handle invalid values
     const numericAmount = Number(amount) || 0;
-    return `₹${numericAmount.toFixed(2)}`;
+    return `Rs. ${numericAmount.toFixed(2)}`;
 };
 
 const generateInvoice = async (order) => {
@@ -83,7 +83,7 @@ const generateInvoice = async (order) => {
     // Footer
     doc.setFontSize(10);
     doc.text('Thank you for your business!', 15, 280);
-    doc.text('Terms: Payment due within 15 days', 15, 285);
+    // doc.text('Terms: Payment due within 15 days', 15, 285);
 
     doc.save(`invoice-${order._id}.pdf`);
 };
