@@ -290,10 +290,10 @@ const Checkout = () => {
                                         <option value="">Select Saved Address</option>
                                         {savedAddresses.map(address => (
                                             <option
-                                                key={address._id} // Use raw ID only
+                                                key={address._id}
                                                 value={address._id}
                                             >
-                                                {address.name} - {address.address.substring(0, 30)}...
+                                                {address.name} - {(address.address || '').substring(0, 30)}...
                                             </option>
                                         ))}
                                     </select>

@@ -342,6 +342,26 @@ router.put('/addresses/:id/primary', protect, async (req, res) => {
     }
 });
 
+// Update address
+router.put('/addresses/:id', protect, async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+        const address = user.addresses.id(req.params.id);
+        
+        if (!address) {
+            return res.status(404).json({ success: false, message: 'Address not found' });
+        }
+
+        // Update fields
+        address.set(req.body);
+        await user.save();
+        
+        res.json({ success: true, addresses: user.addresses });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Failed to update address' });
+    }
+});
+
 router.delete('/addresses/:id', protect, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
