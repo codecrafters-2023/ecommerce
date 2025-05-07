@@ -55,9 +55,9 @@
     color: #6c757d;
 }
 
-.users-table-container {
+/* .users-table-container {
     overflow-x: auto;
-}
+} */
 
 .users-table {
     width: 100%;
@@ -67,7 +67,7 @@
 
 .users-table th,
 .users-table td {
-    padding: 1rem;
+    padding: 7px 1rem;
     text-align: left;
     border-bottom: 1px solid var(--border-color);
 }
@@ -86,7 +86,7 @@
     display: flex;
     /* align-items: center; */
     /* gap: 1rem; */
-    margin: 0!important;
+    margin: 0 !important;
 }
 
 .user-avatar {
@@ -139,9 +139,93 @@
 }
 
 .actions-container {
-    display: flex;
-    gap: 0.75rem;
+    position: relative;
+    /* display: flex;
+    gap: 0.75rem; */
 }
+
+.action-dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-toggle {
+    padding: 6px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+  
+  .dropdown-toggle:hover {
+    background: #f5f6fa;
+  }
+  
+  .dropdown-icon {
+    width: 18px;
+    height: 18px;
+    color: #64748b;
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: 1000;
+    min-width: 160px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.2s ease;
+    visibility: hidden;
+    padding: 8px 0;
+  }
+  
+  .dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #334155;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .dropdown-item:hover {
+    background: #f8fafc;
+  }
+  
+  .dropdown-item.text-danger {
+    color: #ef4444;
+  }
+  
+  .dropdown-item.text-danger:hover {
+    color: #dc2626;
+  }
+  
+  .icon-sm {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .icon-xs {
+    width: 12px;
+    height: 12px;
+    margin-right: 6px;
+  }
 
 .edit-btn,
 .delete-btn {
@@ -222,23 +306,35 @@
     justify-content: flex-end;
 }
 
-.save-btn {
-    background-color: var(--primary-color);
+.edit-modal-overlay .modal-actions .save-btn {
+    background-color: #008001;
     color: white;
     padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
-    margin: 0!important;
+    margin: 0 !important;
 }
 
-.cancel-btn {
+.edit-modal-overlay .modal-actions .cancel-btn {
     background-color: #e9ecef;
     color: var(--text-color);
     padding: 0.75rem 1.5rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 5px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    /* width: 200px; */
+}
+
+.edit-modal-overlay .modal-actions .cancel-btn .icon-xs{
+    height: 18px;
+    width: 18px;
+}
+.edit-modal-overlay .modal-actions .save-btn .icon-xs{
+    height: 18px;
+    width: 18px;
 }
 
 .loading-overlay {
@@ -388,6 +484,18 @@
         width: 35px;
         height: 35px;
     }
+
+    .dropdown-menu {
+        left: auto;
+        right: 0;
+        min-width: 140px;
+      }
+      
+      .dropdown-item {
+        padding: 8px 12px;
+        font-size: 13px;
+        gap: 10px;
+      }
 }
 
 /* Small devices (landscape phones, 600px and below) */

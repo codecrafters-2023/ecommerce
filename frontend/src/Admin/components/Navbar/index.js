@@ -6,6 +6,7 @@ import { MdAddToPhotos } from "react-icons/md";
 import { NavLink } from 'react-router-dom';
 import { FiMenu, FiX, FiUsers, FiSettings, FiLogOut } from 'react-icons/fi';
 import { RiDiscountPercentFill, RiGalleryFill } from "react-icons/ri";
+import { ImProfile } from "react-icons/im";
 import { FaCartArrowDown } from "react-icons/fa";
 import { MdCancel } from "react-icons/md";
 import { LuLayoutPanelLeft } from "react-icons/lu";
@@ -20,15 +21,16 @@ const AdminSidebar = () => {
 
     const links = [
         { path: '/admin', name: 'Dashboard', icon: <MdDashboard /> },
+        { path: '/admin-profile', name: 'Profile', icon: <ImProfile  /> },
         { path: '/allProducts', name: 'Products', icon: <HiMiniShoppingBag /> },
         { path: '/AddProduct', name: 'Add Products', icon: <MdAddToPhotos /> },
         { path: '/orders', name: 'Orders', icon: <FaCartArrowDown /> },
         { path: '/cancelorders', name: 'Cancelled Orders', icon: <MdCancel /> },
         { path: '/discounts', name: 'Discounts', icon: <RiDiscountPercentFill /> },
-        { path: '/UsersList', name: 'Users', icon: <FiUsers /> },
+        { path: '/UsersList', name: 'Customers', icon: <FiUsers /> },
         { path: '/gallery-image-upload', name: 'Gallery', icon: <RiGalleryFill /> },
-        { path: '/', name: 'Billing', icon: <CiCreditCard1 /> },
-        { path: '/settings', name: 'Settings', icon: <FiSettings /> },
+        // { path: '/', name: 'Billing', icon: <CiCreditCard1 /> },
+        // { path: '/settings', name: 'Settings', icon: <FiSettings /> },
         { path: '/', name: 'User Panel', icon: <LuLayoutPanelLeft /> },
     ];
 

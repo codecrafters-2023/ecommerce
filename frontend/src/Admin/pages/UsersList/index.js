@@ -5,6 +5,7 @@ import "./index.css"
 import AdminSidebar from '../../components/Navbar'
 import ReactPaginate from 'react-paginate';
 import { toast } from 'react-toastify';
+import { FaEllipsisV, FaEdit, FaTrash, FaRegSave, FaTimes } from 'react-icons/fa';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -15,10 +16,22 @@ const UserManagement = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.action-dropdown')) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     fetchUsers();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, itemsPerPage]);
 
   const fetchUsers = async () => {
@@ -60,19 +73,26 @@ const UserManagement = () => {
   const handleDelete = async (id) => {
     // if (window.confirm('Are you sure you want to delete this user?')) {
     // }
-      try {
-        await deleteUser(id);
-        await fetchUsers();
-        toast.success('User deleted successfully')
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      await deleteUser(id);
+      await fetchUsers();
+      toast.success('User deleted successfully')
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const filteredUsers = users.filter(user =>
-    user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    user.role !== 'admin' && (
+      user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
+
+  // const filteredUsers = users.filter(user =>
+  //   user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //   user.email?.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   // if (loading) {
   //   return (
@@ -107,6 +127,7 @@ const UserManagement = () => {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Orders</th>
                 <th>Role</th>
                 <th>Actions</th>
               </tr>
@@ -134,28 +155,51 @@ const UserManagement = () => {
                     {user.phone}
                   </td>
                   <td>
+                    {/* {user.phone} */}
+                    <div className="order-count">
+                      {user.orderCount || 0} orders
+                    </div>
+                  </td>
+                  <td>
                     <span className={`role-badge ${user.role}`}>
                       {user.role}
                     </span>
                   </td>
+
                   <td>
-                    <div className="actions-container">
+                    <div className="action-dropdown">
                       <button
-                        className="edit-btn"
-                        onClick={() => setEditingUser(user)}
+                        className="dropdown-toggle"
+                        onClick={() => setOpenDropdown(openDropdown === user._id ? null : user._id)}
                       >
-                        <i className="fas fa-edit"></i>
-                        Edit
+                        <FaEllipsisV className="dropdown-icon" />
                       </button>
-                      <button
-                        className="delete-btn"
-                        onClick={() => handleDelete(user._id)}
-                      >
-                        <i className="fas fa-trash"></i>
-                        Delete
-                      </button>
+
+                      <div className={`dropdown-menu ${openDropdown === user._id ? 'show' : ''}`}>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => {
+                            setEditingUser(user);
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          <FaEdit className="icon-sm" />
+                          Edit
+                        </button>
+                        <button
+                          className="dropdown-item text-danger"
+                          onClick={() => {
+                            handleDelete(user._id);
+                            setOpenDropdown(null);
+                          }}
+                        >
+                          <FaTrash className="icon-sm" />
+                          Delete
+                        </button>
+                      </div>
                     </div>
                   </td>
+
                 </tr>
               ))}
             </tbody>
@@ -248,10 +292,12 @@ const UserManagement = () => {
                     className="cancel-btn"
                     onClick={() => setEditingUser(null)}
                   >
+                    <FaTimes className="icon-xs" />
                     Cancel
                   </button>
                   <button type="submit" className="save-btn">
-                    Save Changes
+                    <FaRegSave className="icon-xs" />
+                    Save
                   </button>
                 </div>
               </form>

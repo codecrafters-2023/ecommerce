@@ -1,4 +1,3 @@
-// services/api.js
 import axios from 'axios';
 
 const api = axios.create({
@@ -19,6 +18,27 @@ export const getUsers = async (page, limit) => {
     }
 };
 
+// Admin Profile API
+export const getAdminProfile = async () => {
+    try {
+        const response = await api.get('/admin/profile');
+        return response.data;
+    } catch (err) {
+        throw err.response.data;
+    }
+};
+
+// Get Admins List API
+export const getAdminList = async () => {
+    try {
+        const response = await api.get('/admins');
+        return response.data;
+    } catch (err) {
+        throw new Error(err.response?.data?.message || 'Failed to fetch admins');
+    }
+};
+
+// Update User API
 export const updateUser = async (id, userData) => {
     try {
         const response = await api.put(`/users/${id}`, userData);
@@ -28,6 +48,7 @@ export const updateUser = async (id, userData) => {
     }
 };
 
+// Delete User API
 export const deleteUser = async (id) => {
     try {
         const response = await api.delete(`/users/${id}`);

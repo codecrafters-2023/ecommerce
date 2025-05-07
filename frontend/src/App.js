@@ -45,6 +45,7 @@ import TermsOfServices from "./components/TermsOfServices/TermsOfServices";
 import ContactInformation from "./components/ContactInformation/ContactInformation";
 import Gallery from "./pages/Gallery/Gallery";
 import ScrollToTop from "./components/ScrollToTop";
+import AdminProfile from "./Admin/pages/Profile/Profile";
 
 
 function App() {
@@ -96,6 +97,7 @@ function App() {
               <Route path="/discounts" element={<Discounts />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/gallery-image-upload" element={<GalleryImageUpload />} />
+              <Route path="/admin-profile" element={<AdminProfile />} />
             </Route>
           </Routes>
           <ToastContainer />

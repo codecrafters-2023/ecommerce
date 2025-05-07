@@ -11,13 +11,27 @@ router.get('/users', async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        
+        // Aggregation pipeline
+        const users = await User.aggregate([
+            {
+                $lookup: {
+                    from: 'orders',
+                    localField: '_id',
+                    foreignField: 'user',
+                    as: 'orders'
+                }
+            },
+            {
+                $addFields: {
+                    orderCount: { $size: '$orders' }
+                }
+            },
+            { $skip: skip },
+            { $limit: limit },
+            { $project: { password: 0, orders: 0 } }
+        ]);
 
         const total = await User.countDocuments();
-        const users = await User.find()
-            .select('-password')
-            .skip(skip)
-            .limit(limit);
 
         res.json({
             users,
@@ -28,6 +42,30 @@ router.get('/users', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
+    }
+});
+
+router.get('/admin/profile', async (req, res) => {
+    try {
+        const admin = await User.findOne({ role: 'admin' }).select('-password');
+        
+        if (!admin) {
+            return res.status(404).json({ msg: 'Admin profile not found' });
+        }
+
+        res.json(admin);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server Error');
+    }
+});
+
+router.get('/admins', async (req, res) => {
+    try {
+        const admins = await User.find({ role: 'admin' }).select('-password');
+        res.json(admins);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
