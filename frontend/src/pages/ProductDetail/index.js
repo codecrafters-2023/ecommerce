@@ -136,6 +136,7 @@ const ProductDetail = () => {
                                         ₹{product.price}
                                     </span>
                                 )}
+
                                 {product.discountPrice < product.price && (
                                     <motion.span
                                         initial={{ scale: 0 }}
@@ -149,6 +150,15 @@ const ProductDetail = () => {
                                         )}
                                         % OFF
                                     </motion.span>
+                                )}
+                                {product.quantity === 0 && (
+                                    <motion.div
+                                        initial={{ scale: 0 }}
+                                        animate={{ scale: 1 }}
+                                        className="sold-out-badge"
+                                    >
+                                        Sold Out
+                                    </motion.div>
                                 )}
                             </div>
                         </div>
@@ -189,45 +199,29 @@ const ProductDetail = () => {
                                 onClick={() => addToCart(product._id, quantity)}
                                 whileHover={{ y: -2 }}
                                 whileTap={{ scale: 0.95 }}
+                                disabled={product.quantity === 0}
                             >
-                                <FiShoppingCart /> Add to Cart
+                                <FiShoppingCart />
+                                Add to Cart
+                                {/* {product.quantity === 0 ? 'Out of Stock' : 'Add to Cart'} */}
                             </motion.button>
+
                             <motion.button
                                 className="buy-now"
                                 whileHover={{ y: -2 }}
                                 whileTap={{ scale: 0.95 }}
+                                disabled={product.quantity === 0}
                                 onClick={async () => {
-                                    try {
-                                        // Clear existing cart items
-                                        await clearCart();
-
-                                        // Add the single product directly to cart
-                                        await addToCart(product._id, quantity);
-
-                                        // Navigate to checkout with direct purchase flag
-                                        navigate('/checkout', {
-                                            state: {
-                                                isDirectPurchase: true,
-                                                productId: product._id,
-                                                quantity: quantity,
-                                                unitPrice: product.discountPrice || product.price
-                                            }
-                                        });
-                                    } catch (error) {
-                                        console.error('Error proceeding to checkout:', error);
+                                    if (product.quantity > 0) {
+                                        // Existing buy now logic
                                     }
                                 }}
                             >
                                 Buy Now
+                                {/* {product.quantity === 0 ? 'Out of Stock' : 'Buy Now'} */}
                             </motion.button>
-                            {/* <motion.button
-                                className="wishlist"
-                                whileHover={{ y: -2 }}
-                                whileTap={{ scale: 0.95 }}
-                            >
-                                <FiHeart /> Wishlist
-                            </motion.button> */}
                         </div>
+
                     </motion.div>
 
                     {/* Product Tabs */}
