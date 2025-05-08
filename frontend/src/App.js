@@ -46,6 +46,7 @@ import ContactInformation from "./components/ContactInformation/ContactInformati
 import Gallery from "./pages/Gallery/Gallery";
 import ScrollToTop from "./components/ScrollToTop";
 import AdminProfile from "./Admin/pages/Profile/Profile";
+import VerificationSuccess from "./components/verification-success";
 
 
 function App() {
@@ -84,6 +85,7 @@ function App() {
             <Route path="/terms-of-services" element={<TermsOfServices />} />
             <Route path="/contact-information" element={<ContactInformation />} />
             <Route path="/gallery" element={<Gallery />} />
+            <Route path="/verification-success" element={<VerificationSuccess />} />
 
             {/* =============== Admin Routes ============== */}
             <Route element={<AdminRoute />}>

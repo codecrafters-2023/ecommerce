@@ -14,6 +14,13 @@ const Header = () => {
     const { cartCount } = useCart();
     const { user, logout } = useAuth();
     const profileRef = useRef(null);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+
 
     // Click outside handler for profile dropdown
     useEffect(() => {
@@ -33,6 +40,8 @@ const Header = () => {
         { name: 'Gallery', path: '/gallery' },
         { name: 'Contact', path: '/contact' },
     ];
+
+    if (!mounted) return null;
 
     return (
         <>
@@ -107,7 +116,7 @@ const Header = () => {
                             )}
                         </div>
 
-                        
+
 
                         <button
                             className="menu-toggle"

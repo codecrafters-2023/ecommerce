@@ -47,7 +47,7 @@
     height: fit-content;
 }
 
-.profile-sidebar  .user-info {
+.profile-sidebar .user-info {
     text-align: center;
     margin-bottom: 2rem;
     padding-bottom: 2rem;
@@ -100,6 +100,7 @@
     padding: 1.5rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     overflow-x: hidden;
+    width: 650px;
     /* Fix horizontal scroll */
 }
 
@@ -167,36 +168,36 @@
     /* margin-top: 1rem; */
     padding-top: 1rem;
     /* border-top: 1px solid var(--border-color); */
-  }
-  
-  .payment-status {
+}
+
+.payment-status {
     padding: 0.35rem 1rem;
     border-radius: 1rem;
     font-size: 0.85rem;
     font-weight: 500;
     text-transform: capitalize;
-  }
-  
-  .payment-status.completed {
+}
+
+.payment-status.completed {
     background: rgba(34, 197, 94, 0.1);
     color: var(--success);
-  }
-  
-  .payment-status.pending {
+}
+
+.payment-status.pending {
     background: rgba(245, 158, 11, 0.1);
     color: var(--warning);
-  }
-  
-  .payment-status.cancelled {
+}
+
+.payment-status.cancelled {
     background: rgba(239, 68, 68, 0.1);
     color: var(--error);
-  }
-  
-  /* For the total amount */
-  .order-total strong {
+}
+
+/* For the total amount */
+.order-total strong {
     color: var(--text-dark);
     font-size: 1.1rem;
-  }
+}
 
 /* Dropdown */
 .dropdown {
@@ -240,6 +241,16 @@
 @media (min-width: 768px) {
     .profile-layout {
         grid-template-columns: 300px 1fr;
+    }
+
+    /* .profile-content {
+        width: auto;
+    } */
+}
+
+@media (min-width: 420px) and (max-width: 768px) {
+    .profile-content {
+        width: auto;
     }
 }
 
@@ -365,28 +376,28 @@
     transition: background-color 0.3s ease;
 }
 
-.address-form h3{
+.address-form h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
     color: var(--text-dark);
 }
 
-.form-grid label{
+.form-grid label {
     font-size: 1rem;
     margin-bottom: 0.5rem;
     color: var(--text-dark);
     font-weight: 500;
 }
 
-.form-grid input{
+.form-grid input {
     color: #575757;
 }
 
-.modal-content{
+.modal-content {
     position: relative;
 }
 
-.modal-close{
+.modal-close {
     position: absolute;
     top: 1rem;
     right: 1rem;
@@ -402,20 +413,20 @@
     font-size: 0.85rem;
     font-weight: 500;
     text-transform: capitalize;
-  }
-  
-  .order-status.completed {
+}
+
+.order-status.completed {
     background: rgba(34, 197, 94, 0.1);
     color: var(--success);
-  }
-  
-  .order-status.pending {
+}
+
+.order-status.pending {
     background: rgba(245, 158, 11, 0.1);
     color: var(--warning);
-  }
-  
-  .order-status.cancelled {
+}
+
+.order-status.cancelled {
     background: rgba(239, 68, 68, 0.1);
     color: var(--error);
     text-decoration: line-through;
-  }
+}

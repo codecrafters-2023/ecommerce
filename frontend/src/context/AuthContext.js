@@ -2,14 +2,28 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import api from '../utils/axiosConfig';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
 
+    const fetchUserProfile = async (token) => {
+        try {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API_URL}/auth/profile`,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            return response.data;
+        } catch (error) {
+            console.error('Profile fetch error:', error);
+            return null;
+        }
+    };
 
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -21,25 +35,15 @@ export const AuthProvider = ({ children }) => {
                 return;
             }
 
-            // Verify token with backend
-            const response = await axios.get(`${process.env.REACT_APP_API_URL}/auth/profile`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (response.data && response.data._id) {
-                setUser(response.data);
+            const userData = await fetchUserProfile(token);
+            if (userData?._id) {
+                setUser(userData);
             } else {
                 logout();
             }
         } catch (error) {
             console.error('Auth check error:', error);
-            if (error.response?.status === 401) {
-                // Token expired or invalid
-                localStorage.removeItem('token');
-            }
-            setUser(null);
+            logout();
         } finally {
             setLoading(false);
         }
@@ -56,6 +60,8 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('token', res.data.token);
             setUser(res.data);
             toast.success('Registration successful!');
+            toast.success('Verification codes sent to your email');
+            navigate('/login');
         } catch (error) {
             toast.error(error.response?.data?.message || 'Registration failed');
         }
@@ -63,13 +69,33 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (formData) => {
         try {
-            const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`, formData);
+            const res = await axios.post(
+                `${process.env.REACT_APP_API_URL}/auth/login`, 
+                formData
+            );
+            
             localStorage.setItem('token', res.data.token);
-            setUser(res.data);
-
-            toast.success('Login successful!');
+            
+            // Fetch complete user profile after login
+            const userProfile = await fetchUserProfile(res.data.token);
+            if (userProfile) {
+                setUser(userProfile);
+                toast.success('Login successful!');
+                navigate('/');
+            } else {
+                throw new Error('Failed to fetch user profile');
+            }
         } catch (error) {
             toast.error(error.response?.data?.message || 'Login failed');
+            logout();
+        }
+    };
+
+    const updateUser = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const userData = await fetchUserProfile(token);
+            setUser(userData);
         }
     };
 
@@ -108,7 +134,8 @@ export const AuthProvider = ({ children }) => {
                 login,
                 logout,
                 forgotPassword,
-                resetPassword
+                resetPassword,
+                updateUser
             }}
         >
             {children}

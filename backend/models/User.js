@@ -51,7 +51,13 @@ const userSchema = new mongoose.Schema({
         expires: Date
     }],
     resetPasswordToken: String,
-    resetPasswordExpires: Date
+    resetPasswordExpires: Date,
+    isEmailVerified: {
+        type: Boolean,
+        default: false
+    },
+    emailVerificationToken: String,
+    emailVerificationExpires: Date,
 });
 
 userSchema.pre('save', async function (next) {

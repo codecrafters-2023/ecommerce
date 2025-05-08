@@ -17,6 +17,8 @@ const Register = () => {
         avatar: null,
     });
 
+
+
     const { register } = useAuth();
     const navigate = useNavigate();
 
@@ -49,17 +51,14 @@ const Register = () => {
 
         try {
             await register(data);
-            // await register({
-            //     fullName: formData.fullName,
-            //     email: formData.email,
-            //     phone: formData.phone,
-            //     password: formData.password
-            // });
-            navigate('/');
+            // toast.success('Verification codes sent to your email');
+
+            // navigate('/login');
         } catch (error) {
             console.error(error);
         }
     };
+
 
     return (
         <>
@@ -91,9 +90,12 @@ const Register = () => {
                             <div className="form-group">
                                 <label>Phone Number</label>
                                 <PhoneInput
-                                    country={'us'} // Default country
+                                    country={'us'}
                                     value={formData.phone}
-                                    onChange={(phone) => setFormData({ ...formData, phone })}
+                                    onChange={(phone, country) => {
+                                        const fullNumber = `+${country.dialCode}${phone.replace(country.dialCode, '')}`;
+                                        setFormData({ ...formData, phone: fullNumber });
+                                    }}
                                     inputClass="phone-input"
                                     containerClass="phone-container"
                                     enableSearch
@@ -129,6 +131,7 @@ const Register = () => {
                 </div> */}
                 </div>
             </div>
+
         </>
     );
 };

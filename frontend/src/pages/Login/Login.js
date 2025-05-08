@@ -15,25 +15,25 @@ const Login = () => {
         e.preventDefault();
         try {
             await login(formData);
-            navigate('/');
+            // navigate('/');
         } catch (error) {
             // Error handled in auth context
         }
     };
 
     return (
-        
-        <div 
-        className="min-h-screen flex flex-col bg-cover bg-center"
-        style={{ backgroundImage: "url('/bg.jpg')" }} // ✅ Add Background Image
-    >            {/* ✅ Fixed Header Placement */}
-            <Header /> 
+
+        <div
+            className="min-h-screen flex flex-col bg-cover bg-center"
+            style={{ backgroundImage: "url('/bg.jpg')" }} // ✅ Add Background Image
+        >            {/* ✅ Fixed Header Placement */}
+            <Header />
 
             {/* ✅ Centered Login Form */}
             <div className="flex flex-1 justify-center items-center">
                 <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8">
                     <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Welcome Back 👋</h2>
-                    
+
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
                             <label className="block text-gray-600 font-medium">Email</label>
@@ -57,8 +57,8 @@ const Login = () => {
                             />
                         </div>
 
-                        <button 
-                            type="submit" 
+                        <button
+                            type="submit"
                             className="w-full bg-green-700 hover:bg-green-700 text-white font-bold py-2  transition-all"
                         >
                             Login
@@ -68,7 +68,7 @@ const Login = () => {
                     <div className="text-center mt-4 text-gray-600">
                         <Link to="/forgot-password" className="hover:text-blue-500">Forgot Password?</Link>
                     </div>
-                    
+
                     <div className="text-center mt-2 text-gray-600">
                         New here? <Link to="/register" className="text-blue-500 font-medium hover:underline">Create Account</Link>
                     </div>

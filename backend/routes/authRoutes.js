@@ -8,6 +8,8 @@ const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const multer = require('multer')
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
 
 
 // Configure Cloudinary
@@ -22,75 +24,100 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'user-avatars',
-        format: async (req, file) => 'png', // or jpeg, webp, etc
-        public_id: (req, file) => `${uuid()}-${Date.now()}`,
+        format: 'png',
+        public_id: (req, file) => `${uuidv4()}-${Date.now()}`, // Fixed uuid reference
         transformation: [{ width: 500, height: 500, crop: 'limit' }]
-    },
+    }
 });
 
 const upload = multer({ storage: storage });
 
 
-
 // Register
 router.post('/register', upload.single('avatar'), async (req, res) => {
     const { email, password, role, phone, fullName } = req.body;
+    let user = null;
+    let avatarUrl = null;
+
+    // Normalize email to lowercase
+    const normalizedEmail = email.toLowerCase();
+
+    if (!phone.startsWith('+')) {
+        return res.status(400).json({
+            message: 'Phone number must include country code'
+        });
+    }
 
     try {
-        const userExists = await User.findOne({ email });
-        if (userExists) return res.status(400).json({ message: 'User already exists' });
-
-        // Handle image upload
-        let avatar = '';
-        if (req.file) {
-            avatar = req.file.path; // Cloudinary URL
-        } else {
-            // Generate default avatar using DiceBear API
-            const avatarName = fullName || email.split('@')[0];
-            avatar = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(avatarName)}&size=64&backgroundType=gradientLinear`;
+        // Check for existing user (case-insensitive)
+        const userExists = await User.findOne({ email: normalizedEmail });
+        if (userExists) {
+            return res.status(400).json({ message: 'User already exists' });
         }
 
-        const user = await User.create({ email, password, role, phone, fullName, avatar });
+        // Handle avatar creation FIRST (before user creation)
+        if (req.file) {
+            avatarUrl = req.file.path;
+        } else {
+            const avatarName = fullName || normalizedEmail.split('@')[0];
+            avatarUrl = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(avatarName)}`;
+        }
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-            expiresIn: '30d'
+        // Create user WITH verification token in single operation
+        const emailToken = jwt.sign({ email: normalizedEmail }, process.env.JWT_SECRET, { 
+            expiresIn: '1h' 
         });
 
-        res.status(201).json({ _id: user._id, email: user.email, role: user.role, avatar: user.avatar, token });
+        user = await User.create({
+            email: normalizedEmail,
+            password,
+            role,
+            phone,
+            fullName,
+            avatar: avatarUrl,
+            isEmailVerified: false,
+            emailVerificationToken: emailToken,
+            emailVerificationExpires: Date.now() + 3600000
+        });
+
+        // Only send email AFTER successful user creation
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        await transporter.sendMail({
+            to: user.email,
+            subject: 'Verify Your Email',
+            html: `<p>Click <a href="${process.env.BACKEND_URL}/api/auth/verify-email?token=${emailToken}">here</a> to verify</p>`
+        });
+
+        res.status(201).json({
+            message: 'Verification email sent',
+            needsVerification: true,
+            userId: user._id
+        });
+
     } catch (error) {
-        // Delete uploaded file if error occurred
+        // Aggressive cleanup if ANY part fails
+        if (user) {
+            await User.deleteOne({ _id: user._id });
+        }
         if (req.file) {
             await cloudinary.uploader.destroy(req.file.filename);
         }
-        res.status(500).json({ message: error.message });
+
+        console.error('Registration Error:', error);
+        res.status(500).json({
+            message: 'Registration failed. No verification email sent.',
+            error: error.message
+        });
     }
 });
 
-// Login
-// router.post('/login', async (req, res) => {
-//     const { email, password } = req.body;
-
-//     try {
-//         const user = await User.findOne({ email });
-//         if (!user) return res.status(401).json({ message: 'Invalid credentials' });
-
-//         const isMatch = await user.matchPassword(password);
-//         if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
-
-//         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-//             expiresIn: '30d'
-//         });
-
-//         user.tokens = user.tokens.concat({
-//             token: token,
-//             expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-//         });
-
-//         res.json({ _id: user._id, email: user.email, role: user.role, token });
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// });
 
 router.post('/login', async (req, res) => {
     try {
@@ -101,6 +128,13 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({
                 success: false,
                 message: 'Invalid credentials'
+            });
+        }
+
+        if (!user.isEmailVerified) {
+            return res.status(401).json({
+                success: false,
+                message: 'Please verify your email before logging in.'
             });
         }
 
@@ -275,6 +309,53 @@ router.put('/userUpdate/:id', upload.single('avatar'), async (req, res) => {
     });
 })
 
+// Email Verification
+router.get('/verify-email', async (req, res) => {
+    const { token } = req.query;
+
+    try {
+        const user = await User.findOne({
+            emailVerificationToken: token,
+            emailVerificationExpires: { $gt: Date.now() }
+        });
+
+        if (!user) return res.status(400).send('Invalid or expired token');
+
+        user.isEmailVerified = true;
+        user.emailVerificationToken = undefined;
+        user.emailVerificationExpires = undefined;
+        await user.save();
+
+        // Redirect to success page
+        res.redirect(`${process.env.CLIENT_URL}/verification-success`);
+    } catch (error) {
+        res.redirect(`${process.env.CLIENT_URL}/verification-error`);
+    }
+});
+
+// Phone Verification
+router.post('/verify-phone', async (req, res) => {
+    const { token } = req.body;
+
+    try {
+        const user = await User.findOne({
+            phoneVerificationToken: token,
+            phoneVerificationExpires: { $gt: Date.now() }
+        });
+
+        if (!user) return res.status(400).json({ message: 'Invalid or expired token' });
+
+        user.isPhoneVerified = true;
+        user.phoneVerificationToken = undefined;
+        user.phoneVerificationExpires = undefined;
+        await user.save();
+
+        res.json({ success: true, message: 'Phone verified' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 // Get saved addresses
 router.get('/addresses', protect, async (req, res) => {
@@ -347,7 +428,7 @@ router.put('/addresses/:id', protect, async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
         const address = user.addresses.id(req.params.id);
-        
+
         if (!address) {
             return res.status(404).json({ success: false, message: 'Address not found' });
         }
@@ -355,7 +436,7 @@ router.put('/addresses/:id', protect, async (req, res) => {
         // Update fields
         address.set(req.body);
         await user.save();
-        
+
         res.json({ success: true, addresses: user.addresses });
     } catch (error) {
         res.status(500).json({ success: false, message: 'Failed to update address' });
