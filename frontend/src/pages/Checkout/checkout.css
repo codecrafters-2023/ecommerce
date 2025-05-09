@@ -183,8 +183,8 @@
 }
 
 .save-address input {
-    width: 15px!important;
-    height: 15px!important;
+    width: 15px !important;
+    height: 15px !important;
     cursor: pointer;
 }
 
@@ -262,5 +262,17 @@
     .back-button {
         position: static;
         margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .manage-address-link {
+        right: 100px;
+        top: 120%;
+    }
+
+    .checkout-header h1 {
+        padding-top: 20px;
     }
 }
