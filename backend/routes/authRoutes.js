@@ -82,18 +82,22 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
 
         // Only send email AFTER successful user creation
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            service: "gmail",
             auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASSWORD
             }
         });
 
-        await transporter.sendMail({
+        const mailOptions = {
+            from: `"FarFoo" <${process.env.SMTP_USER}>`,
             to: user.email,
             subject: 'Verify Your Email',
             html: `<p>Click <a href="${process.env.BACKEND_URL}/api/auth/verify-email?token=${emailToken}">here</a> to verify</p>`
-        });
+        }
+
+
+        await transporter.sendMail(mailOptions);
 
         res.status(201).json({
             message: 'Verification email sent',

@@ -26,10 +26,10 @@ const userSchema = new mongoose.Schema({
     },
     addresses: [{
         _id: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             default: () => new mongoose.Types.ObjectId().toString(), // Force string conversion
-            required: true,
-            unique: true // Explicit unique constraint
+            // required: true,
+            // unique: true // Explicit unique constraint
         },
         name: String,
         email: String,
@@ -58,6 +58,11 @@ const userSchema = new mongoose.Schema({
     },
     emailVerificationToken: String,
     emailVerificationExpires: Date,
+});
+
+userSchema.index({ 'addresses._id': 1 }, {
+    sparse: true,
+    partialFilterExpression: { 'addresses._id': { $exists: true } }
 });
 
 userSchema.pre('save', async function (next) {

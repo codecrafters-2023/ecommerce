@@ -3,10 +3,10 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // e.g., 'Gmail'
+    service: "gmail",
     auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD
     },
     tls: {
         rejectUnauthorized: false  // Important for local development
@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 const sendOrderConfirmation = async (order, recipientEmail, isAdmin = false) => {
     const mailOptions = {
-        from: `"FarFoo Store" <${process.env.EMAIL_USER}>`,
+        from: `"FarFoo" <${process.env.EMAIL_USER}>`,
         to: recipientEmail,
         subject: isAdmin ? 'New Order Received' : 'Order Confirmation',
         html: generateEmailTemplate(order, isAdmin)
