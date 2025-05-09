@@ -92,10 +92,10 @@ router.get('/getAllProducts', async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ 
+        res.status(500).json({
             success: false,
             message: 'Server Error',
-            error: error.message 
+            error: error.message
         });
     }
 });
@@ -157,9 +157,11 @@ router.put('/updateProduct/:id', upload.array('newImages'), async (req, res) => 
         product.specification = req.body.specification || product.specification;
         product.category = req.body.category || product.category;
         product.brand = req.body.brand || product.brand;
-        product.quantity = Number(req.body.quantity) || product.quantity;
         product.discountPrice = Number(req.body.discountPrice) || product.discountPrice;
         product.weight = Number(req.body.weight) || product.weight;
+        product.quantity = typeof req.body.quantity !== 'undefined'
+            ? Number(req.body.quantity)
+            : product.quantity;
         // product.colors = req.body.colors ? JSON.parse(req.body.colors) : product.colors;
 
         await product.save();
@@ -177,12 +179,12 @@ router.put('/updateProduct/:id', upload.array('newImages'), async (req, res) => 
             await Promise.all(
                 req.files.map(file =>
                     cloudinary.uploader.destroy(file.filename)
-            ))
+                ))
         }
 
-        res.status(500).json({ 
+        res.status(500).json({
             message: error.message || 'Update failed',
-            error: error.stack 
+            error: error.stack
         });
     }
 });
@@ -225,7 +227,7 @@ router.get('/getLatestProducts', async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ 
+        res.status(500).json({
             success: false,
             message: 'Server Error'
         });

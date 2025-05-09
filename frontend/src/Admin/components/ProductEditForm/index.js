@@ -390,7 +390,7 @@ const ProductEditForm = () => {
                                 <input
                                     type="number"
                                     name="quantity"
-                                    value={product.quantity}
+                                    value={product.quantity || 0}
                                     onChange={handleInputChange}
                                     className="form-input"
                                     min="0"

@@ -64,8 +64,8 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
         }
 
         // Create user WITH verification token in single operation
-        const emailToken = jwt.sign({ email: normalizedEmail }, process.env.JWT_SECRET, { 
-            expiresIn: '1h' 
+        const emailToken = jwt.sign({ email: normalizedEmail }, process.env.JWT_SECRET, {
+            expiresIn: '1h'
         });
 
         user = await User.create({
@@ -205,7 +205,15 @@ router.post('/forgot-password', async (req, res) => {
             text: `Click this link to reset your password: ${process.env.CLIENT_URL}/reset-password/${token}`
         };
 
-        await transporter.sendMail(mailOptions);
+        await transporter.sendMail(mailOptions)
+            .then(info => {
+                console.log('Email sent:', info.messageId);
+            })
+            .catch(error => {
+                console.error('SMTP Error:', error);
+                throw new Error('Failed to send verification email');
+            });
+
         res.json({ message: 'Email sent' });
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -338,27 +346,27 @@ router.get('/verify-email', async (req, res) => {
 });
 
 // Phone Verification
-router.post('/verify-phone', async (req, res) => {
-    const { token } = req.body;
+// router.post('/verify-phone', async (req, res) => {
+//     const { token } = req.body;
 
-    try {
-        const user = await User.findOne({
-            phoneVerificationToken: token,
-            phoneVerificationExpires: { $gt: Date.now() }
-        });
+//     try {
+//         const user = await User.findOne({
+//             phoneVerificationToken: token,
+//             phoneVerificationExpires: { $gt: Date.now() }
+//         });
 
-        if (!user) return res.status(400).json({ message: 'Invalid or expired token' });
+//         if (!user) return res.status(400).json({ message: 'Invalid or expired token' });
 
-        user.isPhoneVerified = true;
-        user.phoneVerificationToken = undefined;
-        user.phoneVerificationExpires = undefined;
-        await user.save();
+//         user.isPhoneVerified = true;
+//         user.phoneVerificationToken = undefined;
+//         user.phoneVerificationExpires = undefined;
+//         await user.save();
 
-        res.json({ success: true, message: 'Phone verified' });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
+//         res.json({ success: true, message: 'Phone verified' });
+//     } catch (error) {
+//         res.status(500).json({ message: error.message });
+//     }
+// });
 
 
 // Get saved addresses

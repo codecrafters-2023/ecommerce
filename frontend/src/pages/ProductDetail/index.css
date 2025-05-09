@@ -344,6 +344,16 @@
     }
 }
 
+@media (max-width: 480px) {
+    .price-section .price-container {
+        width: 100%;
+    }
+    .add-to-cart,
+.buy-now {
+    justify-content: center;
+}
+}
+
 .loading-spinner {
     width: 40px;
     height: 40px;

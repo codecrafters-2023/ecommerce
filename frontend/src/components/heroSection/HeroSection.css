@@ -44,13 +44,13 @@
 }
 
 .hero-content .product-info #title {
-    font-size: 4rem!important;
+    font-size: 4rem !important;
     color: #1a2e05;
     line-height: 1.1;
     margin-bottom: 1.5rem;
 }
 
-.hero-content .product-info  #title span {
+.hero-content .product-info #title span {
     display: block;
     color: #008001;
     font-size: 1.8rem;
@@ -241,6 +241,12 @@
 
     .main-product {
         max-width: 300px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .cta-button {
         margin: 0 auto;
     }
 }
