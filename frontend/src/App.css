@@ -38,15 +38,15 @@ h1, h2, h3, h4, h5, h6{
 .form_button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #007bff;
+  background-color: #008001;
   color: white;
   border: none;
-  border-radius: 4px;
+  /* border-radius: 4px; */
   cursor: pointer;
 }
 
 .form_button:hover {
-  background-color: #0056b3;
+  background-color: #005900;
 }
 
 .auth-links {

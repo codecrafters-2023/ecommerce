@@ -93,7 +93,55 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
             from: `"FarFoo" <${process.env.SMTP_USER}>`,
             to: user.email,
             subject: 'Verify Your Email',
-            html: `<p>Click <a href="${process.env.BACKEND_URL}/api/auth/verify-email?token=${emailToken}">here</a> to verify</p>`
+            html: `<!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            <title>Email Verification</title>
+                        </head>
+                        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
+                            <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td align="center" style="padding: 40px 20px;">
+                                        <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            <tr>
+                                                <td style="padding: 40px 30px; text-align: center;">
+                                                    
+                                                    <h1 style="color: #333333; margin: 0 0 25px 0;">Verify Your Email Address</h1>
+                                                    <p style="color: #666666; margin: 0 0 30px 0; line-height: 1.6;">Thanks for signing up with FarFoo! Please confirm that <strong>${user.email}</strong> is your email address by clicking the button below:</p>
+                                                    
+                                                    <a href="${process.env.BACKEND_URL}/api/auth/verify-email?token=${emailToken}" 
+                                                    style="background-color: #008001; color: #ffffff; padding: 12px 30px; 
+                                                            text-decoration: none; border-radius: 5px; display: inline-block; 
+                                                            font-weight: bold; margin-bottom: 30px;">
+                                                        Verify Email Address
+                                                    </a>
+
+                                                    <p style="color: #999999; margin: 20px 0 0 0; font-size: 14px;">
+                                                        If you didn't create this account, you can safely ignore this email.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 30px; background-color: #f8f9fa; border-radius: 0 0 8px 8px;">
+                                                    <p style="color: #999999; margin: 0; font-size: 12px; text-align: center;">
+                                                        Need help? Contact our support team at 
+                                                        <a href="mailto:support@farfoo.in" style="color: #007bff; text-decoration: none;">
+                                                            support@farfoo.in
+                                                        </a>
+                                                    </p>
+                                                    <p style="color: #999999; margin: 10px 0 0 0; font-size: 12px; text-align: center;">
+                                                        © ${new Date().getFullYear()} FarFoo. All rights reserved.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </body>
+                        </html>`
         }
 
 
@@ -200,9 +248,67 @@ router.post('/forgot-password', async (req, res) => {
         });
 
         const mailOptions = {
+            from: `"FarFoo" <${process.env.SMTP_USER}>`,
             to: user.email,
             subject: 'Password Reset',
-            text: `Click this link to reset your password: ${process.env.CLIENT_URL}/reset-password/${token}`
+            html: `<!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>Password Reset</title>
+                    </head>
+                    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f6f6f6;">
+                        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td align="center" style="padding: 40px 20px;">
+                                    <table role="presentation" width="600" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                        <tr>
+                                            <td style="padding: 40px 30px; text-align: center;">
+                                                
+                                                <h1 style="color: #333333; margin: 0 0 25px 0;">Password Reset Request</h1>
+                                                <p style="color: #666666; margin: 0 0 30px 0; line-height: 1.6;">
+                                                    We received a request to reset your FarFoo account password. 
+                                                    Click the button below to set a new password:
+                                                </p>
+                                                
+                                                <a href="${process.env.CLIENT_URL}/reset-password/${token}" 
+                                                    style="background-color: #008001; color: #ffffff; padding: 12px 30px; 
+                                                            text-decoration: none; border-radius: 5px; display: inline-block; 
+                                                            font-weight: bold; margin-bottom: 30px;">
+                                                    Reset Password
+                                                </a>
+
+                                                <p style="color: #666666; margin: 20px 0 0 0; font-size: 14px; line-height: 1.5;">
+                                                    If you didn't request this password reset, please ignore this email.<br>
+                                                    For security reasons, don't share this link with anyone.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="padding: 30px; background-color: #f8f9fa; border-radius: 0 0 8px 8px;">
+                                                <p style="color: #999999; margin: 0; font-size: 12px; text-align: center;">
+                                                    Need help? Contact our support team at 
+                                                    <a href="mailto:support@farfoo.in" style="color: #007bff; text-decoration: none;">
+                                                        support@farfoo.in
+                                                    </a>
+                                                </p>
+                                                <p style="color: #999999; margin: 10px 0 0 0; font-size: 12px; text-align: center;">
+                                                    © ${new Date().getFullYear()} FarFoo. All rights reserved.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </body>
+                    </html>`,
+                            text: `We received a password reset request for your FarFoo account. 
+                Use this link to reset your password: ${process.env.CLIENT_URL}/reset-password/${token}
+                This link expires in {expirationTime}.
+
+                If you didn't make this request, please ignore this email.`
         };
 
         await transporter.sendMail(mailOptions)
