@@ -2,15 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FiMenu, FiX, FiSearch, FiShoppingCart } from 'react-icons/fi';
 import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import { RiAdminFill } from "react-icons/ri";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import './Header.css';
 
 const Header = () => {
+    const location = useLocation();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const [searchOpen, setSearchOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [showHeader, setShowHeader] = useState(location.pathname !== '/');
     const { cartCount } = useCart();
     const { user, logout } = useAuth();
     const profileRef = useRef(null);
@@ -20,7 +21,29 @@ const Header = () => {
         setMounted(true);
     }, []);
 
+    // Track scroll position to show/hide header on home page
+    useEffect(() => {
+        if (location.pathname === '/') {
+            // Scroll to top on home page load/reload
+            window.scrollTo(0, 0);
+            setShowHeader(false); // Initially hide on home page
+            
+            const handleScroll = () => {
+                const heroSection = document.getElementById('hero-section');
+                if (heroSection) {
+                    const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+                    setShowHeader(window.scrollY > heroBottom - 100);
+                }
+            };
 
+            window.addEventListener('scroll', handleScroll);
+            handleScroll(); // Check initial position
+            
+            return () => window.removeEventListener('scroll', handleScroll);
+        } else {
+            setShowHeader(true); // Always show on other pages
+        }
+    }, [location.pathname]);
 
     // Click outside handler for profile dropdown
     useEffect(() => {
@@ -33,129 +56,181 @@ const Header = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const navItems = [
+    const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Shop', path: '/shop' },
-        { name: 'About', path: '/about' },
+        { name: 'Our Story', path: '/about' },
         { name: 'Gallery', path: '/gallery' },
         { name: 'Contact', path: '/contact' },
     ];
 
-    if (!mounted) return null;
+    if (!mounted || !showHeader) return null;
 
     return (
         <>
-            <nav className="navbar">
+            <header className="navbar">
                 <div className="navbar-container">
-                    {/* Logo Section - Removed motion */}
-                    <div className="logo">
+                    <div>
                         <Link to="/" className="logo-link">
-                            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" />
+                            <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="FarFoo" className="header-logo-image" />
                         </Link>
                     </div>
 
-                    {/* Desktop Navigation - Removed motion */}
-                    <div className="nav-links">
-                        {navItems.map((item) => (
-                            <div key={item.name}>
-                                <Link
-                                    to={item.path}
-                                    className="nav-item"
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    {item.name}
-                                    <div className="underline" />
-                                </Link>
-                            </div>
+                    {/* Desktop Navigation */}
+                    <nav className="desktop-nav">
+                        {navLinks.map((item) => (
+                            <Link
+                                key={item.name}
+                                to={item.path}
+                                className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                            >
+                                {item.name}
+                            </Link>
                         ))}
+                    </nav>
+
+                    {/* Search Bar */}
+                    <div className="desktop-search">
+                        {/* <FiSearch className="search-icon" /> */}
+                        <input
+                            type="text"
+                            placeholder="Search products..."
+                            className="search-input"
+                        />
                     </div>
 
-                    {/* Action Icons - Removed motion */}
+                    {/* Action Icons */}
                     <div className="action-section">
-                        <button
-                            className="icon-btn"
-                            onClick={() => setSearchOpen(!searchOpen)}
-                        >
-                            <FiSearch />
-                        </button>
-
-                        <Link to="/cart" className="icon-btn">
-                            <FiShoppingCart />
-                            {cartCount > 0 && <span className="badge">{cartCount}</span>}
+                        <Link to="/cart" className="cart-icon">
+                            <FiShoppingCart className="cart-icon-svg" />
+                            {cartCount > 0 && (
+                                <span className="cart-badge">{cartCount}</span>
+                            )}
                         </Link>
 
                         <div className="profile-section" ref={profileRef}>
                             {user ? (
                                 <>
                                     <button
-                                        className="icon-btn"
+                                        className="profile-icon"
                                         onClick={() => setIsProfileOpen(!isProfileOpen)}
                                     >
-                                        <FaUser />
+                                        <FaUser className="profile-icon-svg" />
+                                        {user && (
+                                            <span className="profile-indicator"></span>
+                                        )}
                                     </button>
                                     {isProfileOpen && (
                                         <div className="profile-dropdown">
-                                            <Link to="/profile" className="profile-item">
+                                            <Link to="/profile" className="profile-item" onClick={() => setIsProfileOpen(false)}>
                                                 <FaUser className='icon' /> Profile
                                             </Link>
                                             {user.role === 'admin' && (
-                                                <Link to="/admin" className="profile-item">
+                                                <Link to="/admin" className="profile-item" onClick={() => setIsProfileOpen(false)}>
                                                     <RiAdminFill className='icon' /> Admin
                                                 </Link>
                                             )}
-                                            <button onClick={logout} className="profile-item">
+                                            <button onClick={() => { logout(); setIsProfileOpen(false); }} className="profile-item">
                                                 <FaSignOutAlt className='icon' /> Logout
                                             </button>
                                         </div>
                                     )}
                                 </>
                             ) : (
-                                <Link to="/login" className="sign-in">
-                                    <FaUser className='icon' />
+                                <Link to="/login" className="profile-icon">
+                                    <FaUser className="profile-icon-svg" />
                                 </Link>
                             )}
                         </div>
 
-
-
+                        {/* Mobile Menu Button */}
                         <button
-                            className="menu-toggle"
-                            onClick={() => setIsOpen(!isOpen)}
+                            className="mobile-menu-toggle"
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                         >
-                            {isOpen ? <FiX /> : <FiMenu />}
+                            {mobileMenuOpen ? <FiX /> : <FiMenu />}
                         </button>
                     </div>
 
-                    {/* Search Bar */}
-                    {searchOpen && (
-                        <div className="navbar-search-container">
-                            <input type="text" placeholder="Search..." />
-                            <button
-                                className="close-search"
-                                onClick={() => setSearchOpen(false)}
-                            >
-                                &times;
-                            </button>
+                    {/* Mobile Menu */}
+                    {mobileMenuOpen && (
+                        <div className="mobile-menu">
+                            <div className="mobile-menu-content">
+                                {navLinks.map((item) => (
+                                    <Link
+                                        key={item.name}
+                                        to={item.path}
+                                        className={`mobile-nav-link ${location.pathname === item.path ? 'active' : ''}`}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        {item.name}
+                                    </Link>
+                                ))}
+
+                                {/* Mobile Search */}
+                                <div className="mobile-search-container">
+                                    <div className="mobile-search">
+                                        <FiSearch className="mobile-search-icon" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search products..."
+                                            className="mobile-search-input"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Mobile User Links */}
+                                <div className="mobile-user-links">
+                                    <Link
+                                        to="/cart"
+                                        className="mobile-user-link"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        <FiShoppingCart className="mobile-link-icon" />
+                                        <span>Cart</span>
+                                        {cartCount > 0 && (
+                                            <span className="mobile-cart-badge">{cartCount}</span>
+                                        )}
+                                    </Link>
+                                    
+                                    <Link
+                                        to={user ? "/profile" : "/login"}
+                                        className="mobile-user-link"
+                                        onClick={() => setMobileMenuOpen(false)}
+                                    >
+                                        <FaUser className="mobile-link-icon" />
+                                        <span>{user ? 'My Profile' : 'Login / Sign Up'}</span>
+                                        {user && (
+                                            <span className="mobile-profile-indicator"></span>
+                                        )}
+                                    </Link>
+                                    
+                                    {user && user.role === 'admin' && (
+                                        <Link
+                                            to="/admin"
+                                            className="mobile-user-link"
+                                            onClick={() => setMobileMenuOpen(false)}
+                                        >
+                                            <RiAdminFill className="mobile-link-icon" />
+                                            <span>Admin Panel</span>
+                                        </Link>
+                                    )}
+                                    
+                                    {user && (
+                                        <button 
+                                            onClick={() => { logout(); setMobileMenuOpen(false); }}
+                                            className="mobile-user-link"
+                                        >
+                                            <FaSignOutAlt className="mobile-link-icon" />
+                                            <span>Logout</span>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>
-
-                {/* Mobile Menu */}
-                {isOpen && (
-                    <div className="mobile-menu">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.name}
-                                to={item.path}
-                                className="mobile-item"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {item.name}
-                            </Link>
-                        ))}
-                    </div>
-                )}
-            </nav>
+            </header>
 
             <div className="content-wrapper">
                 {/* Your page content here */}

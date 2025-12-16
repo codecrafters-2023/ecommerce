@@ -1,263 +1,425 @@
-/* ContactPage.css */
-:root {
-    --primary: #3A5F0B;
-    --secondary: #8DA242;
-    --accent: #F4A261;
-    --light: #F8F9F2;
-    --dark: #2B3D07;
+.contact-page{
+    background: #FFF9E6;
+    /* color: #3B291A; */
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
 }
 
 .contact-container {
-    font-family: 'Poppins', sans-serif;
-    color: var(--dark);
-    line-height: 1.6;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
 }
 
-/* Hero Section */
-.hero-section {
-    height: 60vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
-        url('../../../public/banner01.jpg');
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
+/* Contact Header */
+.contact-header {
+  text-align: center;
+  margin-bottom: 4rem;
 }
 
-.hero-overlay {
-    text-align: center;
-    color: var(--light);
-    padding: 2rem;
-    max-width: 800px;
+.contact-main-title {
+  color: #3B291A;
+  font-size: 3rem!important;
+  font-weight: bold;
+  margin-bottom: 1rem!important;
 }
 
-.hero-overlay h1 {
-    font-size: 3.5rem!important;
-    margin-bottom: 1rem!important;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    color: #fff;
-    font-weight: 700;
+.contact-subtitle {
+  color: rgba(59, 41, 26, 0.7);
+  font-size: 1.25rem;
+  line-height: 1.5;
 }
 
-.hero-subtitle {
-    font-size: 1.5rem;
-    font-weight: 300;
-    opacity: 0.9;
+/* Contact Cards Grid */
+.contact-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 5rem;
 }
 
-/* Content Wrapper */
-.content-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 4rem;
-    /* padding: 4rem 2rem; */
-    max-width: 1400px;
-    margin: 0 auto;
+@media (min-width: 768px) {
+  .contact-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* Contact Cards */
-.contact-cards {
-    display: grid;
-    gap: 2rem;
+@media (min-width: 1024px) {
+  .contact-cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-.contact-card {
-    background: var(--light);
-    border-radius: 20px;
-    padding: 2rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease;
+.contact-info-card {
+  background: white;
+  padding: 2rem 1rem;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 20px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: block;
 }
 
-.contact-card:hover {
-    transform: translateY(-5px);
+.contact-info-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border-color: #8CCB5E;
 }
 
-.card-header {
-    border-bottom: 2px solid #008001;
-    padding-bottom: 1rem;
-    margin-bottom: 1.5rem;
+.contact-card-icon {
+  width: 4rem;
+  height: 4rem;
+  background: rgba(140, 203, 94, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+  transition: background-color 0.3s ease;
 }
 
-.card-icon {
-    font-size: 2.5rem;
-    display: block;
-    margin-bottom: 1rem;
-}
-
-.contact-item {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+.contact-info-card:hover .contact-card-icon {
+  background: #4F8F3C;
 }
 
 .contact-icon {
-    font-size: 1.8rem;
-    margin-top: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: #4F8F3C;
+  transition: color 0.3s ease;
 }
 
-.contact-team {
-    margin: 0.8rem 0;
+.contact-info-card:hover .contact-icon {
+  color: white;
 }
 
-.email-link {
-    color: var(--primary);
-    text-decoration: none;
-    transition: opacity 0.3s ease;
+.contact-card-title {
+  color: #3B291A;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-.email-link:hover {
-    opacity: 0.8;
+.contact-card-details {
+  color: rgba(59, 41, 26, 0.7);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
-/* Farm Philosophy */
-.farm-philosophy {
-    background: #008001;
-    color: var(--light);
-    padding: 2rem;
-    border-radius: 20px;
+/* Contact Form Section */
+.contact-form-section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  margin-bottom: 6rem;
 }
 
-.certification-badge {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
+@media (min-width: 1024px) {
+  .contact-form-section {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
 }
 
-/* Contact Form */
+/* Contact Form Card */
+.contact-form-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  border: 2px solid rgba(243, 211, 92, 0.3);
+    transition: all 0.3s ease;
+}
+
+.contact-form-card:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-7px);
+  /* border-color: #8CCB5E; */
+}
+
+.contact-form-title {
+  color: #3B291A;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
 .contact-form {
-    background: white;
-    padding: 3rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    height: 640px;
-}
-
-.form-title {
-    color: var(--dark);
-    margin-bottom: 2rem;
-    font-size: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .form-group {
-    margin-bottom: 2rem;
-    position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
-.form-group.floating input,
-.form-group.floating textarea {
-    width: 100%;
-    padding: 10px 1rem;
-    border: none;
-    border-bottom: 2px solid #ddd;
-    background: transparent;
-    transition: all 0.3s ease;
-    outline: none;
-    border-radius: 0px!important;
-    margin-bottom: 10px;
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #3B291A;
+  margin-bottom: 0.5rem;
 }
 
-.form-group.floating label {
-    position: absolute;
-    left: 1rem;
-    top: 1rem;
-    color: #666;
-    pointer-events: none;
-    transition: all 0.3s ease;
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: #FFF9E6;
+  border: 2px solid rgba(243, 211, 92, 0.3);
+  border-radius: 1rem;
+  font-size: 1rem;
+  color: #3B291A;
+  transition: border-color 0.3s ease;
 }
 
-.form-group.floating input:focus,
-.form-group.floating textarea:focus,
-.form-group.floating input:not(:placeholder-shown),
-.form-group.floating textarea:not(:placeholder-shown) {
-    border-color: #008001;
-    box-shadow: none;
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #4F8F3C;
 }
 
-.form-group.floating input:focus~label,
-.form-group.floating textarea:focus~label,
-.form-group.floating input:not(:placeholder-shown)~label,
-.form-group.floating textarea:not(:placeholder-shown)~label {
-    transform: translateY(-1.5rem);
-    font-size: 0.8rem;
-    color: #008001;
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: rgba(59, 41, 26, 0.5);
 }
 
-.submit-btn {
-    position: relative;
-    background: #008001;
-    color: white;
-    border: none;
-    padding: 1.2rem 2.5rem;
-    border-radius: 0px;
-    font-size: 1rem;
-    cursor: pointer;
-    overflow: hidden;
-    transition: all 0.3s ease;
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233B291A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  padding-right: 3rem;
 }
 
-.submit-btn:hover {
-    background: #046704!important;
-    color: white;
-    transform: translateY(-2px);
+.form-textarea {
+  resize: none;
+  min-height: 150px;
 }
 
-.hover-effect {
-    position: absolute;
-    background: rgba(255, 255, 255, 0.2);
-    width: 50px;
-    height: 100%;
-    left: -50px;
-    top: 0;
-    transform: skewX(-30deg);
-    transition: left 0.4s ease;
+.contact-submit-btn {
+  background: #4F8F3C;
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
 }
 
-.submit-btn:hover .hover-effect {
-    left: 120%;
+.contact-submit-btn:hover {
+  background: #3B291A;
 }
 
-/* Map Section */
-.map-section {
-    height: 500px;
-    margin: 4rem 0;
+.submit-icon {
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
-.interactive-map {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+/* Philosophy Section */
+.philosophy-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-    .content-wrapper {
-        grid-template-columns: 1fr;
-        max-width: 800px;
-    }
+.philosophy-card {
+  background: #FFF9E6;
+  padding: 2.5rem;
+  border-radius: 8px;
+  border: 2px solid rgba(243, 211, 92, 0.2);
 }
 
-@media (max-width: 768px) {
-    .hero-overlay h1 {
-        font-size: 2.5rem!important;
-    }
-
-    .contact-item {
-        flex-direction: column;
-    }
+.philosophy-title {
+  color: #3B291A;
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
 }
 
-@media (max-width: 480px) {
-    .contact-form {
-        padding: 2rem;
-    }
+.philosophy-text {
+  color: rgba(59, 41, 26, 0.8);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
 
-    .submit-btn {
-        width: 100%;
-    }
+.philosophy-points {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.philosophy-point {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.point-icon {
+  width: 2rem;
+  height: 2rem;
+  background: #4F8F3C;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.point-check-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: white;
+}
+
+.point-title {
+  color: #3B291A;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.point-description {
+  color: rgba(59, 41, 26, 0.7);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Map Card */
+.map-card {
+  background: white;
+  border-radius: 8px;
+  border: 2px solid rgba(243, 211, 92, 0.3);
+  overflow: hidden;
+}
+
+.map-content {
+  height: 320px;
+  background: linear-gradient(to bottom right, #FFF9E6, rgba(243, 211, 92, 0.2));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.map-pin-icon {
+  width: 4rem;
+  height: 4rem;
+  color: #4F8F3C;
+  margin-bottom: 1.25rem;
+}
+
+.map-location-title {
+  color: #3B291A;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.map-location-subtitle {
+  color: rgba(59, 41, 26, 0.6);
+  font-size: 0.875rem;
+}
+
+/* FAQ Section */
+.faq-section {
+  background: #FFF9E6;
+  padding: 3rem;
+  border-radius: 1.5rem;
+  border: 2px solid rgba(243, 211, 92, 0.2);
+}
+
+.faq-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.faq-title {
+  color: #3B291A;
+  font-size: 2.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.faq-subtitle {
+  color: rgba(59, 41, 26, 0.7);
+  font-size: 1.25rem;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 910px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .faq-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.faq-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  border: 2px solid rgba(243, 211, 92, 0.2);
+}
+
+.faq-question {
+  color: #3B291A;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.faq-answer {
+  color: rgba(59, 41, 26, 0.7);
+  line-height: 1.6;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .contact-container {
+    padding: 2rem 1rem;
+  }
+  
+  .contact-main-title {
+    font-size: 2.25rem;
+  }
+  
+  .contact-subtitle {
+    font-size: 1.125rem;
+  }
+  
+  .contact-form-card,
+  .philosophy-card {
+    padding: 1.5rem;
+  }
+  
+  .faq-section {
+    padding: 2rem 1.5rem;
+  }
+  
+  .faq-title {
+    font-size: 1.875rem;
+  }
+  
+  .faq-subtitle {
+    font-size: 1.125rem;
+  }
 }

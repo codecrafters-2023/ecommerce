@@ -1,7 +1,7 @@
-/* WhyChooseUs.css */
+/* WhyChooseUs.css
 .why-choose-us {
     padding: 7rem 1.5rem;
-    /* background: #f9fafb; */
+
     text-align: center;
 }
 
@@ -76,7 +76,7 @@
     }
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .features-grid {
         grid-template-columns: 1fr;
@@ -94,4 +94,253 @@
         opacity: 1;
         transform: none;
     }
+} */
+
+/* WhyChooseUs.css */
+
+/* Modern Container */
+.why-choose-us-modern {
+    padding: 6rem 0;
+    background-color: white;
+}
+
+.why-choose-container {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* Section Header */
+.section-header {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgba(243, 211, 92, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(243, 211, 92, 0.3);
+    margin-bottom: 1rem;
+}
+
+.badge-icon {
+    width: 1rem;
+    height: 1rem;
+    color: #F3D35C;
+}
+
+.section-badge span {
+    color: #3B291A;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.why-section-title {
+    font-family: 'Poppins', sans-serif;
+    color: #3B291A;
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.section-description {
+    color: rgba(59, 41, 26, 0.6);
+    font-size: 1rem;
+    line-height: 1.75;
+    max-width: 43rem;
+    margin: 0 auto;
+}
+
+/* Features Grid */
+.features-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 80rem;
+    margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .features-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Feature Card */
+.feature-card-group {
+    width: 100%;
+}
+
+.feature-card {
+    position: relative;
+    height: 100%;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background-color: white;
+    transition: all 0.3s ease;
+    border: 1px solid #f3f4f6;
+    overflow: hidden;
+}
+
+.feature-card:hover {
+    background-color: #FFF9E6;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.feature-card:hover {
+    border-color: rgba(243, 211, 92, 0.4);
+}
+
+/* Icon Container */
+.icon-container {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+}
+
+.feature-icon {
+    width: 2rem;
+    height: 2rem;
+    color: white;
+    /* background-color: #d4a75b; */
+}
+
+/* Feature Content */
+.space-y-4 {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.feature-title {
+    color: #3B291A;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.feature-description {
+    color: rgba(59, 41, 26, 0.6);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0!important;
+    min-height: 3.5rem;
+}
+
+/* Partner Badge */
+.partner-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-radius: 9999px;
+    background: linear-gradient(to right, #f9fafb, white);
+    border: 1px solid #e5e7eb;
+    /* margin-top: 0.25rem; */
+    width: fit-content;
+    margin: 0 auto!important;
+}
+
+.feature-card:hover .partner-badge {
+    border-color: rgba(59, 41, 26, 0.3);
+}
+
+.partner-text {
+    color: rgba(59, 41, 26, 0.5);
+    font-size: 0.75rem;
+}
+
+.partner-name {
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .why-choose-us-modern {
+        padding: 4rem 0;
+    }
+    
+    .why-section-title {
+        font-size: 1.875rem;
+    }
+    
+    .section-description {
+        font-size: 0.875rem;
+    }
+    
+    .features-grid {
+        gap: 1rem;
+    }
+    
+    .feature-card {
+        padding: 1.25rem;
+    }
+    
+    .icon-container {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+    
+    .feature-icon {
+        width: 1.75rem;
+        height: 1.75rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .feature-description {
+        min-height: 4.5rem;
+    }
+}
+
+/* Animation for the icon bounce */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.icon-container {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Individual animation delays for icons */
+.feature-card-group:nth-child(1) .icon-container {
+    animation-delay: 0s;
+}
+
+.feature-card-group:nth-child(2) .icon-container {
+    animation-delay: 0.3s;
+}
+
+.feature-card-group:nth-child(3) .icon-container {
+    animation-delay: 0.6s;
+}
+
+.feature-card-group:nth-child(4) .icon-container {
+    animation-delay: 0.9s;
 }

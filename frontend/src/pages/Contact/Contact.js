@@ -1,245 +1,273 @@
-// import React, { useState } from "react";
-// import { FaPhone, FaMapMarkerAlt, FaClock } from "react-icons/fa";
-// import PhoneInput from "react-phone-input-2";
-// import "react-phone-input-2/lib/style.css";
-// import Header from "../../components/header";
-
-// const Contact = () => {
-//   const [formData, setFormData] = useState({
-//     name: "",
-//     email: "",
-//     message: "",
-//     phone: "",
-//     num1: Math.floor(Math.random() * 10),
-//     num2: Math.floor(Math.random() * 10),
-//     captcha: ""
-//   });
-
-//   const handleChange = (e) => {
-//     setFormData({ ...formData, [e.target.name]: e.target.value });
-//   };
-
-//   const handlePhoneChange = (value) => {
-//     setFormData({ ...formData, phone: value });
-//   };
-
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const correctAnswer = formData.num1 + formData.num2;
-//     if (parseInt(formData.captcha) !== correctAnswer) {
-//       alert("Captcha is incorrect. Please try again.");
-//       return;
-//     }
-//     alert("Message sent successfully!");
-//   };
-
-//   return (
-//     <div>
-//       <Header />
-//       <div className="container mx-auto p-6 flex flex-col md:flex-row gap-6">
-//         {/* Contact Form */}
-//         <div className="md:w-2/3 bg-white p-6 shadow-lg rounded-lg">
-//           <h2 className="text-2xl font-semibold mb-4">Contact Us</h2>
-//           <form onSubmit={handleSubmit} className="space-y-4">
-//             <input
-//               type="text"
-//               name="name"
-//               placeholder="Your Name"
-//               value={formData.name}
-//               onChange={handleChange}
-//               required
-//               className="w-full p-2 border rounded"
-//             />
-//             <input
-//               type="email"
-//               name="email"
-//               placeholder="Your Email"
-//               value={formData.email}
-//               onChange={handleChange}
-//               required
-//               className="w-full p-2 border rounded"
-//             />
-//             <PhoneInput
-//               country={"in"}
-//               value={formData.phone}
-//               onChange={handlePhoneChange}
-//               inputClass="w-full p-2 border rounded"
-//             />
-//             <textarea
-//               name="message"
-//               placeholder="Your Message"
-//               value={formData.message}
-//               onChange={handleChange}
-//               required
-//               className="w-full p-2 border rounded"
-//             ></textarea>
-//             {/* CAPTCHA */}
-//             <div className="flex items-center gap-2">
-//               <span>{formData.num1} + {formData.num2} =</span>
-//               <input
-//                 type="number"
-//                 name="captcha"
-//                 value={formData.captcha}
-//                 onChange={handleChange}
-//                 required
-//                 className="p-2 border rounded"
-//               />
-//             </div>
-//             <button
-//               type="submit"
-//               className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
-//             >
-//               Send Message
-//             </button>
-//           </form>
-//         </div>
-
-//         {/* Contact Details */}
-//         <div className="md:w-1/3 bg-gray-100 p-6 shadow-lg rounded-lg">
-//           <h2 className="text-2xl font-semibold mb-4">Contact Information</h2>
-//           <p className="flex items-center gap-2"><FaMapMarkerAlt /> Kamal Ghuman, Kahangarh, Sangrur, Punjab, 148026</p>
-//           <p className="flex items-center gap-2 mt-2"><FaPhone /> +91 9814207077</p>
-//           <p className="flex items-center gap-2 mt-2"><FaClock /> Open 24/7</p>
-//         </div>
-//       </div>
-
-//       {/* Google Maps
-//       <div className="w-full h-64 mt-6">
-//         <iframe
-//           title="Google Maps"
-//           className="w-full h-full"
-//           src="https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=Kahangarh,Sangrur,Punjab"
-//           allowFullScreen
-//         ></iframe>
-//       </div> */}
-//     </div>
-//   );
-// };
-
-// export default Contact;
-
-
-import React from 'react';
+import React, { useState } from 'react';
 import './Contact.css';
 import Header from '../../components/header';
 import Footer from '../../components/Footer/Footer';
+import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: '',
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // TODO: Handle form submission - In production, send data to backend API
+    alert('Message sent successfully!');
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const contactInfo = [
+    {
+      icon: Mail,
+      title: 'Email Us',
+      details: 'Farfoo@gurmaanitservices.com',
+      link: 'mailto:Farfoo@gurmaanITservices.com',
+    },
+    {
+      icon: Phone,
+      title: 'Sales',
+      details: 'ChahatPreet Singh: +91 8558022853',
+      link: 'tel:+918558022853',
+    },
+    {
+      icon: Phone,
+      title: 'Operations',
+      details: 'Kuldeep Singh: +91 8804997000',
+      link: 'tel:+918804997000',
+    },
+    {
+      icon: MapPin,
+      title: 'Our Farm Location',
+      details: 'Kahangarh, 148026, Punjab, India',
+      link: '#',
+    },
+  ];
+
+  const faqItems = [
+    {
+      question: 'What are your delivery times?',
+      answer: 'We typically deliver within 3-5 business days across India. Express delivery options are also available.',
+    },
+    {
+      question: 'Do you offer bulk orders?',
+      answer: 'Yes! We offer special pricing for bulk orders. Please contact us for more details.',
+    },
+    {
+      question: 'Are your products certified?',
+      answer: 'All our products are FSSAI approved and lab-tested for quality and purity.',
+    },
+    {
+      question: 'What is your return policy?',
+      answer: 'We offer a 7-day return policy for unopened products. Customer satisfaction is our priority.',
+    },
+  ];
+
   return (
     <>
       <Header />
-      <div className="contact-container">
-        {/* Hero Section */}
-        <section className="hero-section">
-          <div className="hero-overlay">
-            <h1>Your Gateway to Pure, Natural Goodness</h1>
-            <p className="hero-subtitle">Fresh Food From Farm to You!</p>
-          </div>
-        </section>
-
-        {/* Content Section */}
-        <div className="content-wrapper">
-          {/* Left Panel - Contact Cards */}
-          <div className="contact-cards">
-            <article className="contact-card">
-              <div className="card-header">
-                <span className="card-icon">🌱</span>
-                <h2>Connect with FarFoo</h2>
-              </div>
-              <div className="card-body">
-                <div className="contact-item">
-                  <span className="contact-icon">📍</span>
-                  <div>
-                    <h3>Our Farm Location</h3>
-                    <p>Kahangarh, 148026<br />Punjab, India</p>
-                  </div>
-                </div>
-
-                <div className="contact-item">
-                  <span className="contact-icon">👥</span>
-                  <div>
-                    <h3>Team Contacts</h3>
-                    <p className="contact-team">
-                      <strong>Sales:</strong> ChahatPreet Singh<br />
-                      <a href="tel:+918558022853">+91 8558022853</a>
-                    </p>
-                    <p className="contact-team">
-                      <strong>Operations:</strong> Kuldeep Singh<br />
-                      <a href="tel:+918804997000">+91 8804997000</a>
-                    </p>
-                    <p className="contact-team">
-                      <strong>IT/Design:</strong> Kamal Ghuman<br />
-                      <a href="tel:+919814207077">+91 9814207077</a>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="contact-item">
-                  <span className="contact-icon">✉️</span>
-                  <div>
-                    <h3>Email Us</h3>
-                    <a href="mailto:Farfoo@gurmaanitservices.com" className="email-link">
-                      Farfoo@gurmaanitservices.com
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <div className="farm-philosophy">
-              <h3>Our Philosophy</h3>
-              <p>We're committed to delivering high-quality, unadulterated products straight from nature to your doorstep.</p>
-              <div className="certification-badge">
-                <span>🍃 100% Natural</span>
-                <span>🌍 Sustainable Farming</span>
-              </div>
-            </div>
+      <div className="contact-page">
+        <div className="contact-container">
+          {/* Page Header */}
+          <div className="contact-header">
+            <h1 className="contact-main-title">Get in Touch</h1>
+            <p className="contact-subtitle">
+              We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </p>
           </div>
 
-          {/* Right Panel - Contact Form */}
-          <form className="contact-form">
-            <h2 className="form-title">Send Us a Message</h2>
+          {/* Contact Cards */}
+          <div className="contact-cards-grid">
+            {contactInfo.map((info, index) => (
+              <a
+                key={index}
+                href={info.link}
+                className="contact-info-card"
+              >
+                <div className="contact-card-icon">
+                  <info.icon className="contact-icon" />
+                </div>
+                <h4 className="contact-card-title">{info.title}</h4>
+                <p className="contact-card-details">{info.details}</p>
+              </a>
+            ))}
+          </div>
 
-            <div className="form-group floating">
-              <input type="text" id="name" required />
-              <label htmlFor="name">Full Name</label>
-              <div className="underline"></div>
+          {/* Contact Form & Info */}
+          <div className="contact-form-section">
+            {/* Contact Form */}
+            <div className="contact-form-card">
+              <h2 className="contact-form-title">Send us a Message</h2>
+              <form onSubmit={handleSubmit} className="contact-form">
+                <div className="form-group">
+                  <label htmlFor="name" className="form-label">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
+                    placeholder="Your name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="form-input"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="phone" className="form-label">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="+91 12345 67890"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="subject" className="form-label">
+                    Subject *
+                  </label>
+                  <select
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className="form-select"
+                  >
+                    <option value="">Select a subject</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="product">Product Question</option>
+                    <option value="order">Order Support</option>
+                    <option value="partnership">Partnership</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="message" className="form-label">
+                    Message *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows={5}
+                    className="form-textarea"
+                    placeholder="Tell us how we can help you..."
+                  ></textarea>
+                </div>
+
+                <button type="submit" className="contact-submit-btn">
+                  <Send className="submit-icon" />
+                  <span>Send Message</span>
+                </button>
+              </form>
             </div>
 
-            <div className="form-group floating">
-              <input type="email" id="email" required />
-              <label htmlFor="email">Email Address</label>
-              <div className="underline"></div>
+            {/* Philosophy & Map */}
+            <div className="philosophy-section">
+              {/* Our Philosophy */}
+              <div className="philosophy-card">
+                <h3 className="philosophy-title">Our Philosophy</h3>
+                <p className="philosophy-text">
+                  At FarFoo, we believe in transparency, quality, and sustainability. Every product we offer
+                  is a testament to our commitment to bringing pure, natural goodness from farms to your home.
+                </p>
+                <div className="philosophy-points">
+                  <div className="philosophy-point">
+                    <div className="point-icon">
+                      <CheckCircle className="point-check-icon" />
+                    </div>
+                    <div>
+                      <h4 className="point-title">Direct from Farms</h4>
+                      <p className="point-description">We work directly with farmers to ensure freshness and fair trade.</p>
+                    </div>
+                  </div>
+                  <div className="philosophy-point">
+                    <div className="point-icon">
+                      <CheckCircle className="point-check-icon" />
+                    </div>
+                    <div>
+                      <h4 className="point-title">Lab Tested Quality</h4>
+                      <p className="point-description">Every batch undergoes rigorous testing for purity and authenticity.</p>
+                    </div>
+                  </div>
+                  <div className="philosophy-point">
+                    <div className="point-icon">
+                      <CheckCircle className="point-check-icon" />
+                    </div>
+                    <div>
+                      <h4 className="point-title">Customer Focused</h4>
+                      <p className="point-description">Your satisfaction and health are our top priorities.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Map Placeholder */}
+              <div className="map-card">
+                <div className="map-content">
+                  <MapPin className="map-pin-icon" />
+                  <h4 className="map-location-title">Kahangarh, 148026</h4>
+                  <p className="map-location-subtitle">
+                    Punjab, India
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <div className="faq-section">
+            <div className="faq-header">
+              <h2 className="faq-title">Common Questions</h2>
+              <p className="faq-subtitle">Quick answers to questions you may have</p>
             </div>
 
-            <div className="form-group floating">
-              <input type="tel" id="phone" required />
-              <label htmlFor="phone">Contact Number</label>
-              <div className="underline"></div>
+            <div className="faq-grid">
+              {faqItems.map((item, index) => (
+                <div key={index} className="faq-card">
+                  <h4 className="faq-question">{item.question}</h4>
+                  <p className="faq-answer">{item.answer}</p>
+                </div>
+              ))}
             </div>
-
-            <div className="form-group floating">
-              <textarea id="message" rows="3" required></textarea>
-              <label htmlFor="message">Your Message</label>
-              <div className="underline"></div>
-            </div>
-
-            <button type="submit" className="submit-btn">
-              <span>Send Message</span>
-              <div className="hover-effect"></div>
-            </button>
-          </form>
-        </div>
-
-        {/* Interactive Map Section */}
-        <div className="map-section">
-          <iframe
-            title="farm-location"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3433.454799121767!2d75.67825831512689!3d30.62335048167099!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391a3dcfd9c5d8b5%3A0x2e5e0a2d4f2a4b1c!2sKahangarh%2C%20Punjab%20148026!5e0!3m2!1sen!2sin!4v1658912345678!5m2!1sen!2sin"
-            className="interactive-map"
-            allowFullScreen
-            loading="lazy"
-          ></iframe>
+          </div>
         </div>
       </div>
       <Footer />
