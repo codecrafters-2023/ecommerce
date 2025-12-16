@@ -489,7 +489,7 @@
     gap: 0.75rem;
 }
 
-.trust-icon-wrapper {
+.home-trust-icon-wrapper {
     width: 3rem;
     height: 3rem;
     border-radius: 1rem;
@@ -499,7 +499,7 @@
     justify-content: center;
 }
 
-.trust-icon {
+.home-trust-icon {
     width: 1.5rem;
     height: 1.5rem;
     color: white;
@@ -510,7 +510,7 @@
     flex-direction: column;
 }
 
-.trust-title {
+.home-trust-title {
     color: #3B291A;
     font-size: 0.875rem;
     font-weight: 700;

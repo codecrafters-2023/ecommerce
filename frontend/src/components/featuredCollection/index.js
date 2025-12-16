@@ -304,29 +304,29 @@ const HomeProducts = () => {
                 {/* Bottom Trust Bar */}
                 <div className="trust-bar">
                     <div className="trust-item">
-                        <div className="trust-icon-wrapper">
-                            <Truck className="trust-icon" />
+                        <div className="home-trust-icon-wrapper">
+                            <Truck className="home-trust-icon" />
                         </div>
                         <div className="trust-text">
-                            <p className="trust-title">Free Delivery*</p>
+                            <p className="home-trust-title">Free Delivery*</p>
                             <p className="trust-subtitle">On orders above ₹499</p>
                         </div>
                     </div>
                     <div className="trust-item">
-                        <div className="trust-icon-wrapper">
-                            <Award className="trust-icon" />
+                        <div className="home-trust-icon-wrapper">
+                            <Award className="home-trust-icon" />
                         </div>
                         <div className="trust-text">
-                            <p className="trust-title">Lab Tested</p>
+                            <p className="home-trust-title">Lab Tested</p>
                             <p className="trust-subtitle">Quality checked every batch</p>
                         </div>
                     </div>
                     <div className="trust-item">
-                        <div className="trust-icon-wrapper">
-                            <Leaf className="trust-icon" />
+                        <div className="home-trust-icon-wrapper">
+                            <Leaf className="home-trust-icon" />
                         </div>
                         <div className="trust-text">
-                            <p className="trust-title">Naturally Sourced</p>
+                            <p className="home-trust-title">Naturally Sourced</p>
                             <p className="trust-subtitle">From trusted organic farms</p>
                         </div>
                     </div>
