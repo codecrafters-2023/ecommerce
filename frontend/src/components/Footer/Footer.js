@@ -207,7 +207,7 @@ const Footer = () => {
                                 className="footer-contact-item"
                             >
                                 <div className="contact-icon-wrapper">
-                                    <Mail className="contact-icon" />
+                                    <Mail className="footer-contact-icon" />
                                 </div>
                                 <span className="contact-text">Farfoo@gurmaanitservices.com</span>
                             </a>
@@ -216,7 +216,7 @@ const Footer = () => {
                                 className="footer-contact-item"
                             >
                                 <div className="contact-icon-wrapper">
-                                    <Phone className="contact-icon" />
+                                    <Phone className="footer-contact-icon" />
                                 </div>
                                 <span className="contact-text">+91 8558022853 (Sales)</span>
                             </a>
@@ -225,7 +225,7 @@ const Footer = () => {
                                 className="footer-contact-item"
                             >
                                 <div className="contact-icon-wrapper">
-                                    <MapPin className="contact-icon" />
+                                    <MapPin className="footer-contact-icon" />
                                 </div>
                                 <span className="contact-text">Kahangarh, Punjab</span>
                             </a>

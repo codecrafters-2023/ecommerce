@@ -47,6 +47,7 @@ import Gallery from "./pages/Gallery/Gallery";
 import ScrollToTop from "./components/ScrollToTop";
 import AdminProfile from "./Admin/pages/Profile/Profile";
 import VerificationSuccess from "./components/verification-success";
+import GuestCartMerger from "./components/GuestCartMerger";
 
 
 function App() {
@@ -63,6 +64,7 @@ function App() {
       <ScrollToTop />
       <AuthProvider>
         <CartProvider>
+          <GuestCartMerger />
           <Routes>
             {/* =============== User Routes ============== */}
             <Route path="/login" element={<Login />} />

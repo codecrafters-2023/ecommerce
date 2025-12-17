@@ -342,15 +342,6 @@ const ProductDetail = () => {
 
     const navigate = useNavigate();
 
-    // const weightOptions = [
-    //     { size: '100g', price: 129, originalPrice: 159 },
-    //     { size: '250g', price: 249, originalPrice: 299 },
-    //     { size: '400g', price: 379, originalPrice: 449 },
-    //     { size: '1kg', price: 899, originalPrice: 1099 },
-    // ];
-
-    // const selectedOption = weightOptions.find(option => option.size === selectedWeight) || weightOptions[1];
-
     useEffect(() => {
         const fetchProduct = async () => {
             try {
@@ -418,42 +409,40 @@ const ProductDetail = () => {
         },
     ];
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         if (product) {
-            // Use the existing addToCart function signature from your CartContext
-            addToCart(product._id, quantity, {
+            // Add product details for guest cart
+            const productDetails = {
+                _id: product._id,
                 name: product.name,
-                price: product.price,
-                image: product.images?.[0]?.url || '',
+                price: product.discountPrice,
+                images: product.images,
+                brand: product.brand,
+                quantity: product.quantity,
                 weight: product.weight,
                 originalPrice: product.originalPrice
-            });
-            
-            // Optional: Show a success message or feedback
-            console.log('Product added to cart:', {
-                id: product._id,
-                quantity,
-                price: product.price
-            });
+            };
+
+            await addToCart(product._id, quantity, productDetails);
         }
     };
 
-    const handleBuyNow = () => {
-        handleAddToCart();
+    const handleBuyNow = async () => {
+        await handleAddToCart();
         navigate('/cart');
     };
 
     // Function to format specifications with line breaks
     const formatSpecifications = (specText) => {
         if (!specText) return null;
-        
+
         // Split by line breaks and bullet points
         const lines = specText.split(/\n|\r\n/);
-        
+
         return lines.map((line, index) => {
             const trimmedLine = line.trim();
             if (!trimmedLine) return null;
-            
+
             // Check if line starts with a bullet point or dash
             if (trimmedLine.match(/^[•\-*]\s/) || trimmedLine.match(/^\d+[\.\)]\s/)) {
                 return (
@@ -462,7 +451,7 @@ const ProductDetail = () => {
                     </li>
                 );
             }
-            
+
             // Check if line contains colon (key: value format)
             if (trimmedLine.includes(':')) {
                 const [key, ...valueParts] = trimmedLine.split(':');
@@ -474,7 +463,7 @@ const ProductDetail = () => {
                     </div>
                 );
             }
-            
+
             // Regular paragraph
             return (
                 <p key={index} className="spec-paragraph">
@@ -487,9 +476,9 @@ const ProductDetail = () => {
     // Function to format description with line breaks
     const formatDescription = (descText) => {
         if (!descText) return null;
-        
+
         const paragraphs = descText.split(/\n\s*\n/);
-        
+
         return paragraphs.map((paragraph, index) => (
             <p key={index} className="desc-paragraph">
                 {paragraph.trim()}
@@ -576,7 +565,7 @@ const ProductDetail = () => {
                             <div>
                                 <p className="product-brand">{product.brand}</p>
                                 <h1 className="product-title">{product.name}</h1>
-                                
+
                                 <div className="product-rating-section">
                                     <div className="stars">
                                         {[...Array(5)].map((_, i) => (
@@ -700,7 +689,7 @@ const ProductDetail = () => {
                                         disabled={product.quantity === 0}
                                     >
                                         <FiShoppingCart />
-                                        Add to Cart
+                                        {product.quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                                     </motion.button>
 
                                     <motion.button
@@ -710,7 +699,7 @@ const ProductDetail = () => {
                                         whileTap={{ scale: 0.95 }}
                                         disabled={product.quantity === 0}
                                     >
-                                        Buy Now
+                                        {product.quantity === 0 ? 'Out of Stock' : 'Buy Now'}
                                     </motion.button>
                                 </div>
                             </div>
