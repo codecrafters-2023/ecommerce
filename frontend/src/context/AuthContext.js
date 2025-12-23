@@ -68,28 +68,35 @@ export const AuthProvider = ({ children }) => {
     };
 
     const login = async (formData) => {
-        try {
-            const res = await axios.post(
-                `${process.env.REACT_APP_API_URL}/auth/login`, 
-                formData
-            );
+    try {
+        const res = await axios.post(
+            `${process.env.REACT_APP_API_URL}/auth/login`, 
+            formData
+        );
+        
+        localStorage.setItem('token', res.data.token);
+        
+        // Fetch complete user profile after login
+        const userProfile = await fetchUserProfile(res.data.token);
+        if (userProfile) {
+            setUser(userProfile);
+            toast.success('Login successful!');
             
-            localStorage.setItem('token', res.data.token);
+            // Trigger cart context to refresh
+            window.dispatchEvent(new Event('login-success'));
             
-            // Fetch complete user profile after login
-            const userProfile = await fetchUserProfile(res.data.token);
-            if (userProfile) {
-                setUser(userProfile);
-                toast.success('Login successful!');
-                navigate('/');
-            } else {
-                throw new Error('Failed to fetch user profile');
-            }
-        } catch (error) {
-            toast.error(error.response?.data?.message || 'Login failed');
-            logout();
+            // Also dispatch custom auth change event
+            window.dispatchEvent(new Event('auth-change'));
+            
+            navigate('/');
+        } else {
+            throw new Error('Failed to fetch user profile');
         }
-    };
+    } catch (error) {
+        toast.error(error.response?.data?.message || 'Login failed');
+        logout();
+    }
+};
 
     const updateUser = async () => {
         const token = localStorage.getItem('token');

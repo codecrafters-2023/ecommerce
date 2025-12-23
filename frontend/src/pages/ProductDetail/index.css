@@ -184,7 +184,7 @@
     font-weight: 600;
 }
 
-.product-description {
+.productDetail-description {
     color: rgba(59, 41, 26, 0.8);
     line-height: 1.75;
     font-size: 0.875rem;
@@ -758,7 +758,7 @@
 }
 
 /* Preserve line breaks in all text content */
-.product-description,
+.productDetail-description,
 .specifications-list,
 .desc-paragraph,
 .spec-paragraph,

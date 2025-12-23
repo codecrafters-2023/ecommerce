@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import './index.css';
 import Header from '../../components/header';
 import Footer from '../../components/Footer/Footer';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Package, Truck, ShieldCheck, Tag } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Package, Truck, ShieldCheck, Tag, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const Cart = () => {
-    const { cart, updateQuantity, removeFromCart, applyCoupon, isAuthenticated } = useCart();
+    const { cart, updateQuantity, removeFromCart, applyCoupon, isAuthenticated, fetchCart, loading } = useCart();
     const [promoCode, setPromoCode] = useState('');
     const [applyingPromo, setApplyingPromo] = useState(false);
+    const [localCart, setLocalCart] = useState({ items: [], totalAfterDiscount: 0 });
     const navigate = useNavigate();
+
+    // Sync local cart with context cart
+    useEffect(() => {
+        console.log('Cart context updated:', cart);
+        if (cart && cart.items) {
+            setLocalCart({
+                items: cart.items || [],
+                totalAfterDiscount: cart.totalAfterDiscount || 0,
+                coupon: cart.coupon || null
+            });
+        }
+    }, [cart]);
 
     // Helper function to safely get image URL
     const getItemImage = (item) => {
@@ -32,8 +45,24 @@ const Cart = () => {
 
     // Helper function to safely get item price
     const getItemPrice = (item) => {
-        const price = item?.product?.price || item?.price || 0;
-        return parseFloat(price);
+        // First check for product discount price
+        if (item?.product?.discountPrice !== undefined) {
+            return parseFloat(item.product.discountPrice);
+        }
+        // Then check for item discount price
+        else if (item?.discountPrice !== undefined) {
+            return parseFloat(item.discountPrice);
+        }
+        // Then check for product regular price
+        else if (item?.product?.price !== undefined) {
+            return parseFloat(item.product.price);
+        }
+        // Then check for item regular price
+        else if (item?.price !== undefined) {
+            return parseFloat(item.price);
+        }
+        // Default to 0 if no price found
+        return 0;
     };
 
     // Helper function to get item weight (if available)
@@ -43,7 +72,17 @@ const Cart = () => {
 
     // Helper function to get original price (for discounts)
     const getItemOriginalPrice = (item) => {
-        return item?.product?.originalPrice || item?.originalPrice;
+        // First check for discount price, then regular price
+        if (item?.product?.discountPrice !== undefined) {
+            return parseFloat(item.product.discountPrice);
+        } else if (item?.discountPrice !== undefined) {
+            return parseFloat(item.discountPrice);
+        } else if (item?.product?.price !== undefined) {
+            return parseFloat(item.product.price);
+        } else if (item?.price !== undefined) {
+            return parseFloat(item.price);
+        }
+        return 0;
     };
 
     const handleApplyPromo = async () => {
@@ -64,7 +103,6 @@ const Cart = () => {
 
     const handleRemovePromo = () => {
         // You'll need to add a removeCoupon function to your CartContext
-        // For now, we'll clear the coupon
         applyCoupon('');
     };
 
@@ -72,32 +110,41 @@ const Cart = () => {
         navigate('/checkout');
     };
 
-    // Calculate subtotal
+    const handleRefreshCart = async () => {
+        await fetchCart();
+    };
+
+    // Get cart items safely
+    const cartItems = localCart.items || [];
+
+    // Calculate subtotal safely
     const calculateSubtotal = () => {
-        return cart.items.reduce((sum, item) => {
+        if (!cartItems || cartItems.length === 0) return 0;
+
+        return cartItems.reduce((sum, item) => {
             const price = getItemPrice(item);
             const quantity = item.quantity || 1;
             return sum + (price * quantity);
         }, 0);
     };
 
-    // Calculate discount
+    // Calculate discount safely
     const calculateDiscount = () => {
         const subtotal = calculateSubtotal();
-        
-        if (cart.coupon && cart.coupon.discount) {
+
+        if (localCart.coupon && localCart.coupon.discount) {
             // If coupon has a fixed discount amount
-            if (cart.coupon.discountType === 'fixed') {
-                return Math.min(cart.coupon.discount, subtotal);
+            if (localCart.coupon.discountType === 'fixed') {
+                return Math.min(localCart.coupon.discount, subtotal);
             }
             // If coupon has percentage discount
-            if (cart.coupon.discountType === 'percentage') {
-                return (subtotal * cart.coupon.discount) / 100;
+            if (localCart.coupon.discountType === 'percentage') {
+                return (subtotal * localCart.coupon.discount) / 100;
             }
             // Default to discount amount
-            return cart.coupon.discount;
+            return localCart.coupon.discount;
         }
-        
+
         return 0;
     };
 
@@ -112,7 +159,23 @@ const Cart = () => {
     const shipping = calculateShipping();
     const total = subtotal - discount + shipping;
 
-    if (cart.items.length === 0) {
+    // Show loading state
+    if (loading) {
+        return (
+            <>
+                <Header />
+                <div className="bg-white min-h-screen flex items-center justify-center">
+                    <div className="text-center">
+                        <RefreshCw className="w-12 h-12 text-[#3B291A] animate-spin mx-auto mb-4" />
+                        <p className="text-[#3B291A]">Loading cart...</p>
+                    </div>
+                </div>
+                <Footer />
+            </>
+        );
+    }
+
+    if (cartItems.length === 0) {
         return (
             <>
                 <Header />
@@ -130,10 +193,18 @@ const Cart = () => {
                             <p className="text-[#3B291A]/60 max-w-md mx-auto">
                                 Looks like you haven't added any products to your cart yet. Start shopping to fill it up!
                             </p>
-                            <Link to="/shop" className="btn-primary inline-flex items-center gap-2 mt-6">
-                                Continue Shopping
-                                <ArrowRight className="w-5 h-5" />
-                            </Link>
+                            <div className="space-y-4">
+                                <Link to="/shop" className="btn-primary inline-flex items-center gap-2 mt-6">
+                                    Continue Shopping
+                                    <ArrowRight className="w-5 h-5" />
+                                </Link>
+                                <button
+                                    onClick={handleRefreshCart}
+                                    className="block mx-auto text-[#4F8F3C] hover:underline"
+                                >
+                                    Refresh Cart
+                                </button>
+                            </div>
                         </motion.div>
                     </div>
                 </div>
@@ -156,21 +227,39 @@ const Cart = () => {
 
                     {/* Page Title */}
                     <div className="mb-12">
-                        <h1 className="text-[#3B291A] mb-2 text-3xl">Shopping Cart</h1>
-                        <p className="text-[#3B291A]/60">You have {cart.items.length} {cart.items.length === 1 ? 'item' : 'items'} in your cart</p>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <h1 className="text-[#3B291A] mb-2 text-3xl">Shopping Cart</h1>
+                                <p className="text-[#3B291A]/60">
+                                    You have {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart
+                                </p>
+                            </div>
+                            <button
+                                onClick={handleRefreshCart}
+                                className="flex items-center gap-2 text-[#4F8F3C] hover:text-[#3d7230] transition-colors"
+                            >
+                                <RefreshCw className="w-5 h-5" />
+                                Refresh
+                            </button>
+                        </div>
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-8">
                         {/* Cart Items */}
                         <div className="lg:col-span-2 space-y-4">
-                            {cart.items.map((item) => {
-                                const itemId = item._id || item.id;
+                            {cartItems.map((item, index) => {
+                                const itemId = item._id || `item-${index}`;
                                 const imageUrl = getItemImage(item);
                                 const name = getItemName(item);
-                                const price = getItemPrice(item);
+                                const currentPrice = getItemPrice(item); // Use current price (with discount if available)
+                                const originalPrice = getItemOriginalPrice(item); // This might be the original price before discount
                                 const weight = getItemWeight(item);
-                                const originalPrice = getItemOriginalPrice(item);
                                 const quantity = item.quantity || 1;
+
+                                // Calculate the effective price to display
+                                const displayPrice = currentPrice;
+                                const displayOriginalPrice = originalPrice;
+                                const hasDiscount = displayOriginalPrice > 0 && displayOriginalPrice > displayPrice;
 
                                 return (
                                     <motion.div
@@ -203,6 +292,9 @@ const Cart = () => {
                                                     <div>
                                                         <h3 className="text-[#3B291A] font-semibold text-lg mb-1">{name}</h3>
                                                         <p className="text-[#3B291A]/60 text-sm">Weight: {weight}</p>
+                                                        <p className="text-[#3B291A]/60 text-sm">
+                                                            Price: ₹{displayPrice.toFixed(2)} each
+                                                        </p>
                                                     </div>
                                                     <button
                                                         onClick={() => removeFromCart(itemId)}
@@ -233,10 +325,12 @@ const Cart = () => {
 
                                                     {/* Price */}
                                                     <div className="text-right">
-                                                        <p className="text-[#3B291A] font-bold text-xl">₹{(price * quantity).toFixed(2)}</p>
-                                                        {originalPrice && originalPrice > price && (
+                                                        <p className="text-[#3B291A] font-bold text-xl">
+                                                            ₹{(displayPrice * quantity).toFixed(2)}
+                                                        </p>
+                                                        {hasDiscount && displayOriginalPrice > displayPrice && (
                                                             <p className="text-[#3B291A]/40 line-through text-sm">
-                                                                ₹{(originalPrice * quantity).toFixed(2)}
+                                                                ₹{(displayOriginalPrice * quantity).toFixed(2)}
                                                             </p>
                                                         )}
                                                     </div>
@@ -277,10 +371,10 @@ const Cart = () => {
                                             value={promoCode}
                                             onChange={(e) => setPromoCode(e.target.value)}
                                             placeholder="Enter code"
-                                            disabled={!isAuthenticated || cart.coupon}
+                                            disabled={!isAuthenticated || localCart.coupon}
                                             className="flex-1 px-4 py-3 border-2 border-[#F3D35C]/30 rounded-2xl focus:outline-none focus:border-[#4F8F3C] text-[#3B291A] disabled:bg-gray-100"
                                         />
-                                        {cart.coupon ? (
+                                        {localCart.coupon ? (
                                             <button
                                                 onClick={handleRemovePromo}
                                                 className="px-6 py-3 bg-red-500 text-white rounded-2xl font-medium hover:bg-red-600 transition-colors"
@@ -297,10 +391,10 @@ const Cart = () => {
                                             </button>
                                         )}
                                     </div>
-                                    {cart.coupon && (
+                                    {localCart.coupon && (
                                         <p className="text-[#4F8F3C] text-sm font-medium flex items-center gap-2">
                                             <ShieldCheck className="w-4 h-4" />
-                                            {cart.coupon.code} applied! You saved ₹{discount.toFixed(2)}
+                                            {localCart.coupon.code} applied! You saved ₹{discount.toFixed(2)}
                                         </p>
                                     )}
                                     {!isAuthenticated && (
@@ -312,7 +406,7 @@ const Cart = () => {
 
                                 <div className="space-y-4 py-6 border-t-2 border-b-2 border-[#F3D35C]/20">
                                     <div className="flex justify-between text-[#3B291A]/80">
-                                        <span>Subtotal ({cart.items.length} items)</span>
+                                        <span>Subtotal ({cartItems.length} items)</span>
                                         <span className="font-medium">₹{subtotal.toFixed(2)}</span>
                                     </div>
                                     <div className="flex justify-between text-[#3B291A]/80">

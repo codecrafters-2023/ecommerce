@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cartItemSchema = new mongoose.Schema({
     product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product',
+        ref: 'eproducts',
         required: true
     },
     quantity: {
@@ -30,7 +30,7 @@ const cartSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
-        unique: true
+        // unique: true
     },
     items: [cartItemSchema],
     totalAfterDiscount: Number,

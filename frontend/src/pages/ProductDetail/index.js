@@ -590,7 +590,7 @@ const ProductDetail = () => {
                                     </span>
                                 </div>
 
-                                <div className="product-description">
+                                <div className="productDetail-description">
                                     {formatDescription(product.description)}
                                 </div>
 

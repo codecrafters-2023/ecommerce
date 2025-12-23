@@ -286,7 +286,8 @@
 
 @media (max-width: 768px) {
     .logo-image {
-        height: 8rem;
+        height: 6rem;
+        margin-left: 90px;
     }
 }
 
