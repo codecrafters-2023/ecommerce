@@ -82,11 +82,13 @@ router.post('/register', upload.single('avatar'), async (req, res) => {
 
         // Only send email AFTER successful user creation
         const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: process.env.EMAIL_HOST,
+            port: process.env.EMAIL_PORT,
+            secure: false, // true for 465, false for other ports
             auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASSWORD
-            }
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
+            },
         });
 
         const mailOptions = {
@@ -240,11 +242,13 @@ router.post('/forgot-password', async (req, res) => {
 
         // Send email
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: process.env.EMAIL_HOST,
+            port: process.env.EMAIL_PORT,
+            secure: false, // true for 465, false for other ports
             auth: {
                 user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            }
+                pass: process.env.EMAIL_PASS,
+            },
         });
 
         const mailOptions = {
@@ -304,7 +308,7 @@ router.post('/forgot-password', async (req, res) => {
                         </table>
                     </body>
                     </html>`,
-                            text: `We received a password reset request for your FarFoo account. 
+            text: `We received a password reset request for your FarFoo account. 
                 Use this link to reset your password: ${process.env.CLIENT_URL}/reset-password/${token}
                 This link expires in {expirationTime}.
 
