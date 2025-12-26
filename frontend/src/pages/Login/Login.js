@@ -88,6 +88,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, Phone, CheckCircle2, X, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Header from '../../components/header';
+import Footer from '../../components/Footer/Footer';
 import { toast } from 'react-toastify';
 
 const Login = () => {
@@ -623,6 +624,7 @@ const Login = () => {
                     </div>
                 </div>
             )}
+            <Footer />
         </div>
     );
 };
