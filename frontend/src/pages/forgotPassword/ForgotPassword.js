@@ -22,9 +22,9 @@ const ForgotPassword = () => {
     return (
         <div>
             <Header />
-            <div className="forgotPassword-container">
+            <div className="forgotPassword-container bg-gradient-to-br from-[#FFF9E6] via-white to-[#FFF9E6]" >
                 <div className="forgotPassword-box">
-                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="logo" />
+                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="forgot-logo" />
                     <h2>Forgot Password</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">

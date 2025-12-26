@@ -44,7 +44,7 @@ const ResetPassword = () => {
             <Header />
             <div className="resetPassword-container">
                 <div className="resetPassword-box" style={{ background: "white" }} >
-                    <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="logo" />
+                    <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="Logo" className="reset-logo" />
                     <h2>Reset Password</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">

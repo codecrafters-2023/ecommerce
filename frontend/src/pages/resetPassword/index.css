@@ -7,6 +7,13 @@
     min-height: 91.7vh;
     background-image: url(../../../public/bg.jpg);
 }
+
+.reset-logo {
+    width: 35%;
+    height: auto;
+    /* margin-bottom: 20px; */
+}
+
 .resetPassword-box {
     display: flex;
     justify-content: center;
