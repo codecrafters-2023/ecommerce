@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -137,6 +138,7 @@ export const AuthProvider = ({ children }) => {
             value={{
                 user,
                 loading,
+                setUser,
                 register,
                 login,
                 logout,

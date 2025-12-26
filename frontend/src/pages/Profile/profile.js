@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // import React, { useState, useEffect } from "react";
 // import { useAuth } from "../../context/AuthContext";
 // import Header from "../../components/header";
@@ -614,8 +615,8 @@
 
 
 import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { User, Mail, Phone, MapPin, Edit2, Trash2, Plus, Save, X, Home, Briefcase, MapPinned, ArrowLeft, Package, Calendar, CheckCircle, XCircle, MoreVertical, Download } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { User, Mail, Phone, MapPin, Edit2, Trash2, Plus, Save, X, Home, Briefcase, MapPinned, ArrowLeft, Package, Calendar, XCircle, Download, CreditCard, Truck, FileText, Tag } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import Header from '../../components/header';
 import axios from 'axios';
@@ -623,8 +624,8 @@ import { toast } from 'react-toastify';
 import generateInvoice from "../../utils/pdfDesign";
 
 export default function Profile() {
-  const { user, isLoggedIn } = useAuth();
-  const navigate = useNavigate();
+  const { user, setUser } = useAuth();
+  // const navigate = useNavigate();
   const location = useLocation();
 
   const [isEditingProfile, setIsEditingProfile] = useState(false);
@@ -635,9 +636,7 @@ export default function Profile() {
   const [orders, setOrders] = useState([]);
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  console.log(addresses);
-  
+  const [viewingOrder, setViewingOrder] = useState(null);
 
   const [profileData, setProfileData] = useState({
     firstName: '',
@@ -736,6 +735,10 @@ export default function Profile() {
     }
   }, [activeTab, user]);
 
+  const handleViewOrderDetails = (order) => {
+    setViewingOrder(order);
+  };
+
   const handleProfileInputChange = (e) => {
     const { name, value } = e.target;
     setProfileData((prev) => ({ ...prev, [name]: value }));
@@ -763,7 +766,7 @@ export default function Profile() {
     if (!profileData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
     }
-    
+
     if (profileData.password) {
       if (profileData.password !== profileData.confirmPassword) {
         newErrors.confirmPassword = 'Passwords do not match';
@@ -774,7 +777,7 @@ export default function Profile() {
         newErrors.password = 'Password must include uppercase, lowercase, and special character';
       }
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -806,11 +809,35 @@ export default function Profile() {
           updateData.password = profileData.password;
         }
 
-        await axios.put(
+        // Call the API
+        const response = await axios.put(
           `${process.env.REACT_APP_API_URL}/auth/userUpdate/${user._id}`,
           updateData,
           { headers: { Authorization: `Bearer ${token}` } }
         );
+
+        // Update the user in context with new data
+        if (response.data && setUser) {
+          // Create updated user object
+          const updatedUser = {
+            ...user,
+            fullName: updateData.fullName,
+            phone: updateData.phone
+          };
+
+          // Update context
+          setUser(updatedUser);
+
+          // Also update localStorage if you store user data there
+          const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+          if (storedUser) {
+            localStorage.setItem('user', JSON.stringify({
+              ...storedUser,
+              fullName: updateData.fullName,
+              phone: updateData.phone
+            }));
+          }
+        }
 
         toast.success('Profile updated successfully!');
         setShowProfileModal(false);
@@ -930,8 +957,8 @@ export default function Profile() {
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        
-        setOrders(orders.map(order => 
+
+        setOrders(orders.map(order =>
           order._id === orderId ? { ...order, status: 'cancelled' } : order
         ));
         toast.success('Order cancelled successfully');
@@ -996,8 +1023,8 @@ export default function Profile() {
 
   const getStatusText = (order) => {
     if (order.status === 'cancelled') return 'Cancelled';
-    return order.paymentStatus ? 
-      order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1) : 
+    return order.paymentStatus ?
+      order.paymentStatus.charAt(0).toUpperCase() + order.paymentStatus.slice(1) :
       'Pending';
   };
 
@@ -1046,33 +1073,30 @@ export default function Profile() {
                 <nav className="space-y-2">
                   <button
                     onClick={() => setActiveTab('profile')}
-                    className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-300 flex items-center gap-3 ${
-                      activeTab === 'profile'
-                        ? 'bg-gradient-to-r from-[#F3D35C] to-[#D4A75B] text-[#3B291A] shadow-md'
-                        : 'text-[#3B291A]/60 hover:text-[#3B291A] hover:bg-[#FFF9E6]'
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-300 flex items-center gap-3 ${activeTab === 'profile'
+                      ? 'bg-gradient-to-r from-[#F3D35C] to-[#D4A75B] text-[#3B291A] shadow-md'
+                      : 'text-[#3B291A]/60 hover:text-[#3B291A] hover:bg-[#FFF9E6]'
+                      }`}
                   >
                     <User className="w-5 h-5" />
                     Edit Profile
                   </button>
                   <button
                     onClick={() => setActiveTab('addresses')}
-                    className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-300 flex items-center gap-3 ${
-                      activeTab === 'addresses'
-                        ? 'bg-gradient-to-r from-[#F3D35C] to-[#D4A75B] text-[#3B291A] shadow-md'
-                        : 'text-[#3B291A]/60 hover:text-[#3B291A] hover:bg-[#FFF9E6]'
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-300 flex items-center gap-3 ${activeTab === 'addresses'
+                      ? 'bg-gradient-to-r from-[#F3D35C] to-[#D4A75B] text-[#3B291A] shadow-md'
+                      : 'text-[#3B291A]/60 hover:text-[#3B291A] hover:bg-[#FFF9E6]'
+                      }`}
                   >
                     <MapPin className="w-5 h-5" />
                     Manage Addresses
                   </button>
                   <button
                     onClick={() => setActiveTab('orders')}
-                    className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-300 flex items-center gap-3 ${
-                      activeTab === 'orders'
-                        ? 'bg-gradient-to-r from-[#F3D35C] to-[#D4A75B] text-[#3B291A] shadow-md'
-                        : 'text-[#3B291A]/60 hover:text-[#3B291A] hover:bg-[#FFF9E6]'
-                    }`}
+                    className={`w-full text-left px-4 py-3 rounded-2xl transition-all duration-300 flex items-center gap-3 ${activeTab === 'orders'
+                      ? 'bg-gradient-to-r from-[#F3D35C] to-[#D4A75B] text-[#3B291A] shadow-md'
+                      : 'text-[#3B291A]/60 hover:text-[#3B291A] hover:bg-[#FFF9E6]'
+                      }`}
                   >
                     <Package className="w-5 h-5" />
                     Order History
@@ -1258,7 +1282,7 @@ export default function Profile() {
                     <div className="text-center py-8">
                       <Package className="w-12 h-12 text-[#3B291A]/20 mx-auto mb-4" />
                       <p className="text-[#3B291A]/60">No orders found</p>
-                      <Link 
+                      <Link
                         to="/products"
                         className="inline-block mt-4 text-[#4F8F3C] hover:text-[#3d7230] transition-colors"
                       >
@@ -1280,13 +1304,12 @@ export default function Profile() {
                                   {formatDate(order.createdAt)}
                                 </p>
                               </div>
-                              <span className={`px-3 py-1 rounded-full text-sm ${
-                                getStatusClass(order) === 'completed'
-                                  ? 'bg-green-100 text-green-800'
-                                  : getStatusClass(order) === 'cancelled'
-                                    ? 'bg-red-100 text-red-800'
-                                    : 'bg-yellow-100 text-yellow-800'
-                              }`}>
+                              <span className={`px-3 py-1 rounded-full text-sm ${getStatusClass(order) === 'completed'
+                                ? 'bg-green-100 text-green-800'
+                                : getStatusClass(order) === 'cancelled'
+                                  ? 'bg-red-100 text-red-800'
+                                  : 'bg-yellow-100 text-yellow-800'
+                                }`}>
                                 {getStatusText(order)}
                               </span>
                             </div>
@@ -1312,9 +1335,14 @@ export default function Profile() {
                                   </div>
                                 )}
                               </div>
-                              <p className="text-[#3B291A]/80">
-                                {order.items?.length} item{order.items?.length !== 1 ? 's' : ''}
-                              </p>
+                              <div className="text-sm text-[#3B291A]/80 flex justify-between">
+                                <p className="text-sm text-[#3B291A]/80 mb-1">
+                                  {order.items?.[0]?.name}
+                                </p>
+                                <p className="text-[#3B291A]/80">
+                                  {order.items?.length} item{order.items?.length !== 1 ? 's' : ''}
+                                </p>
+                              </div>
                             </div>
 
                             <div className="flex items-center justify-between pt-4 border-t border-[#3B291A]/10">
@@ -1331,7 +1359,7 @@ export default function Profile() {
                                     Invoice
                                   </button>
                                 )}
-                                {order.status === 'pending' && (
+                                {order.paymentStatus === 'pending' && (
                                   <button
                                     onClick={() => handleCancelOrder(order._id)}
                                     className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700 transition-colors"
@@ -1340,7 +1368,7 @@ export default function Profile() {
                                     Cancel
                                   </button>
                                 )}
-                                {order.status === 'cancelled' && (
+                                {order.paymentStatus === 'cancelled' && (
                                   <button
                                     onClick={() => handleDeleteOrder(order._id)}
                                     className="flex items-center gap-1 text-sm text-red-500 hover:text-red-700 transition-colors"
@@ -1349,12 +1377,12 @@ export default function Profile() {
                                     Delete
                                   </button>
                                 )}
-                                {/* <Link 
-                                  to={`/order/${order._id}`}
+                                <button
+                                  onClick={() => handleViewOrderDetails(order)}
                                   className="text-sm text-[#4F8F3C] hover:text-[#3d7230] transition-colors ml-2"
                                 >
                                   View Details →
-                                </Link> */}
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -1398,9 +1426,8 @@ export default function Profile() {
                       name="firstName"
                       value={profileData.firstName}
                       onChange={handleProfileInputChange}
-                      className={`w-full px-4 py-3 rounded-2xl border ${
-                        errors.firstName ? 'border-red-500' : 'border-[#3B291A]/10'
-                      } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
+                      className={`w-full px-4 py-3 rounded-2xl border ${errors.firstName ? 'border-red-500' : 'border-[#3B291A]/10'
+                        } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
                       placeholder="First Name"
                     />
                     {errors.firstName && (
@@ -1417,9 +1444,8 @@ export default function Profile() {
                       name="lastName"
                       value={profileData.lastName}
                       onChange={handleProfileInputChange}
-                      className={`w-full px-4 py-3 rounded-2xl border ${
-                        errors.lastName ? 'border-red-500' : 'border-[#3B291A]/10'
-                      } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
+                      className={`w-full px-4 py-3 rounded-2xl border ${errors.lastName ? 'border-red-500' : 'border-[#3B291A]/10'
+                        } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
                       placeholder="Last Name"
                     />
                     {errors.lastName && (
@@ -1454,9 +1480,8 @@ export default function Profile() {
                         value={profileData.phone}
                         onChange={handleProfileInputChange}
                         // maxLength={10}
-                        className={`w-full pl-12 pr-4 py-3 rounded-2xl border ${
-                          errors.phone ? 'border-red-500' : 'border-[#3B291A]/10'
-                        } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
+                        className={`w-full pl-12 pr-4 py-3 rounded-2xl border ${errors.phone ? 'border-red-500' : 'border-[#3B291A]/10'
+                          } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
                         placeholder="Phone Number"
                       />
                     </div>
@@ -1476,9 +1501,8 @@ export default function Profile() {
                         name="password"
                         value={profileData.password}
                         onChange={handleProfileInputChange}
-                        className={`w-full px-4 py-3 rounded-2xl border ${
-                          errors.password ? 'border-red-500' : 'border-[#3B291A]/10'
-                        } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
+                        className={`w-full px-4 py-3 rounded-2xl border ${errors.password ? 'border-red-500' : 'border-[#3B291A]/10'
+                          } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
                         placeholder="Leave blank to keep current"
                       />
                       {errors.password && (
@@ -1495,9 +1519,8 @@ export default function Profile() {
                         name="confirmPassword"
                         value={profileData.confirmPassword}
                         onChange={handleProfileInputChange}
-                        className={`w-full px-4 py-3 rounded-2xl border ${
-                          errors.confirmPassword ? 'border-red-500' : 'border-[#3B291A]/10'
-                        } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
+                        className={`w-full px-4 py-3 rounded-2xl border ${errors.confirmPassword ? 'border-red-500' : 'border-[#3B291A]/10'
+                          } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
                         placeholder="Confirm new password"
                       />
                       {errors.confirmPassword && (
@@ -1565,9 +1588,8 @@ export default function Profile() {
                     name="address"
                     value={addressData.address}
                     onChange={handleAddressInputChange}
-                    className={`w-full px-4 py-3 rounded-2xl border ${
-                      errors.address ? 'border-red-500' : 'border-[#3B291A]/10'
-                    } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
+                    className={`w-full px-4 py-3 rounded-2xl border ${errors.address ? 'border-red-500' : 'border-[#3B291A]/10'
+                      } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
                     placeholder="Enter street address"
                   />
                   {errors.address && (
@@ -1599,9 +1621,8 @@ export default function Profile() {
                       name="city"
                       value={addressData.city}
                       onChange={handleAddressInputChange}
-                      className={`w-full px-4 py-3 rounded-2xl border ${
-                        errors.city ? 'border-red-500' : 'border-[#3B291A]/10'
-                      } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
+                      className={`w-full px-4 py-3 rounded-2xl border ${errors.city ? 'border-red-500' : 'border-[#3B291A]/10'
+                        } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
                       placeholder="City"
                     />
                     {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
@@ -1615,9 +1636,8 @@ export default function Profile() {
                       name="state"
                       value={addressData.state}
                       onChange={handleAddressInputChange}
-                      className={`w-full px-4 py-3 rounded-2xl border ${
-                        errors.state ? 'border-red-500' : 'border-[#3B291A]/10'
-                      } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all bg-white`}
+                      className={`w-full px-4 py-3 rounded-2xl border ${errors.state ? 'border-red-500' : 'border-[#3B291A]/10'
+                        } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all bg-white`}
                     >
                       <option value="">Select State</option>
                       <option value="Punjab">Punjab</option>
@@ -1644,9 +1664,8 @@ export default function Profile() {
                       value={addressData.pincode}
                       onChange={handleAddressInputChange}
                       maxLength={6}
-                      className={`w-full px-4 py-3 rounded-2xl border ${
-                        errors.pincode ? 'border-red-500' : 'border-[#3B291A]/10'
-                      } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
+                      className={`w-full px-4 py-3 rounded-2xl border ${errors.pincode ? 'border-red-500' : 'border-[#3B291A]/10'
+                        } focus:outline-none focus:ring-2 focus:ring-[#F3D35C] transition-all`}
                       placeholder="6-digit"
                     />
                     {errors.pincode && (
@@ -1676,6 +1695,231 @@ export default function Profile() {
                   <Save className="w-5 h-5" />
                   {editingAddressId ? 'Update Address' : 'Save Address'}
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Order Details Modal */}
+        {viewingOrder && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 overflow-y-auto">
+            <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl">
+              {/* Modal Header */}
+              <div className="sticky top-0 z-10 bg-white border-b border-gray-100 p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F3D35C] to-[#D4A75B] flex items-center justify-center">
+                      <Package className="w-5 h-5 text-[#3B291A]" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold text-[#3B291A]">Order Details</h2>
+                      <p className="text-sm text-gray-500">Order #{viewingOrder._id?.slice(-8).toUpperCase()}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setViewingOrder(null)}
+                    className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  >
+                    <X className="w-6 h-6 text-gray-500" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Content - Scrollable */}
+              <div className="overflow-y-auto max-h-[calc(90vh-120px)]">
+                {/* Order Summary */}
+                <div className="p-6">
+                  <div className="grid md:grid-cols-3 gap-6 mb-8">
+                    <div className="bg-gradient-to-br from-[#FFF9E6] to-white rounded-2xl p-5 border border-[#F3D35C]/20">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#FFF9E6] flex items-center justify-center">
+                          <Calendar className="w-5 h-5 text-[#F3D35C]" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Order Date</p>
+                          <p className="font-medium text-[#3B291A]">
+                            {formatDate(viewingOrder.createdAt)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-[#FFF9E6] to-white rounded-2xl p-5 border border-[#F3D35C]/20">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#FFF9E6] flex items-center justify-center">
+                          <CreditCard className="w-5 h-5 text-[#F3D35C]" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Payment Status</p>
+                          <p className={`font-medium ${viewingOrder.paymentStatus === 'completed' ? 'text-green-600' : 'text-yellow-600'}`}>
+                            {viewingOrder.paymentStatus?.charAt(0).toUpperCase() + viewingOrder.paymentStatus?.slice(1)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-gradient-to-br from-[#FFF9E6] to-white rounded-2xl p-5 border border-[#F3D35C]/20">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#FFF9E6] flex items-center justify-center">
+                          <Truck className="w-5 h-5 text-[#F3D35C]" />
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Order Status</p>
+                          <p className={`font-medium ${getStatusClass(viewingOrder) === 'cancelled' ? 'text-red-600' :
+                            getStatusClass(viewingOrder) === 'completed' ? 'text-green-600' : 'text-yellow-600'}`}>
+                            {getStatusText(viewingOrder)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Order Items */}
+                  <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-[#3B291A] mb-4">Order Items ({viewingOrder.items?.length})</h3>
+                    <div className="space-y-4">
+                      {viewingOrder.items?.map((item, index) => (
+                        <div key={index} className="flex items-center gap-4 p-4 rounded-2xl border border-gray-100 hover:border-[#F3D35C] transition-colors">
+                          <div className="flex-shrink-0">
+                            <img
+                              src={item.image || item.productId?.image}
+                              alt={item.name}
+                              className="w-16 h-16 rounded-xl object-cover border"
+                              onError={(e) => {
+                                e.target.src = 'https://via.placeholder.com/64?text=Product';
+                              }}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-[#3B291A]">{item.name}</h4>
+                            <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                              <span className="flex items-center gap-1">
+                                <Tag className="w-4 h-4" />
+                                ₹{item.price || item.productId?.price || 'N/A'}
+                              </span>
+                              <span>Quantity: {item.quantity || 1}</span>
+                              <span className="ml-auto font-semibold text-[#3B291A]">
+                                ₹{((item.price || item.productId?.price || 0) * (item.quantity || 1)).toFixed(2)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Shipping Information */}
+                  {viewingOrder.shippingAddress && (
+                    <div className="mb-8">
+                      <h3 className="text-lg font-semibold text-[#3B291A] mb-4 flex items-center gap-2">
+                        <MapPin className="w-5 h-5" />
+                        Shipping Address
+                      </h3>
+                      <div className="bg-gradient-to-br from-[#FFF9E6] to-white rounded-2xl p-5 border border-[#F3D35C]/20">
+                        <p className="font-medium text-[#3B291A] mb-2">{viewingOrder.shippingAddress.name}</p>
+                        <p className="text-gray-600">{viewingOrder.shippingAddress.street}</p>
+                        <p className="text-gray-600">{viewingOrder.shippingAddress.city}, {viewingOrder.shippingAddress.state} {viewingOrder.shippingAddress.zip}</p>
+                        <p className="text-gray-600 mt-2">Phone: {viewingOrder.shippingAddress.phone}</p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Payment & Total Summary */}
+                  <div style={{marginBottom:"80px"}} className="bg-gradient-to-br from-[#FFF9E6] to-white rounded-2xl p-6 border border-[#F3D35C]/20">
+                    <h3 className="text-lg font-semibold text-[#3B291A] mb-4">Order Summary</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between text-gray-600">
+                        <span>Subtotal</span>
+                        <span>₹{viewingOrder.subtotal || viewingOrder.totalAmount}</span>
+                      </div>
+                      {viewingOrder.shippingFee > 0 && (
+                        <div className="flex justify-between text-gray-600">
+                          <span>Shipping Fee</span>
+                          <span>₹{viewingOrder.shippingFee}</span>
+                        </div>
+                      )}
+                      {viewingOrder.taxAmount > 0 && (
+                        <div className="flex justify-between text-gray-600">
+                          <span>Tax</span>
+                          <span>₹{viewingOrder.taxAmount}</span>
+                        </div>
+                      )}
+                      {viewingOrder.discountAmount > 0 && (
+                        <div className="flex justify-between text-green-600">
+                          <span>Discount</span>
+                          <span>-₹{viewingOrder.discountAmount}</span>
+                        </div>
+                      )}
+                      <div className="border-t border-gray-200 pt-3 mt-3">
+                        <div className="flex justify-between text-lg font-semibold text-[#3B291A]">
+                          <span>Total Amount</span>
+                          <span>₹{viewingOrder.totalAmount}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Order Notes */}
+                  {/* {viewingOrder.notes && (
+                    <div className="mt-6 bg-blue-50 rounded-2xl p-5 border border-blue-100">
+                      <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
+                        <FileText className="w-5 h-5" />
+                        Order Notes
+                      </h4>
+                      <p className="text-blue-600">{viewingOrder.notes}</p>
+                    </div>
+                  )} */}
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="sticky bottom-0 bg-white border-t border-gray-100 p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    {viewingOrder.paymentStatus === 'completed' && (
+                      <button
+                        onClick={() => {
+                          handleDownloadInvoice(viewingOrder);
+                          setViewingOrder(null);
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#4F8F3C] to-[#8CCB5E] text-white rounded-xl hover:shadow-md transition-all"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download Invoice
+                      </button>
+                    )}
+                    {viewingOrder.paymentStatus === 'pending' && (
+                      <button
+                        onClick={() => {
+                          handleCancelOrder(viewingOrder._id);
+                          setViewingOrder(null);
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition-colors"
+                      >
+                        <XCircle className="w-4 h-4" />
+                        Cancel Order
+                      </button>
+                    )}
+                    {viewingOrder.paymentStatus === 'cancelled' && (
+                      <button
+                        onClick={() => {
+                          handleDeleteOrder(viewingOrder._id);
+                          setViewingOrder(null);
+                        }}
+                        className="flex items-center gap-2 px-4 py-2 bg-red-100 text-red-600 rounded-xl hover:bg-red-200 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        Delete Order
+                      </button>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setViewingOrder(null)}
+                    className="px-6 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
           </div>
