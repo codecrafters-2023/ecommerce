@@ -105,15 +105,15 @@ const HeroSection = () => {
             <div className="hero-background-modern" aria-hidden="true"></div>
 
             {/* Big Animated Logo at Top Center */}
-            <motion.div 
+            <motion.div
                 className="hero-logo"
                 initial={{ opacity: 0, y: -30 }}
-                animate={{ 
-                    opacity: 1, 
+                animate={{
+                    opacity: 1,
                     y: [0, -4, 0],
                     rotate: [0, 1, -1, 0],
                 }}
-                transition={{ 
+                transition={{
                     opacity: { duration: 0.8 },
                     y: {
                         duration: 4,
@@ -127,9 +127,9 @@ const HeroSection = () => {
                     }
                 }}
             >
-                <img 
-                    src={process.env.PUBLIC_URL + '/logo.png'} 
-                    alt="FarFoo" 
+                <img
+                    src={process.env.PUBLIC_URL + '/logo.png'}
+                    alt="FarFoo"
                     className="logo-image"
                 />
             </motion.div>
@@ -154,7 +154,7 @@ const HeroSection = () => {
                                 FarFoo: Fresh Food from Farm to You
                             </p>
                             <p className="hero-description">
-                                Experience the authentic essence of nature with FarFoo's premium turmeric and spices, 
+                                Experience the authentic essence of nature with FarFoo's premium turmeric and spices,
                                 sourced directly from organic farms across India.
                             </p>
                         </div>
@@ -186,17 +186,17 @@ const HeroSection = () => {
 
                         {/* CTAs */}
                         <div className="hero-ctas">
-                            <Link 
-                                to="/shop" 
+                            <Link
+                                to="/shop"
                                 className="cta-primary"
                             >
                                 <ShoppingBag className="cta-icon" />
                                 <span>Explore Products</span>
                                 <ArrowRight className="cta-icon" />
                             </Link>
-                            
-                            <Link 
-                                to="/about" 
+
+                            <Link
+                                to="/about"
                                 className="cta-secondary"
                             >
                                 <span>Our Story</span>
@@ -224,7 +224,7 @@ const HeroSection = () => {
                         </motion.div>
 
                         {/* Floating Badges */}
-                        <motion.div 
+                        <motion.div
                             className="floating-badge fssai-badge"
                             animate={{
                                 y: [0, -10, 0],
@@ -246,7 +246,7 @@ const HeroSection = () => {
                             </div>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                             className="floating-badge color-badge"
                             animate={{
                                 y: [0, -8, 0],
@@ -269,7 +269,7 @@ const HeroSection = () => {
                             </div>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                             className="floating-badge preservative-badge"
                             animate={{
                                 y: [0, -10, 0],
@@ -292,7 +292,7 @@ const HeroSection = () => {
                             </div>
                         </motion.div>
 
-                        <motion.div 
+                        <motion.div
                             className="floating-badge lab-badge"
                             animate={{
                                 y: [0, -8, 0],
@@ -314,7 +314,7 @@ const HeroSection = () => {
                         </motion.div>
 
                         {/* Product Image */}
-                        <motion.div 
+                        <motion.div
                             className="product-image-wrapper"
                             animate={{
                                 y: [0, -10, 0],
@@ -341,16 +341,20 @@ const HeroSection = () => {
                                 <div className="product-glow-inner"></div>
                             </motion.div>
 
-                            <motion.img
-                                src={process.env.PUBLIC_URL + '/farfoo.png'}
-                                alt="Turmeric Powder"
-                                className="main-product-enhanced"
-                                whileHover={{
-                                    scale: 1.05,
-                                    rotate: 5,
-                                    transition: { duration: 0.3 }
-                                }}
-                            />
+                            <Link
+                            to={`/productDetail/681d2312bcb227ecbb7bf3b7`}
+                            >
+                                <motion.img
+                                    src={process.env.PUBLIC_URL + '/farfoo.png'}
+                                    alt="Turmeric Powder"
+                                    className="main-product-enhanced"
+                                    whileHover={{
+                                        scale: 1.05,
+                                        rotate: 5,
+                                        transition: { duration: 0.3 }
+                                    }}
+                                />
+                            </Link>
                         </motion.div>
                     </div>
                 </div>
